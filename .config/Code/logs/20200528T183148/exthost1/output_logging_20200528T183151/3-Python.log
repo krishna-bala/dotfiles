@@ -1,0 +1,67 @@
+User belongs to experiment group 'AlwaysDisplayTestExplorer - experiment'
+User belongs to experiment group 'ShowPlayIcon - start'
+User belongs to experiment group 'DebugAdapterFactory - experiment'
+User belongs to experiment group 'PtvsdWheels37 - experiment'
+User belongs to experiment group 'UseTerminalToGetActivatedEnvVars - control'
+User belongs to experiment group 'AA_testing - control'
+User belongs to experiment group 'WebHostNotebook - control'
+User belongs to experiment group 'LocalZMQKernel - control'
+User belongs to experiment group 'NativeNotebook - control'
+User belongs to experiment group 'CollectLSRequestTiming - control'
+User belongs to experiment group 'CollectNodeLSRequestTiming - experiment'
+User belongs to experiment group 'EnableIPyWidgets - experiment'
+User belongs to experiment group 'RunByLine - control'
+> conda --version
+> pyenv root
+> python3.7 ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python3.6 ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python3 ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python2 ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> conda info --json
+> /usr/bin/python3 ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import jupyter"
+> /usr/bin/python3 ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import jupyter"
+> /usr/bin/python3 ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import notebook"
+> /usr/bin/python3 ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import notebook"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+Python interpreter path: /usr/bin/python
+> conda env list
+Starting Jedi Python language engine.
+> /usr/bin/python3 ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py jupyter kernelspec --version
+> /usr/bin/python3 ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py jupyter kernelspec --version
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> conda info --json
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+> conda env list
+> /usr/bin/python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.prefix)"
+cwd: ~/.vscode/extensions/ms-python.python-2020.5.80290/out/client
+> /usr/bin/python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.prefix)"
+cwd: ~/.vscode/extensions/ms-python.python-2020.5.80290/out/client
+> /usr/bin/python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+cwd: ~/.vscode/extensions/ms-python.python-2020.5.80290/out/client
+> /usr/bin/python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "import sys;print(sys.executable)"
+cwd: ~/.vscode/extensions/ms-python.python-2020.5.80290/out/client
+> /usr/bin/python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+cwd: ~/.vscode/extensions/ms-python.python-2020.5.80290/out/client
+> /usr/bin/python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+cwd: ~/.vscode/extensions/ms-python.python-2020.5.80290/out/client
+> /usr/bin/python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py site --user-site
+cwd: ~/.vscode/extensions/ms-python.python-2020.5.80290/out/client
+> /usr/bin/python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py site --user-site
+cwd: ~/.vscode/extensions/ms-python.python-2020.5.80290/out/client
+> /usr/bin/python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/completion.py
+> /usr/bin/python ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/pyvsc-run-isolated.py ~/.vscode/extensions/ms-python.python-2020.5.80290/pythonFiles/completion.py

@@ -1,0 +1,329 @@
+Looking for git in: git
+Using git 2.17.1 from git
+> git rev-parse --show-toplevel
+> git rev-parse --git-dir
+Open repository: /home/krish/gym-collision-avoidance
+> git status -z -u
+> git symbolic-ref --short HEAD
+> git rev-parse release
+> git rev-parse --symbolic-full-name release@{u}
+> git rev-list --left-right release...refs/remotes/origin/release
+> git for-each-ref --format %(refname) %(objectname) --sort -committerdate
+> git remote --verbose
+Failed to watch ref '/home/krish/gym-collision-avoidance/.git/refs/remotes/origin/release', is most likely packed.
+Error: ENOENT: no such file or directory, watch '/home/krish/gym-collision-avoidance/.git/refs/remotes/origin/release'
+	at FSWatcher.start (internal/fs/watchers.js:165:26)
+	at Object.watch (fs.js:1270:11)
+	at Object.t.watch (/snap/code/33/usr/share/code/resources/app/extensions/git/dist/main.js:1:604919)
+	at T.updateTransientWatchers (/snap/code/33/usr/share/code/resources/app/extensions/git/dist/main.js:1:83965)
+	at e.fire (/snap/code/33/usr/share/code/resources/app/out/vs/workbench/services/extensions/node/extensionHostProcess.js:46:87)
+	at e.updateModelState (/snap/code/33/usr/share/code/resources/app/extensions/git/dist/main.js:1:103179)
+> git config --get commit.template
+> git check-ignore -v -z --stdin
+> git rev-parse --show-toplevel
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git rev-parse --git-dir
+Open repository: /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/Python-RVO2
+> git status -z -u
+> git cat-file -s c502af7595294f6582f0fefa185d56428581c625
+> git symbolic-ref --short HEAD
+fatal: ref HEAD is not a symbolic ref
+> git rev-parse HEAD
+> git for-each-ref --format %(refname) %(objectname) --sort -committerdate
+> git remote --verbose
+> git config --get commit.template
+> git rev-parse --show-toplevel
+> git rev-parse --git-dir
+Open repository: /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/DRL_Long
+> git status -z -u
+> git symbolic-ref --short HEAD
+fatal: ref HEAD is not a symbolic ref
+> git rev-parse HEAD
+> git for-each-ref --format %(refname) %(objectname) --sort -committerdate
+> git remote --verbose
+> git config --get commit.template
+> git check-ignore -v -z --stdin
+> git check-ignore -v -z --stdin
+> git check-ignore -v -z --stdin
+> git config --global user.email
+> git config --global user.name
+> git show :gym_collision_avoidance/envs/policies/InternalPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/InternalPolicy.py
+> git cat-file -s 569b08df0aeb28bbaf37d82f1dbc7a436fb5839f
+> git check-ignore -v -z --stdin
+> git check-ignore -v -z --stdin
+> git log --format=%H%n%aN%n%aE%n%at%n%ct%n%P%n%B -z -n21 -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/InternalPolicy.py
+> git check-ignore -v -z --stdin
+> git check-ignore -v -z --stdin
+> git check-ignore -v -z --stdin
+> git log --format=%H%n%aN%n%aE%n%at%n%ct%n%P%n%B -z -n21 -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/test_cases/2_agents_500_cases_carrl_seed000.p
+> git show :gym_collision_avoidance/envs/policies/InternalPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/InternalPolicy.py
+> git cat-file -s 569b08df0aeb28bbaf37d82f1dbc7a436fb5839f
+> git show :gym_collision_avoidance/envs/policies/Policy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/Policy.py
+> git cat-file -s c4fc484bf4029c2957cf9ec9d4640ef5d4f115aa
+> git log --format=%H%n%aN%n%aE%n%at%n%ct%n%P%n%B -z -n21 -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/Policy.py
+> git check-ignore -v -z --stdin
+> git check-ignore -v -z --stdin
+> git show :gym_collision_avoidance/experiments/src/example.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/experiments/src/example.py
+> git cat-file -s 9d3ac1308cdc6d5c7d86035302e7dcd7378a6e99
+> git show :gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git cat-file -s 154f07d9762967d2ade48fc113bec601ee22e800
+> git show :gym_collision_avoidance/experiments/src/example.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/experiments/src/example.py
+> git cat-file -s 9d3ac1308cdc6d5c7d86035302e7dcd7378a6e99
+> git log --format=%H%n%aN%n%aE%n%at%n%ct%n%P%n%B -z -n21 -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/experiments/src/example.py
+> git show :gym_collision_avoidance/envs/test_cases.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/test_cases.py
+> git cat-file -s b1cc7d95dfbebeb526ebe83ab5f178dddaae4ccf
+> git show :gym_collision_avoidance/envs/agent.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/agent.py
+> git cat-file -s 2e4f77f3689a35e443b2bc1c557275c06880f670
+> git show :../../agent.py
+> git show :gym_collision_avoidance/experiments/src/example.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/experiments/src/example.py
+> git cat-file -s 9d3ac1308cdc6d5c7d86035302e7dcd7378a6e99
+> git show :../../../experiments/src/example.py
+> git show :gym_collision_avoidance/envs/test_cases.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/test_cases.py
+> git cat-file -s b1cc7d95dfbebeb526ebe83ab5f178dddaae4ccf
+> git show :../../test_cases.py
+> git show :gym_collision_avoidance/envs/agent.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/agent.py
+> git cat-file -s 2e4f77f3689a35e443b2bc1c557275c06880f670
+> git show :../../agent.py
+> git show :gym_collision_avoidance/envs/test_cases.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/test_cases.py
+> git cat-file -s b1cc7d95dfbebeb526ebe83ab5f178dddaae4ccf
+> git show :../../test_cases.py
+> git show :gym_collision_avoidance/envs/agent.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/agent.py
+> git show :../../agent.py
+> git cat-file -s 2e4f77f3689a35e443b2bc1c557275c06880f670
+> git show :gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git cat-file -s 4a65ee9fe9d8ce5da917d72c4ac9cfc9e6b0c8ec
+> git show :../GA3CCADRLPolicy.py
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/__init__.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/__init__.py
+> git cat-file -s e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+> git show :../GA3C_CADRL/__init__.py
+> git show :gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git cat-file -s 4a65ee9fe9d8ce5da917d72c4ac9cfc9e6b0c8ec
+> git show :../GA3CCADRLPolicy.py
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git cat-file -s c502af7595294f6582f0fefa185d56428581c625
+> git show :../GA3C_CADRL/network.py
+> git show :gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git cat-file -s 4a65ee9fe9d8ce5da917d72c4ac9cfc9e6b0c8ec
+> git show :../GA3CCADRLPolicy.py
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git cat-file -s c502af7595294f6582f0fefa185d56428581c625
+> git show :../GA3C_CADRL/network.py
+> git show :gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git cat-file -s 4a65ee9fe9d8ce5da917d72c4ac9cfc9e6b0c8ec
+> git show :../GA3CCADRLPolicy.py
+> git show :gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git cat-file -s 154f07d9762967d2ade48fc113bec601ee22e800
+> git show :../LearningPolicyGA3C.py
+> git show :gym_collision_avoidance/envs/policies/LearningPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/LearningPolicy.py
+> git cat-file -s 2f8679bd91d21aa8e2af5cab059e7f1d303c98f8
+> git show :../LearningPolicy.py
+> git show :gym_collision_avoidance/envs/policies/ExternalPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/ExternalPolicy.py
+> git cat-file -s f8d9deb04fc8c6ccfa574ecfb022b996d0af7499
+> git show :../ExternalPolicy.py
+> git show :gym_collision_avoidance/envs/policies/Policy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/Policy.py
+> git cat-file -s c4fc484bf4029c2957cf9ec9d4640ef5d4f115aa
+> git show :../Policy.py
+> git show :gym_collision_avoidance/envs/policies/ExternalPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/ExternalPolicy.py
+> git cat-file -s f8d9deb04fc8c6ccfa574ecfb022b996d0af7499
+> git show :../ExternalPolicy.py
+> git show :../ExternalPolicy.py
+> git show :gym_collision_avoidance/envs/policies/LearningPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/LearningPolicy.py
+> git cat-file -s 2f8679bd91d21aa8e2af5cab059e7f1d303c98f8
+> git show :gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git cat-file -s 154f07d9762967d2ade48fc113bec601ee22e800
+> git show :gym_collision_avoidance/envs/policies/LearningPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/LearningPolicy.py
+> git cat-file -s 2f8679bd91d21aa8e2af5cab059e7f1d303c98f8
+> git show :../LearningPolicy.py
+> git show :gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git cat-file -s 154f07d9762967d2ade48fc113bec601ee22e800
+> git show :../LearningPolicyGA3C.py
+> git show :gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git cat-file -s 4a65ee9fe9d8ce5da917d72c4ac9cfc9e6b0c8ec
+> git show :../GA3CCADRLPolicy.py
+> git show :gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git cat-file -s 154f07d9762967d2ade48fc113bec601ee22e800
+> git show :../LearningPolicyGA3C.py
+> git show :gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git cat-file -s 4a65ee9fe9d8ce5da917d72c4ac9cfc9e6b0c8ec
+> git show :../GA3CCADRLPolicy.py
+> git show :gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git cat-file -s 154f07d9762967d2ade48fc113bec601ee22e800
+> git show :../LearningPolicyGA3C.py
+> git show :gym_collision_avoidance/envs/policies/LearningPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/LearningPolicy.py
+> git cat-file -s 2f8679bd91d21aa8e2af5cab059e7f1d303c98f8
+> git show :../LearningPolicy.py
+> git show :gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git cat-file -s 154f07d9762967d2ade48fc113bec601ee22e800
+> git show :../LearningPolicyGA3C.py
+> git show :gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/LearningPolicyGA3C.py
+> git cat-file -s 154f07d9762967d2ade48fc113bec601ee22e800
+> git show :../LearningPolicyGA3C.py
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git cat-file -s c502af7595294f6582f0fefa185d56428581c625
+> git show :../GA3C_CADRL/network.py
+> git show :gym_collision_avoidance/envs/policies/NonCooperativePolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/NonCooperativePolicy.py
+> git cat-file -s c1b91c8c5f3973d6638ebcd20af2f9110d454e46
+> git show :../NonCooperativePolicy.py
+> git show :gym_collision_avoidance/envs/policies/StaticPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/StaticPolicy.py
+> git cat-file -s 8965f920c50bb16c02f0295cadd4d7190ab14246
+> git show :../StaticPolicy.py
+> git show :gym_collision_avoidance/envs/policies/NonCooperativePolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/NonCooperativePolicy.py
+> git cat-file -s c1b91c8c5f3973d6638ebcd20af2f9110d454e46
+> git show :../NonCooperativePolicy.py
+> git show :gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git cat-file -s 4a65ee9fe9d8ce5da917d72c4ac9cfc9e6b0c8ec
+> git show :../GA3CCADRLPolicy.py
+> git check-ignore -v -z --stdin
+> git show :gym_collision_avoidance/experiments/src/collect_regression_dataset.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/experiments/src/collect_regression_dataset.py
+> git cat-file -s 30dae51fa6e4e5458cd9bf7603980ccbab59a6d1
+> git show :../../../experiments/src/collect_regression_dataset.py
+> git show :gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git cat-file -s 4a65ee9fe9d8ce5da917d72c4ac9cfc9e6b0c8ec
+> git show :../GA3CCADRLPolicy.py
+> git show :gym_collision_avoidance/envs/policies/InternalPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/InternalPolicy.py
+> git cat-file -s 569b08df0aeb28bbaf37d82f1dbc7a436fb5839f
+> git show :../InternalPolicy.py
+> git show :gym_collision_avoidance/envs/policies/Policy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/Policy.py
+> git cat-file -s c4fc484bf4029c2957cf9ec9d4640ef5d4f115aa
+> git show :../Policy.py
+> git log --format=%H%n%aN%n%aE%n%at%n%ct%n%P%n%B -z -n21 -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/Policy.py
+> git log --format=%H%n%aN%n%aE%n%at%n%ct%n%P%n%B -z -n41 -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/Policy.py
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/__init__.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/__init__.py
+> git cat-file -s e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+> git show :../GA3C_CADRL/__init__.py
+> git log --format=%H%n%aN%n%aE%n%at%n%ct%n%P%n%B -z -n21 -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/Policy.py
+> git show :../Policy.py
+> git show :../InternalPolicy.py
+> git show :../GA3CCADRLPolicy.py
+> git check-ignore -v -z --stdin
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/__init__.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/__init__.py
+> git cat-file -s e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+> git show :../GA3C_CADRL/__init__.py
+> git show :gym_collision_avoidance/envs/policies/Policy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/Policy.py
+> git cat-file -s c4fc484bf4029c2957cf9ec9d4640ef5d4f115aa
+> git show :../InternalPolicy.py
+> git show :../Policy.py
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git cat-file -s c502af7595294f6582f0fefa185d56428581c625
+> git show :../GA3C_CADRL/network.py
+> git show :../LearningPolicy.py
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/__init__.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/__init__.py
+> git cat-file -s e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+> git show :../LearningPolicyGA3C.py
+> git show :../GA3C_CADRL/__init__.py
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git cat-file -s c502af7595294f6582f0fefa185d56428581c625
+> git show :../GA3C_CADRL/network.py
+> git check-ignore -v -z --stdin
+> git check-ignore -v -z --stdin
+> git check-ignore -v -z --stdin
+> git log --format=%H%n%aN%n%aE%n%at%n%ct%n%P%n%B -z -n21 -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/checkpoints/IROS18/network_01900000.data-00000-of-00001
+> git show :../../util.py
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git cat-file -s c502af7595294f6582f0fefa185d56428581c625
+> git check-ignore -v -z --stdin
+> git show :../../wrappers.py
+> git show :../Policy.py
+> git show :../NonCooperativePolicy.py
+> git show :../LearningPolicyGA3C.py
+> git show :../LearningPolicy.py
+> git show :../InternalPolicy.py
+> git show :../CARRLPolicy.py
+> git show :gym_collision_avoidance/envs/config.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/config.py
+> git cat-file -s 97da2a9517ddf201e70d9f73706a307a33b38445
+> git show :../../config.py
+> git show :../GA3C_CADRL/network.py
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git cat-file -s c502af7595294f6582f0fefa185d56428581c625
+> git check-ignore -v -z --stdin
+> git show :gym_collision_avoidance/envs/config.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/config.py
+> git cat-file -s 97da2a9517ddf201e70d9f73706a307a33b38445
+> git show :gym_collision_avoidance/envs/policies/Policy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/Policy.py
+> git cat-file -s c4fc484bf4029c2957cf9ec9d4640ef5d4f115aa
+> git show :gym_collision_avoidance/envs/policies/NonCooperativePolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/NonCooperativePolicy.py
+> git cat-file -s c1b91c8c5f3973d6638ebcd20af2f9110d454e46
+> git show :gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3CCADRLPolicy.py
+> git cat-file -s 4a65ee9fe9d8ce5da917d72c4ac9cfc9e6b0c8ec
+> git show :gym_collision_avoidance/envs/agent.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/agent.py
+> git cat-file -s 2e4f77f3689a35e443b2bc1c557275c06880f670
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git cat-file -s c502af7595294f6582f0fefa185d56428581c625
+> git show :gym_collision_avoidance/envs/agent.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/agent.py
+> git cat-file -s 2e4f77f3689a35e443b2bc1c557275c06880f670
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git cat-file -s c502af7595294f6582f0fefa185d56428581c625
+> git show :gym_collision_avoidance/envs/agent.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/agent.py
+> git cat-file -s 2e4f77f3689a35e443b2bc1c557275c06880f670
+> git show :gym_collision_avoidance/envs/test_cases.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/test_cases.py
+> git cat-file -s b1cc7d95dfbebeb526ebe83ab5f178dddaae4ccf
+> git show :gym_collision_avoidance/experiments/src/example.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/experiments/src/example.py
+> git cat-file -s 9d3ac1308cdc6d5c7d86035302e7dcd7378a6e99
+> git show :gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/GA3C_CADRL/network.py
+> git cat-file -s c502af7595294f6582f0fefa185d56428581c625

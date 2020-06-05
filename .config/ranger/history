@@ -1,0 +1,31 @@
+set show_hidden
+search tools
+vim notes.txt
+vim rc.conf
+touch rc.conf
+touch tools.txt
+rename .vimrc
+vim
+delete
+help
+search home
+touch zathuratest.tex
+set show_hidden!
+search .config
+search media
+open evince
+search ranger
+open_with evince
+open_with 1
+search med
+search medi
+open_with 
+terminal
+open_with vim
+search config
+search nvim
+open_with 0
+search 
+
+Q
+read code

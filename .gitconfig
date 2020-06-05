@@ -1,0 +1,8 @@
+[user]
+	email = krishnab@uw.edu
+[core]
+	editor = vim
+[color]
+	ui = auto
+[clor]
+	branch = true

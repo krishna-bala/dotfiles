@@ -1,0 +1,30 @@
+Looking for git in: git
+Using git 2.17.1 from git
+> git rev-parse --show-toplevel
+fatal: not a git repository (or any parent up to mount point /media/krish)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+> git rev-parse --show-toplevel
+fatal: not a git repository (or any parent up to mount point /media/krish)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+> git rev-parse --show-toplevel
+> git rev-parse --show-toplevel
+> git rev-parse --show-toplevel
+fatal: not a git repository (or any parent up to mount point /media/krish)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+> git rev-parse --show-toplevel
+fatal: not a git repository (or any parent up to mount point /media/krish)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+> git rev-parse --show-toplevel
+> git rev-parse --git-dir
+Open repository: /media/krish/WD1/Ubuntu/Documents/coursework/2019-2020/winter-2020/CSE 478 - Autonomous Robotics/lab/lab_2/lab2
+> git config --global user.email
+> git status -z -u
+> git config --global user.name
+> git symbolic-ref --short HEAD
+> git rev-parse krishnas-branch
+> git rev-parse --symbolic-full-name krishnas-branch@{u}
+fatal: no upstream configured for branch 'krishnas-branch'
+> git for-each-ref --format %(refname) %(objectname) --sort -committerdate
+> git remote --verbose
+> git config --get commit.template
+> git check-ignore -v -z --stdin

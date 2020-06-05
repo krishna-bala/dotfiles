@@ -1,0 +1,46 @@
+Looking for git in: git
+Using git 2.17.1 from git
+> git rev-parse --show-toplevel
+> git rev-parse --git-dir
+Open repository: /home/krish/gym-collision-avoidance
+> git status -z -u
+> git symbolic-ref --short HEAD
+> git rev-parse release
+> git rev-parse --symbolic-full-name release@{u}
+> git rev-list --left-right release...refs/remotes/origin/release
+> git for-each-ref --format %(refname) %(objectname) --sort -committerdate
+> git remote --verbose
+Failed to watch ref '/home/krish/gym-collision-avoidance/.git/refs/remotes/origin/release', is most likely packed.
+Error: ENOENT: no such file or directory, watch '/home/krish/gym-collision-avoidance/.git/refs/remotes/origin/release'
+	at FSWatcher.start (internal/fs/watchers.js:165:26)
+	at Object.watch (fs.js:1270:11)
+	at Object.t.watch (/snap/code/33/usr/share/code/resources/app/extensions/git/dist/main.js:1:604919)
+	at T.updateTransientWatchers (/snap/code/33/usr/share/code/resources/app/extensions/git/dist/main.js:1:83965)
+	at e.fire (/snap/code/33/usr/share/code/resources/app/out/vs/workbench/services/extensions/node/extensionHostProcess.js:46:87)
+	at e.updateModelState (/snap/code/33/usr/share/code/resources/app/extensions/git/dist/main.js:1:103179)
+> git config --get commit.template
+> git check-ignore -v -z --stdin
+> git rev-parse --show-toplevel
+> git rev-parse --git-dir
+Open repository: /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/Python-RVO2
+> git status -z -u
+> git symbolic-ref --short HEAD
+fatal: ref HEAD is not a symbolic ref
+> git rev-parse HEAD
+> git for-each-ref --format %(refname) %(objectname) --sort -committerdate
+> git remote --verbose
+> git config --get commit.template
+> git rev-parse --show-toplevel
+> git rev-parse --git-dir
+Open repository: /home/krish/gym-collision-avoidance/gym_collision_avoidance/envs/policies/DRL_Long
+> git status -z -u
+> git symbolic-ref --short HEAD
+fatal: ref HEAD is not a symbolic ref
+> git rev-parse HEAD
+> git for-each-ref --format %(refname) %(objectname) --sort -committerdate
+> git remote --verbose
+> git config --get commit.template
+> git show :README.md
+> git ls-files --stage -- /home/krish/gym-collision-avoidance/README.md
+> git cat-file -s 592ca77b0f53d76ca2b0b906dfd3d1b88a26c058
+> git check-ignore -v -z --stdin

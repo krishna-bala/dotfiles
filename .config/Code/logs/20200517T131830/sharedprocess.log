@@ -1,0 +1,8 @@
+[2020-05-17 13:18:34.443] [sharedprocess] [info] main {"machineId":"d904318e6190f96be454a5f471557f4f7371e9f7e3dc9adaeb90de00cb01e1a5","windowId":2}
+[2020-05-17 13:18:36.236] [sharedprocess] [info] Installing extension: vscodevim.vim
+[2020-05-17 13:18:36.674] [sharedprocess] [info] Downloaded extension: vscodevim.vim /tmp/5ef456a8-edd9-4f9f-8bca-712a3eea467b
+[2020-05-17 13:18:36.731] [sharedprocess] [info] Extracted extension to /home/krish/.vscode/extensions/.vscodevim.vim-1.14.4: vscodevim.vim
+[2020-05-17 13:18:36.731] [sharedprocess] [info] Renamed to /home/krish/.vscode/extensions/vscodevim.vim-1.14.4
+[2020-05-17 13:18:36.731] [sharedprocess] [info] Installation completed. vscodevim.vim
+[2020-05-17 13:18:36.743] [sharedprocess] [info] Extensions installed successfully: vscodevim.vim
+[2020-05-17 13:19:14.464] [sharedprocess] [info] Starting to clean up unused language packs.

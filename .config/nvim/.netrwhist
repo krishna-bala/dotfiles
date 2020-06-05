@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =9
+let g:netrw_dirhist_9='/home/krish/.config/wal/templates'
+let g:netrw_dirhist_8='/home/krish/.config/wal'
+let g:netrw_dirhist_7='/home/krish/.config/gnome-session'
+let g:netrw_dirhist_6='/home/krish'
+let g:netrw_dirhist_5='/home/krish/.config'
+let g:netrw_dirhist_4='/home/krish/.config/nvim'
+let g:netrw_dirhist_3='/home/krish/.config/nvim/plugged'
+let g:netrw_dirhist_2='/home/krish/.config/nvim/plugged/pywal/pywal'
+let g:netrw_dirhist_1='/home/krish/.config/nvim/plugged/pywal/pywal/colorschemes'
+let g:netrw_dirhist_0='/home/krish/.config/nvim/plugged/pywal/pywal/colorschemes/dark'
