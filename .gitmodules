@@ -1,19 +1,24 @@
 [submodule "dotbot"]
 	path = dotbot
-	url = git@github.com:anishathalye/dotbot.git
+	url = https://github.com/anishathalye/dotbot
 	ignore = dirty
+
 [submodule "config/nvim/plugged/nord-vim"]
 	path = config/nvim/plugged/nord-vim
 	url = git@github.com:arcticicestudio/nord-vim.git
+
 [submodule "config/nvim/plugged/pywal"]
 	path = config/nvim/plugged/pywal
 	url = git@github.com:dylanaraps/pywal.git
+
 [submodule "config/nvim/plugged/vim-auto-save"]
 	path = config/nvim/plugged/vim-auto-save
 	url = git@github.com:907th/vim-auto-save.git
+
 [submodule "config/nvim/plugged/vimtex"]
 	path = config/nvim/plugged/vimtex
 	url = git@github.com:lervag/vimtex.git
+
 [submodule "config/nvim/plugged/vimwiki"]
 	path = config/nvim/plugged/vimwiki
 	url = git@github.com:vimwiki/vimwiki.git
