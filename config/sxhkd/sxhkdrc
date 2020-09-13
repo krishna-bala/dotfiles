@@ -6,10 +6,16 @@
 super + Return
 	urxvt
 
+# window switcher
+alt + Tab
+	rofi -show window
+
 # program launcher
 super + @space
-	dmenu_run
+	rofi -show run
 
+super + alt + @space
+	rofi -dmenu 
 # make sxhkd reload its configuration files:
 super + Escape
 	pkill -USR1 -x sxhkd
@@ -50,7 +56,7 @@ super + {t,shift + t,s,f}
 super + ctrl + {m,x,y,z}
 	bspc node -g {marked,locked,sticky,private}
 
-#
+
 # focus/swap
 #
 
@@ -66,9 +72,16 @@ super + {p,b,comma,period}
 super + {_,shift + }c
 	bspc node -f {next,prev}.local
 
-# focus the next/previous desktop in the current monitor
+# focus to the next/previous desktop 
 super + bracket{left,right}
-	bspc desktop -f {prev,next}.local
+	bspc desktop -f {prev,next}
+
+# send and stay focused on window to the next/previous desktop
+super + shift + bracket{left,right}
+	DIR={prev,next}; \
+	bspc node -d "$DIR"; \
+	bspc desktop -f "$DIR"; \
+	bspc node -f next.local; 
 
 # focus the last node/desktop
 super + {grave,Tab}
@@ -119,3 +132,51 @@ super + alt + shift + {h,j,k,l}
 # move a floating window
 super + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+################
+#### Volume ####
+################
+
+XF86AudioRaiseVolume
+	amixer set Master 5%+
+
+XF86AudioLowerVolume
+	amixer set Master 5%-
+
+XF86AudioMute
+	amixer set Master toggle
+
+####################
+#### Brightness ####
+####################
+
+XF86MonBrightnessDown
+	xbacklight -dec 5
+XF86MonBrightnessUp
+	xbacklight -inc 5
+
+#########################
+#### Reorganize tree ####
+#########################
+
+super + r
+	bspc node @/ -R 90	
+
+###########################
+#### Change Border Gap ####
+###########################
+
+# Switch between gap presets
+super + shift + {y,u,i,o}
+	bspc config window_gap {0,5,10,20}
+ 
+
+##############################
+#### Lock, Suspend Laptop ####
+##############################
+
+super + alt + ctrl + l
+	i3lock -i /home/krish/pictures/Wallpapers/el-capitan-i3lock.png
+
+super + alt + ctrl + s
+	systemctl suspend
