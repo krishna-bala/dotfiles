@@ -1,7 +1,10 @@
 # My aliases:
-alias python='python3'
-alias ipython='ipython3'
+# alias python='python3'
+# alias ipython='ipython3'
 alias matlabroot='cd /usr/local/MATLAB/R2020a/bin'
 alias matlab='./matlab'
 alias vim='nvim'
+alias soc-nav='cd /home/krish/scripts; ./google-soc-nav-folder.sh'
+alias unmount='udiskie-umount /media/krish/WD/'
+alias qt-creator='/home/krish/Qt/Tools/QtCreator/bin/qtcreator'
 # alias jupyter='jupyter-notebook'

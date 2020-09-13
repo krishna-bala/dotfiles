@@ -1,0 +1,50 @@
+rename path_bot
+rename mit_acl
+rename pathbot_literature
+rename reinforcement_learning_lit_review
+rename stanford_cvgl
+rename vita_epfl
+rename reading_techniques
+rename undergrad
+rename macs_lab
+rename interests
+rename gsri
+rename brunton
+rename bio_robotics
+rename research_tools
+rename gym-collision-avoidance
+rename desktop
+search scripts
+shell nvim test.py
+wq
+q
+rename ubuntu
+rename PowersOfTwo
+rename PowersOfTwo.pro
+rename PowersOfTwo.pro.user
+rename PowersOfTwo_global.h
+rename cpp_projects
+delete
+shell sudo python setup.py
+mkdir mnemosyne
+rename run_krishna_test.sh
+shell vim
+search 
+search ranger
+search .confi
+search vimrc
+flat 1
+rename anaconda3
+shell 
+find 
+
+shell nvim token.cpp
+shell g++ main.cpp token.cpp -o main
+shell g++ - main.cpp token.cpp main.out
+shell g++ -o main.out main.cpp token.cpp
+shell mkdir rl_collision_avoidance
+search resea
+open_with 
+search .xr
+search config
+search .config

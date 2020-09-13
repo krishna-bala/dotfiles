@@ -7,6 +7,8 @@
 	Plug 'lervag/vimtex'
 	Plug 'dylanaraps/wal.vim'
 	Plug '907th/vim-auto-save'
+	Plug 'francoiscabrol/ranger.vim'
+	Plug 'rbgrouleff/bclose.vim' 
 	call plug#end()
 
 " colors
@@ -45,8 +47,8 @@
     noremap <Up>		<NOP>
     noremap <Left>		<NOP>
     noremap <Right>		<NOP>
-    nnoremap tl			:tabnext<CR>
-	nnoremap th			:tabprev<CR>
+    nnoremap tj			:tabnext<CR>
+	nnoremap tk			:tabprev<CR>
 	nnoremap tn			:tabnew<CR>
 	au VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
     au VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
@@ -55,7 +57,9 @@
     set splitright splitbelow 
 
 " Shortcutting split navigation:
-    map <C-h> <C-w>h
+    nnoremap <leader>wv <C-w>v
+	nnoremap <leader>wh <C-w>s
+	map <C-h> <C-w>h
     map <C-k> <C-w>k
     map <C-j> <C-w>j
     map <C-l> <C-w>l
