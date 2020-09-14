@@ -6,19 +6,20 @@
 
 - link:
     ~/.dotfiles: ''
+    ~/.bash_aliases: bash_aliases
+    ~/.bash_logout: bash_logout
+    ~/.bashrc: bashrc
+    ~/.condarc: condarc
     ~/.config/bspwm: config/bspwm
     ~/.config/nvim: config/nvim
     ~/.config/polybar: config/polybar
     ~/.config/ranger: config/ranger
     ~/.config/sxhkd: config/sxhkd
-    ~/.vim: vim
-    ~/.vscode: vscode
-    ~/.bash_aliases: bash_aliases
-    ~/.bash_logout: bash_logout
-    ~/.bashrc: bashrc
-    ~/.condarc: condarc
     ~/.profile: profile
+    ~/.tmux.conf: tmux.conf
+    ~/.vim: vim
     ~/.vimrc: vimrc
+    ~/.vscode: vscode
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
