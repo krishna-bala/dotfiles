@@ -1,49 +1,49 @@
-#! /bin/sh
-
-#### AUTOSTART ####
-sxhkd &										# hotkeys
-nitrogen --restore &						# wallpaper
-picom --config ~/.config/picom/picom.ini &	# picom config
-xrdb $HOME/.Xresources &					# urxvt config
-$HOME/.config/polybar/launch.sh &			# launch polybar
-wmname LG3D &								# for java apps	
-udiskie &									# automount external hard drives
-xset r rate 200 75 &						# set key repeat rate faster
-xsetroot -cursor_name left_ptr &			# cursor config
+#!/bin/sh
 
 #################
 #### DISPLAY ####
 #################
 
-m=$(xrandr | grep " connected " | awk '{print$1 }' | wc -l);
+#m=$(xrandr --listmonitors | wc -l);
 
-xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
-exec gnome-terminal
+m=$(xrandr | grep " connected " | wc -l);
+sleep .25;
 
 if [ "$m" -eq "1" ]; then
-	xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161
+	xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
 elif [ "$m" -eq "2" ]; then
-    xrandr --output eDP-1-1 --mode 1920x1080 --primary --output HDMI-1 --mode 1920x1080 --scale 1x1 --right-of eDP-1-1
+	xrandr --output eDP-1-1 --mode 1920x1080 --primary --output HDMI-1 --mode 1920x1080 --scale 1x1 --right-of eDP-1-1 &
 else
-	xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161
+	xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
 fi
+
+###################
+#### AUTOSTART ####
+###################
+
+# $HOME/.config/bspwm/autostart.sh &
+
+sxhkd &										# hotkeys
+picom --config ~/.config/picom/picom.ini &	# picom config
+xrdb $HOME/.Xresources &					# urxvt config
+$HOME/.config/polybar/launch.sh &			# launch polybar
+wmname LG3D &								# for java apps	
+udiskie &									# automount external hard drives
+nitrogen --restore &						# wallpaper
 
 ###################
 #### MONITORS #####
 ###################
 
-if [ "$m" -eq "1" ]
-	then
-		bspc monitor eDP-1-1 -d 1 2 3 4 5 6 7 8 9 0
-	#bspc monitor HDMI-1 --remove &
-elif [ "$m" -eq "2" ]
-	then
-		bspc monitor eDP-1-1 -d 1 2 3 4 5 
-		bspc monitor HDMI-1 -d 6 7 8 9 0 
+if [ "$m" -eq "1" ]; then
+	bspc monitor eDP-1-1 -d 1 2 3 4 5 6 7 8 9 0
+elif [ "$m" -eq "2" ]; then
+  	bspc monitor eDP-1-1 -d 1 2 3 4 5 
+  	bspc monitor HDMI-1 -d 6 7 8 9 0 
 else
-	bspc monitor eDP-1-1 -d 1 2 3 4 5 
+  	bspc monitor eDP-1-1 -d 1 2 3 4 5 
 fi
-
+ 
 #############################
 #### BSPWM configuration ####
 #############################
@@ -77,5 +77,7 @@ bspc rule -a mplayer2 state=floating
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
 
+xset r rate 200 75 &						# set key repeat rate faster
+xsetroot -cursor_name left_ptr &			# cursor config
 
-exec ssh-agent bspwm	# start ssh-agent (not working?)
+exec ssh-agent	# start ssh-agent (not working?)
