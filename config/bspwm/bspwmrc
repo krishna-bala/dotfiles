@@ -7,16 +7,59 @@
 #m=$(xrandr --listmonitors | wc -l);
 
 m=$(xrandr | grep " connected " | wc -l);
-sleep .25;
+sleep 1;
+
+lid=$(cat /proc/acpi/button/lid/LID/state | grep "state:    " | awk '{ print $2 }')
+#if [ "$lid" = "closed" ]; then
+#	m=$((m+1))
+#fi
 
 if [ "$m" -eq "1" ]; then
 	xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
-elif [ "$m" -eq "2" ]; then
-	xrandr --output eDP-1-1 --mode 1920x1080 --primary --output HDMI-1 --mode 1920x1080 --scale 1x1 --right-of eDP-1-1 &
+#elif [ "$m" -eq "2" ]; then
+#	xrandr --output eDP-1-1 --mode 1920x1080 --primary --output HDMI-1 --mode 1920x1080 --scale 1x1 --left-of eDP-1-1 &
+elif [ "$m" -eq "3" ]; then
+	if [ "$lid" = "closed" ]; then
+		xrandr --output eDP-1-1 --off &
+		xrandr --output DP-1-2 --mode 1920x1080 --primary --rate 60 &
+		xrandr --output HDMI-1 --right-of DP-1-2 --mode 1920x1080 --rotate normal &
+	else
+		xrandr --output eDP-1-1 --mode 1920x1080 --primary 
+		xrandr --output DP-1-2 --mode 1920x1080 --above eDP-1-1 --rate 60 
+		xrandr --output HDMI-1 --right-of DP-1-2 --mode 1920x1080 --rotate normal &
+	fi
+	sleep .25
+	xrandr --output HDMI-1 --right-of DP-1-2 --rotate left --panning 1920x1080 &
 else
 	xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
 fi
 
+###################
+#### MONITORS #####
+###################
+
+if [ "$m" -eq "1" ]; then
+	bspc monitor eDP-1-1 -d 1 2 3 4 5 6 7 8 9 0 &
+	bspc monitor DP-1-2 --remove &
+	bspc monitor HDMI-1 --remove &
+#elif [ "$m" -eq "2" ]; then
+#	bspc monitor eDP-1-1 -d 1 2 3 4 5 &
+#	bspc monitor DP-1-2 -d 6 7 8 9 0 &
+#	bspc monitor HDMI-1 --remove &
+elif [ "$m" -eq "3" ]; then
+	if [ "$lid" = "closed" ]; then
+		bspc monitor DP-1-2 -d 1 2 3 4 5 &
+		bspc monitor HDMI-1 -d 6 7 8 9 0 &
+		bspc monitor eDP-1-1 --remove &
+	else
+		bspc monitor eDP-1-1 -d 1 2 3  &
+		bspc monitor DP-1-2 -d 4 5 6 & 
+		bspc monitor HDMI-1 -d 7 8 9 &
+	fi
+else
+  	bspc monitor eDP-1-1 -d 1 2 3 4 5 
+fi
+ 
 ###################
 #### AUTOSTART ####
 ###################
@@ -24,26 +67,15 @@ fi
 # $HOME/.config/bspwm/autostart.sh &
 
 sxhkd &										# hotkeys
-picom --config ~/.config/picom/picom.ini &	# picom config
+#picom --config ~/.config/picom/picom.ini &	# picom config
 xrdb $HOME/.Xresources &					# urxvt config
 $HOME/.config/polybar/launch.sh &			# launch polybar
 wmname LG3D &								# for java apps	
 udiskie &									# automount external hard drives
 nitrogen --restore &						# wallpaper
+gnome-keyring-daemon
 
-###################
-#### MONITORS #####
-###################
 
-if [ "$m" -eq "1" ]; then
-	bspc monitor eDP-1-1 -d 1 2 3 4 5 6 7 8 9 0
-elif [ "$m" -eq "2" ]; then
-  	bspc monitor eDP-1-1 -d 1 2 3 4 5 
-  	bspc monitor HDMI-1 -d 6 7 8 9 0 
-else
-  	bspc monitor eDP-1-1 -d 1 2 3 4 5 
-fi
- 
 #############################
 #### BSPWM configuration ####
 #############################

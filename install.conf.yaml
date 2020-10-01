@@ -19,7 +19,6 @@
     ~/.tmux.conf: tmux.conf
     ~/.vim: vim
     ~/.vimrc: vimrc
-    ~/.vscode: vscode
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
