@@ -1,10 +1,3 @@
-rename mit_acl
-rename pathbot_literature
-rename reinforcement_learning_lit_review
-rename stanford_cvgl
-rename vita_epfl
-rename reading_techniques
-rename undergrad
 rename macs_lab
 rename interests
 rename gsri
@@ -41,10 +34,17 @@ shell g++ - main.cpp token.cpp main.out
 shell g++ -o main.out main.cpp token.cpp
 shell mkdir rl_collision_avoidance
 search resea
-open_with 
 search .xr
 search config
 search .config
 
 rename music
 delete
+open_with 
+open_with
+open_with 2
+open_with h
+show_hidden
+shell sudo find . -type f -iname "*.sh" -exec chmod +x {} \; 
+;q
+shell sudo apt install ./slack-desktop-4.9.1-amd4.deb
