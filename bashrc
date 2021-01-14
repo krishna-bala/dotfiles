@@ -116,6 +116,13 @@ if ! shopt -oq posix; then
   fi
 fi
 
+###############################
+#### ROS Environment Setup ####
+###############################
+
+source /opt/ros/kinetic/setup.bash
+
+
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/home/krish/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
@@ -130,12 +137,6 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-
-###############################
-#### ROS Environment Setup ####
-###############################
-
-source /opt/ros/kinetic/setup.bash
 
 ###############################
 #### Terminal Settings ########
@@ -154,4 +155,12 @@ PROMPT_DIRTRIM=2
 
 # Change autorepeat settings
 xset r rate 200 75
+
+# swap esc and caps lock
+setxkbmap -option caps:swapescape &
+
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
 

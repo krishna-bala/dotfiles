@@ -1,50 +1,50 @@
-rename macs_lab
-rename interests
-rename gsri
-rename brunton
-rename bio_robotics
-rename research_tools
-rename gym-collision-avoidance
-rename desktop
-search scripts
-shell nvim test.py
-wq
-q
-rename ubuntu
-rename PowersOfTwo
-rename PowersOfTwo.pro
-rename PowersOfTwo.pro.user
-rename PowersOfTwo_global.h
-rename cpp_projects
-shell sudo python setup.py
-mkdir mnemosyne
-rename run_krishna_test.sh
-shell vim
 search 
-search ranger
-search .confi
-search vimrc
-flat 1
-rename anaconda3
+q
+qa
+rename Robotics Engineer - Waymo.pdf
+rename Resume - Robotics Engineer, HMI.pdf
+rename Resume - Robotics Engineer, JPL (1).pdf
+rename Robotics Engineer - JPL.docx
+rename Robotics Engineer - JPL.pdf
+rename Cover Letter - Robotics Engineer, JPL.pdf
+rename Resume - SLAM, UW.pdf
+rename Resume - Software Engineer, Amazon Hardlines.pdf
+rename Cover Letter - Robotics Engineer, JPL (1).pdf
+rename Cover Leter - Robotics Engineer, Waymo.pdf
+rename Cover Leter -  Engineer, Waymo.pdf
+rename Cover Letter - Robotics Engineer, Waymo.pdf
+rename Resume - Robotics Engineer, Waymo.pdf
 shell 
-find 
-shell nvim token.cpp
-shell g++ main.cpp token.cpp -o main
-shell g++ - main.cpp token.cpp main.out
-shell g++ -o main.out main.cpp token.cpp
-shell mkdir rl_collision_avoidance
-search resea
-search .xr
-search config
-search .config
 
-rename music
-delete
+search vimrc
+open_with gimp
+rename linearization1.png
+mkdir bags
+mkdir gifs
+rename CADRL_plus_MPC_dynamic_cross1.bag
+rename CADRL_plus_MPC_dynamic_straight1.bag
+rename CADRL_plus_MPC_static1.bag
+rename Vanilla_CADRL_dynamic_cross1.bag
+rename Vanilla_CADRL_dynamic_straight1.bag
+rename Vanilla_CADRL_Static1.bag
+mkdir experiments
+mkdir pngs
+rename Vanilla_CADRL_static1.gif
+rename Vanilla_CADRL_static1.png
+rename Vanilla_CADRL_dynamic_straight1.png
+rename Resume - Robotics Engineer.pdf
+rename Cover Letter - Krishna Balasubramanian - RL Engineer, Amazon Scout.pdf
+shell file-roller 02_WikiRacer.zip
 open_with 
-open_with
+search programming
 open_with 2
-open_with h
-show_hidden
-shell sudo find . -type f -iname "*.sh" -exec chmod +x {} \; 
-;q
-shell sudo apt install ./slack-desktop-4.9.1-amd4.deb
+search
+rename A Computer Science Tapestry, 2nd Ed - Astrachan.pdf
+delete
+rename Resume - Krishna Balasubramanian - Robotics Engineer_old1.pdf
+rename Resume - Krishna Balasubramanian - Robotics Engineer_old.pdf
+rename Resume - Krishna Balasubramanian - Robotics Engineer_old2.pdf
+open_with 1
+open_with 0
+rename Resume - Krishna Balasubramanian - Robotics Engineer_old3.pdf
+rename Resume - Krishna Balasubramanian - Robotics Engineer.pdf

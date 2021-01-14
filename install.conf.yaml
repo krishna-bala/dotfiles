@@ -15,10 +15,12 @@
     ~/.config/polybar: config/polybar
     ~/.config/ranger: config/ranger
     ~/.config/sxhkd: config/sxhkd
+    ~/.inputrc: inputrc
     ~/.profile: profile
     ~/.tmux.conf: tmux.conf
     ~/.vim: vim
     ~/.vimrc: vimrc
+    ~/.Xresources: Xresources
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]

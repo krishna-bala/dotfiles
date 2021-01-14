@@ -3,16 +3,18 @@
 " Plugins
     call plug#begin('~/.config/nvim/plugged')    
     Plug 'arcticicestudio/nord-vim'
-    Plug 'vimwiki/vimwiki'
+	Plug 'doums/darcula'
+    "Plug 'vimwiki/vimwiki'
 	Plug 'lervag/vimtex'
-	Plug 'dylanaraps/wal.vim'
+	"Plug 'dylanaraps/wal.vim'
 	Plug '907th/vim-auto-save'
 	Plug 'francoiscabrol/ranger.vim'
 	Plug 'rbgrouleff/bclose.vim' 
 	call plug#end()
 
 " colors
-    colorscheme nord
+    colorscheme darcula
+	set termguicolors
 
 " Basics
     set nocompatible
@@ -47,8 +49,8 @@
     noremap <Up>		<NOP>
     noremap <Left>		<NOP>
     noremap <Right>		<NOP>
-    nnoremap tj			:tabnext<CR>
-	nnoremap tk			:tabprev<CR>
+    nnoremap tl			:tabnext<CR>
+	nnoremap th			:tabprev<CR>
 	nnoremap tn			:tabnew<CR>
 	au VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
     au VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
@@ -58,7 +60,7 @@
 
 " Shortcutting split navigation:
     nnoremap <leader>wv <C-w>v
-	nnoremap <leader>wh <C-w>s
+	nnoremap <leader>ws <C-w>s
 	map <C-h> <C-w>h
     map <C-k> <C-w>k
     map <C-j> <C-w>j
@@ -74,26 +76,26 @@
     xnoremap s "_s
 
 " set text width
-    au FileType text setlocal textwidth=78
+	au FileType text setlocal textwidth=78
 
 " disable swaps and backups
     set nobackup
     set noswapfile
     
 " indentation with 2 or 4 spaces
-    set noexpandtab       " use spaces instead of tabs
-    set autoindent      " autoindent based on line above
-    set smartindent     " smarter indent for C-like languages
-    set shiftwidth=4    " when using Shift + > or <
-    set softtabstop=4   " in insert mode
-    set tabstop=4       " set the space occupied by a regular tabset autoindent
-    set linebreak breakindent "break line at 'break' character and indent to line indent
+	"set noexpandtab     " use spaces instead of tabs
+	set autoindent      " autoindent based on line above
+	set smartindent     " smarter indent for C-like languages
+	set shiftwidth=4    " when using Shift + > or <
+	set softtabstop=4   " in insert mode
+	set tabstop=4       " set the space occupied by a regular tabset autoindent
+	set linebreak breakindent "break line at 'break' character and indent to line indent
 " allow mouse wheel movement
     set mouse=a
 
-" vimwiki: set syntax to markdown
-    let g:vimwiki_list = [{'path': '~/vimwiki', 'syntax': 'markdown', 'ext': '.md'}] 
-
+"" vimwiki: set syntax to markdown
+"    let g:vimwiki_list = [{'path': '~/vimwiki', 'syntax': 'markdown', 'ext': '.md'}] 
+"
 " netrw settings
 	let g:netrw_liststyle = 3
 	let g:netrw_banner = 0
@@ -113,30 +115,30 @@
 	endfunction
 
 " vimtex settings
-"	let g:vimtex_compiler_progname = 'nvr'
+	let g:vimtex_compiler_progname = 'nvr'
 	let g:tex_flavor='latex'
 	let g:vimtex_view_method='zathura'
 	let g:vimtex_quickfix_mode=0
 	set conceallevel=1
 	let g:tex_conceal='abdmg'
-"	let g:vimtex_compiler_latexmk = {
-"        \ 'background' : 1,
-"        \ 'build_dir' : '',
-"        \ 'callback' : 1,
-"        \ 'continuous' : 1,
-"        \ 'executable' : 'latexmk',
-"        \ 'hooks' : [],
-"        \ 'options' : [
-"        \   '-verbose',
-"        \   '-file-line-error',
-"        \   '-synctex=1',
-"        \   '-interaction=nonstopmode',
-"        \ ],
-"        \}
+	let g:vimtex_compiler_latexmk = {
+        \ 'background' : 1,
+        \ 'build_dir' : '',
+        \ 'callback' : 1,
+        \ 'continuous' : 1,
+        \ 'executable' : 'latexmk',
+        \ 'hooks' : [],
+        \ 'options' : [
+        \   '-verbose',
+        \   '-file-line-error',
+        \   '-synctex=1',
+        \   '-interaction=nonstopmode',
+        \ ],
+        \}
 
 " vim-auto-save for tex files only
-let g:auto_save = 0
-augroup ft_tex
-  au!
-  au FileType tex let b:auto_save = 1
-augroup END
+	let g:auto_save = 0
+	augroup ft_tex
+	  au!
+	  au FileType tex let b:auto_save = 1
+	augroup END

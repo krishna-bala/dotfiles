@@ -4,7 +4,11 @@
 
 # terminal emulator
 super + Return
-	urxvt
+	gnome-terminal
+
+# reset xkbmap
+super + alt + Return
+	setxkbmap -option caps:swapesxcape
 
 # window switcher
 alt + Tab
@@ -176,7 +180,8 @@ super + shift + {y,u,i,o}
 ##############################
 
 super + alt + ctrl + l
-	i3lock -i /home/krish/pictures/Wallpapers/el-capitan-i3lock.png
+	i3lock -i /home/krish/Pictures/Wallpapers/el-capitan-i3lock.png
 
 super + alt + ctrl + s
 	systemctl suspend
+

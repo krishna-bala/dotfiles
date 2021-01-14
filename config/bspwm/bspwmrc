@@ -5,27 +5,32 @@
 #################
 
 m=$(xrandr | grep " connected " | wc -l);
-sleep 1;
+sleep 2;
 
 lid=$(cat /proc/acpi/button/lid/LID/state | grep "state:    " | awk '{ print $2 }')
 
 
 if [ "$m" -eq "1" ]; then
-	xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
+	$HOME/.screenlayout/laptop.sh &
+	# xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
 elif [ "$m" -eq "3" ]; then
 	if [ "$lid" = "closed" ]; then
-		xrandr --output eDP-1-1 --off &
-		xrandr --output DP-1-2 --mode 1920x1080 --primary --rate 60 &
-		xrandr --output HDMI-1 --right-of DP-1-2 --mode 1920x1080 --rotate normal &
+		$HOME/.screenlayout/lid-closed-dual-monitors.sh &
+		# xrandr --output eDP-1-1 --off &
+		# xrandr --output DP-1-2 --mode 1920x1080 --primary --rate 60 &
+		# xrandr --output HDMI-1 --right-of DP-1-2 --mode 1920x1080 --rotate normal &
 	else
-		xrandr --output eDP-1-1 --mode 1920x1080 --primary &
-		xrandr --output DP-1-2 --mode 1920x1080 --above eDP-1-1 --rate 60 
-		xrandr --output HDMI-1 --right-of DP-1-2 --mode 1920x1080 --rotate normal &
+		$HOME/.screenlayout/lid-opened-dual-monitors.sh &
+		# xrandr --output eDP-1-1 --mode 1920x1080 --primary &
+		# sleep 1
+		# xrandr --output DP-1-2 --mode 1920x1080 --above eDP-1-1 --rate 60 
+		# xrandr --output HDMI-1 --right-of DP-1-2 --mode 1920x1080 --rotate normal &
 	fi
-	sleep .25
-	xrandr --output HDMI-1 --right-of DP-1-2 --rotate left --panning 1920x1080 &
+	# sleep 1 
+	# xrandr --output HDMI-1 --right-of DP-1-2 --rotate left #--panning 1920x1080 &
 else
-	xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
+	$HOME/.screenlayout/laptop.sh &
+	# xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
 fi
 
 ###################
@@ -42,9 +47,9 @@ elif [ "$m" -eq "3" ]; then
 		bspc monitor HDMI-1 -d 6 7 8 9 0 &
 		bspc monitor eDP-1-1 --remove &
 	else
-		bspc monitor eDP-1-1 -d 1 2 3  &
-		bspc monitor DP-1-2 -d 4 5 6 & 
-		bspc monitor HDMI-1 -d 7 8 9 &
+		bspc monitor DP-1-2 -d 1 2 3 4 5 & 
+		bspc monitor HDMI-1 -d 6 7 8 9 &
+		bspc monitor eDP-1-1 -d 0 &
 	fi
 else
   	bspc monitor eDP-1-1 -d 1 2 3 4 5 
@@ -58,10 +63,13 @@ sxhkd &										# hotkeys
 #picom --config ~/.config/picom/picom.ini &	# picom config
 xrdb $HOME/.Xresources &					# urxvt config
 $HOME/.config/polybar/launch.sh &			# launch polybar
-#wmname LG3D &								# for java apps	
+wmname LG3D &								# for java apps	
 udiskie &									# automount external hard drives
 nitrogen --restore &						# wallpaper
-gnome-keyring-daemon
+gnome-keyring-daemon &						# unlock when login (not working?)
+setxkbmap -option caps:swapescape &			# caps = esc, esc = caps
+#gtk-redshift &
+redshift -l geoclue2 -t 4000:2600 &			# f.lux equivalent, use long/lat
 
 
 #############################
@@ -91,13 +99,13 @@ bspc config urgent_border_color 	      "#dd2727"
 #xdo below -t $(xdo id -n root) $(xdo id -a polybar-main_eDP-1-1) & 
 #xdo below -t $(xdo id -n root) $(xdo id -a polybar-main_HDM-1) &
 
-bspc rule -a Gimp desktop='^8' state=floating follow=on
-bspc rule -a Chromium desktop='^2'
+# bspc rule -a Gimp desktop='^8' state=floating follow=on
+# bspc rule -a Chromium desktop='^2'
 bspc rule -a mplayer2 state=floating
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
 
-xset r rate 200 75 &						# set key repeat rate faster
+xset r rate 200 40 &						# set key repeat rate faster
 xsetroot -cursor_name left_ptr &			# cursor config
 
 exec ssh-agent	# start ssh-agent (not working?)
