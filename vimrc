@@ -2,14 +2,14 @@
 
 " Plugins
     call plug#begin('~/.config/nvim/plugged')    
-    Plug 'arcticicestudio/nord-vim'
+    "Plug 'arcticicestudio/nord-vim'
 	Plug 'doums/darcula'
     "Plug 'vimwiki/vimwiki'
 	Plug 'lervag/vimtex'
 	"Plug 'dylanaraps/wal.vim'
 	Plug '907th/vim-auto-save'
 	Plug 'francoiscabrol/ranger.vim'
-	Plug 'rbgrouleff/bclose.vim' 
+	"Plug 'rbgrouleff/bclose.vim' 
 	call plug#end()
 
 " colors
