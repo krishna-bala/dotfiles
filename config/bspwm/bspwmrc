@@ -15,7 +15,7 @@ if [ "$m" -eq "1" ]; then
 	# xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
 elif [ "$m" -eq "3" ]; then
 	if [ "$lid" = "closed" ]; then
-		$HOME/.screenlayout/lid-closed-dual-monitors.sh &
+		$HOME/.screenlayout/lid-closed-dual-monitors_right_portrait.sh &
 		# xrandr --output eDP-1-1 --off &
 		# xrandr --output DP-1-2 --mode 1920x1080 --primary --rate 60 &
 		# xrandr --output HDMI-1 --right-of DP-1-2 --mode 1920x1080 --rotate normal &
@@ -59,17 +59,19 @@ fi
 #### AUTOSTART ####
 ###################
 
-sxhkd &										# hotkeys
-#picom --config ~/.config/picom/picom.ini &	# picom config
-xrdb $HOME/.Xresources &					# urxvt config
-$HOME/.config/polybar/launch.sh &			# launch polybar
-wmname LG3D &								# for java apps	
-udiskie &									# automount external hard drives
-nitrogen --restore &						# wallpaper
-gnome-keyring-daemon &						# unlock when login (not working?)
-setxkbmap -option caps:swapescape &			# caps = esc, esc = caps
+sxhkd &											# hotkeys
+#picom --config ~/.config/picom/picom.ini &		# picom config
+xrdb $HOME/.Xresources &						# urxvt config
+$HOME/.config/polybar/launch.sh &				# launch polybar
+wmname LG3D &									# for java apps	
+udiskie &										# automount external hard drives
+nitrogen --restore &							# wallpaper
+gnome-keyring-daemon &							# unlock when login (not working?)
+setxkbmap -option caps:swapescape &				# caps = esc, esc = caps
 #gtk-redshift &
-redshift -l geoclue2 -t 4000:2600 &			# f.lux equivalent, use long/lat
+redshift -l geoclue2 -t 4000:2200 &				# f.lux equivalent, use long/lat
+# pulseaudio -k &
+# pulseaudio --start &							# Both needed for pairing bluetooth for some reason...
 
 
 #############################

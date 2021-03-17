@@ -1,6 +1,6 @@
 # My aliases:
 alias matlabroot='cd /usr/local/MATLAB/R2020b/bin'
-alias matlab='./matlab'
+alias matlab='tmux new -d -s matlab "/usr/local/MATLAB/R2020b/bin/matlab"'
 alias vim='nvim'
 alias soc-nav='cd /home/krish/scripts; ./google-soc-nav-folder.sh'
 alias unmount-wd='udiskie-umount /media/krish/WD'
@@ -9,4 +9,4 @@ alias keylight-on='sudo tee /sys/class/leds/asus::kbd_backlight/brightness <<< 3
 alias keylight-off='sudo tee /sys/class/leds/asus::kbd_backlight/brightness <<< 0'
 alias mthrbrn='ssh ugrads@10.158.54.112'
 alias charm='tmux new -d -s charm "charm"'
-# alias jupyter='jupyter-notebook'
+#alias jupyter-lab='tmux new -d -s jupyter-lab "jupyter-lab"'

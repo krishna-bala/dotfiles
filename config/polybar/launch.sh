@@ -19,6 +19,9 @@ if [ "$m" -eq "1" ]; then
 #elif [ "$m" -eq "2" ]; then
 #	polybar -c ~/.config/polybar/config.ini laptop &
 #	polybar -c ~/.config/polybar/config.ini monitor1 &
+elif [ "$m" -eq "2" ]; then
+	polybar -c ~/.config/polybar/config.ini laptop &
+	polybar -c ~/.config/polybar/config.ini monitor1 &
 elif [ "$m" -eq "3" ]; then
 	if [ "$lid" = "closed" ]; then
 		polybar -c ~/.config/polybar/config.ini monitor1 &

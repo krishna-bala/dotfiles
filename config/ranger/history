@@ -1,50 +1,50 @@
-search 
-q
-qa
-rename Robotics Engineer - Waymo.pdf
-rename Resume - Robotics Engineer, HMI.pdf
-rename Resume - Robotics Engineer, JPL (1).pdf
-rename Robotics Engineer - JPL.docx
-rename Robotics Engineer - JPL.pdf
-rename Cover Letter - Robotics Engineer, JPL.pdf
-rename Resume - SLAM, UW.pdf
-rename Resume - Software Engineer, Amazon Hardlines.pdf
-rename Cover Letter - Robotics Engineer, JPL (1).pdf
-rename Cover Leter - Robotics Engineer, Waymo.pdf
-rename Cover Leter -  Engineer, Waymo.pdf
-rename Cover Letter - Robotics Engineer, Waymo.pdf
-rename Resume - Robotics Engineer, Waymo.pdf
-shell 
-
-search vimrc
-open_with gimp
-rename linearization1.png
-mkdir bags
-mkdir gifs
-rename CADRL_plus_MPC_dynamic_cross1.bag
-rename CADRL_plus_MPC_dynamic_straight1.bag
-rename CADRL_plus_MPC_static1.bag
-rename Vanilla_CADRL_dynamic_cross1.bag
-rename Vanilla_CADRL_dynamic_straight1.bag
-rename Vanilla_CADRL_Static1.bag
-mkdir experiments
-mkdir pngs
-rename Vanilla_CADRL_static1.gif
-rename Vanilla_CADRL_static1.png
-rename Vanilla_CADRL_dynamic_straight1.png
-rename Resume - Robotics Engineer.pdf
-rename Cover Letter - Krishna Balasubramanian - RL Engineer, Amazon Scout.pdf
-shell file-roller 02_WikiRacer.zip
-open_with 
-search programming
-open_with 2
-search
-rename A Computer Science Tapestry, 2nd Ed - Astrachan.pdf
-delete
-rename Resume - Krishna Balasubramanian - Robotics Engineer_old1.pdf
-rename Resume - Krishna Balasubramanian - Robotics Engineer_old.pdf
-rename Resume - Krishna Balasubramanian - Robotics Engineer_old2.pdf
-open_with 1
+rename vanilla_CADRL_09
+rename vanilla_CADRL_10
+rename MPC_CADRL_01
+rename 1human_concurrent1
+rename 2human_concurrent1
+rename 3human_concurrent1
+rename 1human_concurrent
+rename 2human_concurrent
+rename 3human_concurrent
+rename TRIMMED_total_stats
+shell vim 1human_sequential_stats
+shell nvim 2human_sequential_stats
+shell nvim 2human_sequential_stats.txt
+shell nvim 2human_concurrent_stats.txt
+shell nvim 1human_concurrent_stats.txt
+shell nvim 3human_concurrent_stats.txt
+mkdir stats
+shell nvim 3human_sequential_stats.txt
+:q
+search .config
+search data
 open_with 0
-rename Resume - Krishna Balasubramanian - Robotics Engineer_old3.pdf
+search prob
+shell chmod -x Probabilistic\ Robotics\ \(2005\)\ -\ Sebastian\ Thrun\ et\ al..pdf
+shell tar -xzf lab_1.tar.gz
+mkdir cs478_labs
+rename lab1
+mkdir assessments
+mkdir torc_path_planning
+open_with 2
+open_with 1
+shell 
+rename deSilva_pySINDy.pdf
+
+shell chmod -x *.pdf
+shell chmod -x -R *.pdf
+q
+search brun
+shell mkdir c++
+rename Astrachan_-_Computer_Science_Tapestry_C+.pdf_
+rename Astrachan_-_Computer_Science_Tapestry_C++.pdf
+open_with 
+rename Stroustrup_-_Programming_Principles_and_Practice_Using_C++_-_2nd_Ed.pdf
+delete
+mkdir chap_2
+rename Resume - Krishna Balasubramanian - Robotics Engineer_v9.pdf
 rename Resume - Krishna Balasubramanian - Robotics Engineer.pdf
+l
+search tapest
+search tap

@@ -83,7 +83,7 @@
     set noswapfile
     
 " indentation with 2 or 4 spaces
-	"set noexpandtab     " use spaces instead of tabs
+	set noexpandtab     " use spaces instead of tabs
 	set autoindent      " autoindent based on line above
 	set smartindent     " smarter indent for C-like languages
 	set shiftwidth=4    " when using Shift + > or <
