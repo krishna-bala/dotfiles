@@ -45,7 +45,7 @@ elif [ "$m" -eq "3" ]; then
 	if [ "$lid" = "closed" ]; then
 		bspc monitor DP-1-2 -d 1 2 3 4 5 &
 		bspc monitor HDMI-1 -d 6 7 8 9 0 &
-		bspc monitor eDP-1-1 --remove &
+		bspc monitor eDP-1-1 --remove &A
 	else
 		bspc monitor DP-1-2 -d 1 2 3 4 5 & 
 		bspc monitor HDMI-1 -d 6 7 8 9 &
@@ -70,6 +70,13 @@ gnome-keyring-daemon &							# unlock when login (not working?)
 setxkbmap -option caps:swapescape &				# caps = esc, esc = caps
 #gtk-redshift &
 redshift -l geoclue2 -t 4000:2200 &				# f.lux equivalent, use long/lat
+
+# Disable touchpad if lid is closed.
+if [ "$m" -eq "3" ]; then
+	if [ "$lid" = "closed" ]; then
+		xinput disable $(xinput list | grep Touchpad | cut -f2 | cut -d= -f2)
+	fi
+fi
 # pulseaudio -k &
 # pulseaudio --start &							# Both needed for pairing bluetooth for some reason...
 

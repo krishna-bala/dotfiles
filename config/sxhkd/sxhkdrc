@@ -180,7 +180,7 @@ super + shift + {y,u,i,o}
 ##############################
 
 super + alt + ctrl + l
-	i3lock -i /home/krish/Pictures/Wallpapers/black.png
+	i3lock -i /home/krish/Pictures/Wallpapers/mountain-lake.png
 
 super + alt + ctrl + s
 	systemctl suspend

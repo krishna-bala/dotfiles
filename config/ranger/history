@@ -1,50 +1,50 @@
-rename vanilla_CADRL_09
-rename vanilla_CADRL_10
-rename MPC_CADRL_01
-rename 1human_concurrent1
-rename 2human_concurrent1
-rename 3human_concurrent1
-rename 1human_concurrent
-rename 2human_concurrent
-rename 3human_concurrent
-rename TRIMMED_total_stats
-shell vim 1human_sequential_stats
-shell nvim 2human_sequential_stats
-shell nvim 2human_sequential_stats.txt
-shell nvim 2human_concurrent_stats.txt
-shell nvim 1human_concurrent_stats.txt
-shell nvim 3human_concurrent_stats.txt
-mkdir stats
-shell nvim 3human_sequential_stats.txt
-:q
-search .config
-search data
-open_with 0
-search prob
-shell chmod -x Probabilistic\ Robotics\ \(2005\)\ -\ Sebastian\ Thrun\ et\ al..pdf
-shell tar -xzf lab_1.tar.gz
-mkdir cs478_labs
-rename lab1
-mkdir assessments
-mkdir torc_path_planning
-open_with 2
-open_with 1
-shell 
-rename deSilva_pySINDy.pdf
-
-shell chmod -x *.pdf
-shell chmod -x -R *.pdf
-q
-search brun
-shell mkdir c++
-rename Astrachan_-_Computer_Science_Tapestry_C+.pdf_
-rename Astrachan_-_Computer_Science_Tapestry_C++.pdf
+mkdir crazyflie_sim
+search mkdir docs
+shell mkdir docs
+search -
+search _
+rename me565-mechanical_engineering_analysis_iiudi
+search audit
+rename 01-notes.pdf
+rename 02-notes.pdf
+search 229
+mkdir section
+mkdir lecture
+mkdir slides
 open_with 
-rename Stroustrup_-_Programming_Principles_and_Practice_Using_C++_-_2nd_Ed.pdf
+search nor
+open_with 2
+search ros
+search 
+search tr
+shell file-roller search.zip
+mkdir figures
+q
+q!
+rename  Crassidis_Jenkins_-_Optimal_Estimation_of_Dynamic_Systems.pdf
+search linear
+search vectors
+search real mat
+search real_math
+search linear_control
+search linear_sys
+rename Russell_Norvig_-_Artificial_Intelligence_A_Modern_Approach_-_4th_Ed.pdf
+
+rename Erich Gamma, Richard HelmJohnson_Vlissides_-_Design_Patterns.pdf
+rename Gamma_Helm_Johnson_Vlissides_-_Design_Patterns.pdf
+mkdir lecture-notes
+mkdir my-notes
+mkdir torc-assessment
 delete
-mkdir chap_2
-rename Resume - Krishna Balasubramanian - Robotics Engineer_v9.pdf
-rename Resume - Krishna Balasubramanian - Robotics Engineer.pdf
-l
-search tapest
-search tap
+rename updated_policy_2021-04-08_-_simulation_linear_vel_obs.mp4
+rename updated_policy_-_static_obs.mp4
+rename 2021-04-08_-_simulation_linear_vel_obs.mp4
+rename 2021_04_08_-_static_obs.mp4
+rename 2021_04_08_-_simulation_static_obs.mp4
+rename Image from iOS (1).MOV
+rename 2021_04_08_-_real_linear_vel_obs.MOV
+rename 2021_04_08_-_real_static_obs.MOV
+open_with 0
+search solutions
+abort 
+rename brito-21_-_learning_subgoal_policy_for_MPC.pdf

@@ -1,0 +1,364 @@
+global !p
+
+def math():
+	return vim.eval('vimtex#syntax#in_mathzone()') == '1'
+
+def comment(): 
+	return vim.eval('vimtex#syntax#in_comment()') == '1'
+
+def env(name):
+	[x,y] = vim.eval("vimtex#env#is_inside('" + name + "')") 
+	return x != '0' and y != '0'
+
+endglobal
+
+################
+### Preamble ###
+################
+
+snippet template "Basic template" b
+\documentclass[a4paper]{article}
+\usepackage[margin=1in]{geometry}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\pdfsuppresswarningpagegroup=1
+
+\title{${1:Course Name}}
+\author{Krishna Balasubramanian}
+\date{`date +"%d %B %Y"`}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+	\begin{center}
+		\LARGE ${1:Course Name}
+	\end{center}
+	\begin{center}
+		\Large ${2:Lecture X}
+		\vspace{0.4cm}
+	\end{center}
+	$0
+\end{document}
+endsnippet
+
+#####################
+### General Latex ###
+#####################
+
+snippet beg "begin{} / end{}" bA
+\begin{$1}
+	$0
+\end{$1}
+endsnippet
+
+snippet sect "\section{}" bA
+\section{$1}$0
+endsnippet
+
+snippet subsect "\subsection{}" bA
+\subsection{$1}$0
+endsnippet
+
+snippet bd "\textbf{}" w
+\textbf{${1:${VISUAL}}}${0}
+endsnippet
+
+snippet it "\textbf{}" w
+\emph{${1:${VISUAL}}}${0}
+endsnippet
+
+snippet und "\textbf{}" w
+\underline{${1:${VISUAL}}}${0}
+endsnippet
+
+
+#############
+### Math ####
+#############
+
+snippet mk "Math" wA
+$${1:${VISUAL}}$`!p
+if t[2] and t[2][0] not in [',', '.', '?', '-', ' ', ')']:
+	snip.rv = ' '
+else:
+	snip.rv = ''
+`$2
+endsnippet
+
+snippet dm "Math" wA
+\[
+${1:${VISUAL}}
+\] $0
+endsnippet
+
+#######################
+### Math Formatting ###
+#######################
+
+context "math()"
+snippet tt "text " iA
+\text{${1:${VISUAL}}}$0
+endsnippet
+
+context "math()"
+snippet pmb "\pmb{}" w
+\pmb{${1:${VISUAL}}}${0}
+endsnippet
+
+####################
+### Math Symbols ###
+####################
+
+context "math()"
+snippet approx "approx" iA
+\approx$0
+endsnippet
+
+context "math()"
+snippet subset "approx" iA
+\approx$0
+endsnippet
+
+context "math()"
+snippet subset "subset" iA
+\subset$0
+endsnippet
+
+context "math()"
+snippet inn "in " iA
+\in$0
+endsnippet
+
+context "math()"
+snippet notin "not in " iA
+\not\in$0
+endsnippet
+
+context "math()"
+snippet xx "times" iA
+ \times $0
+endsnippet
+
+context "math()"
+snippet RR "real" iA
+\mathbb{R}$0 
+endsnippet
+
+context "math()"
+snippet bb "BlackBoard" i
+\mathbb{${1:${VISUAL}}}$0
+endsnippet
+
+context "math()"
+snippet cal "mathcal" i
+\mathcal{${1:${VISUAL}}}$0
+endsnippet
+
+context "math()"
+snippet Nn "cap" iA
+\cap$0
+endsnippet
+
+context "math()"
+snippet UU "cup" iA
+\cup$0
+endsnippet
+
+context "math()"
+snippet theta "theta" iA
+\theta${0}
+endsnippet
+
+context "math()"
+snippet phi "phi" iA
+\phi${0}
+endsnippet
+
+context "math()"
+snippet lambda "lambda" iA
+\lambda${0}
+endsnippet
+
+context "math()"
+snippet psi "psi" iA
+\psi${0}
+endsnippet
+
+context "math()"
+snippet alpha "alpha" iA
+\alpha${0}
+endsnippet
+
+context "math()"
+snippet partial "partial" iA
+\partial${0}
+endsnippet
+
+context "math()"
+snippet nabla "nabla" iA
+\nabla${0}
+endsnippet
+
+context "math()"
+snippet * "cdot" i
+\cdot${0}
+endsnippet
+
+context "math()"
+snippet (( "(" iA
+\left( ${0}
+endsnippet
+
+context "math()"
+snippet )) ")" iA
+ \right) ${0}
+endsnippet
+
+context "math()"
+snippet ... "..." iA
+\ldots$0
+endsnippet
+
+context "math()"
+snippet vd "vertical dots" i
+\vdots$0
+endsnippet
+
+context "math()"
+snippet dd "diagonal dots" i
+\ddots$0
+endsnippet
+
+context "math()"
+snippet vert "|" i
+\vert$0
+endsnippet
+
+snippet rowvec "row vector" i
+\text{---} \hspace{-0.3cm} & ${1:x}_${2:1} & \hspace{-0.3cm} \text{---}
+endsnippet
+
+context "math()"
+snippet --- "---" i
+\text{---} \hspace{-0.2cm}$0
+endsnippet
+
+#############################
+### Math Symol Modifiers ###
+#############################
+
+priority 10
+context "math()"
+snippet "bar" "bar" riA
+\overline{$1}$0
+endsnippet
+
+priority 100
+context "math()"
+snippet "([a-zA-Z])bar" "bar" riA
+\overline{`!p snip.rv=match.group(1)`}
+endsnippet
+
+priority 10
+context "math()"
+snippet dot "dot" iA
+\dot{$1}${0}
+endsnippet
+
+priority 10
+context "math()"
+snippet vec "vec" iw
+\vec{$1}${0}
+endsnippet
+
+priority 10
+context "math()"
+snippet tilde "tilde" iwA
+\tilde{${1:${VISUAL}}}${0}
+endsnippet
+
+
+######################
+### Math Operators ###
+######################
+
+context "math()"
+snippet ^^ "superscript" iA
+^{${1:2}}$0
+endsnippet
+
+context "math()"
+snippet __ "subscript" iA
+_{${1:1}}$0
+endsnippet
+
+context "math()"
+snippet _ "subscript" i
+_${1:1}$0
+endsnippet
+
+context "math()"
+snippet // "fraction" iA
+\frac{$1}{$2}$0
+endsnippet
+
+snippet / "fraction" i
+\frac{${VISUAL}}{$1}$0
+endsnippet
+
+############################
+### Math  Quick Equations ###
+############################
+
+snippet cvec "column vector" iA
+\begin{bmatrix} ${1:x}_${2:1}\\\\ \vdots\\\\ $1_${2:n} \end{bmatrix}
+endsnippet
+
+snippet rvec "row vector" iA
+
+\begin{bmatrix} 
+${1:x}_${2:1} \ldots $1_${2:n} 
+\end{bmatrix}
+endsnippet
+
+context "math()"
+snippet pmat "pmat" iA
+\begin{pmatrix} $1 \end{pmatrix} $0
+endsnippet
+
+context "math()"
+snippet bmat "bmat" iA
+\begin{bmatrix} $1 \end{bmatrix} $0
+endsnippet
+
+context "math()"
+snippet sum "sum" w
+\sum_{${1:i=1}}^{${2:\infty}} ${3:a_n z^n}
+endsnippet
+
+context "math()"
+snippet prodsum "product sum" w
+\prod_{${1:i=1}}^{${2:\infty}} ${3:a_n z^n}
+endsnippet
+
+context "math()"
+snippet fun "Small function" i
+$1: $2 &\mapsto $3
+endsnippet
+
+snippet bigfun "Big function" iA
+\begin{align*}
+	$1: $2 &\longrightarrow $3 \\\\
+	$4 &\longmapsto $1($4) = $0
+.\end{align*}
+endsnippet
