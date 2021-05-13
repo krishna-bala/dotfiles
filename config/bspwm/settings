@@ -1,0 +1,6 @@
+#!/bin/sh
+
+setxkbmap -option caps:swapescape &				# caps = esc, esc = caps
+# redshift -l geoclue2 -t 4000:2200 &				# f.lux equivalent, use long/lat
+xset r rate 200 40 &							# set key repeat rate faster
+xsetroot -cursor_name left_ptr &				# cursor config

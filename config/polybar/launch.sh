@@ -8,17 +8,14 @@ killall -q polybar
 # Wait until the processes have been shut down
 while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 
-# Launch bar1 and bar2
+# Get number of monitors and if lid is closed
 m=$(xrandr | grep " connected " | wc -l);
 sleep 0.25
 lid=$(cat /proc/acpi/button/lid/LID/state | grep "state:    " | awk '{ print $2 }')
 
-
+# Launch bars
 if [ "$m" -eq "1" ]; then
 	polybar -c ~/.config/polybar/config.ini laptop &
-#elif [ "$m" -eq "2" ]; then
-#	polybar -c ~/.config/polybar/config.ini laptop &
-#	polybar -c ~/.config/polybar/config.ini monitor1 &
 elif [ "$m" -eq "2" ]; then
 	polybar -c ~/.config/polybar/config.ini laptop &
 	polybar -c ~/.config/polybar/config.ini monitor1 &

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+m=$(xrandr | grep " connected " | wc -l);
+lid=$(cat /proc/acpi/button/lid/LID/state | grep "state:    " | awk '{ print $2 }')
+
+if [ "$lid" = "closed" ]; then
+	xinput disable $(xinput list | grep Touchpad | cut -f2 | cut -d= -f2)
+fi
+

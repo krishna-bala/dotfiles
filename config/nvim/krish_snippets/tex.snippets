@@ -81,6 +81,26 @@ snippet und "\textbf{}" w
 \underline{${1:${VISUAL}}}${0}
 endsnippet
 
+snippet itemize "begin{} / end{}" wA
+\begin{itemize}
+	$0
+\end{itemize}
+endsnippet
+
+snippet item "begin{item} / end{item}" w
+\item $0
+endsnippet
+
+snippet nl "begin{} / end{}" w
+\newline
+$0
+endsnippet
+
+snippet red "\textcolor{red}{...}" i
+\textcolor{red}{${1:${VISUAL}}}
+$0
+endsnippet
+
 
 #############
 ### Math ####
@@ -115,9 +135,24 @@ snippet pmb "\pmb{}" w
 \pmb{${1:${VISUAL}}}${0}
 endsnippet
 
+context "math()"
+snippet space "\hspace{0.1cm}" w
+\hspace{0.1cm} $0
+endsnippet
+
 ####################
 ### Math Symbols ###
 ####################
+
+context "math()"
+snippet iff "if and only if" w
+\iff$0
+endsnippet
+
+context "math()"
+snippet implies "implies" wA
+\implies$0
+endsnippet
 
 context "math()"
 snippet approx "approx" iA
@@ -125,18 +160,28 @@ snippet approx "approx" iA
 endsnippet
 
 context "math()"
-snippet subset "approx" iA
-\approx$0
+snippet subset "subset" iA
+\subset $0
 endsnippet
 
 context "math()"
-snippet subset "subset" iA
-\subset$0
+snippet subseteq "subset" iA
+\subseteq $0
 endsnippet
 
 context "math()"
 snippet inn "in " iA
 \in$0
+endsnippet
+
+context "math()"
+snippet exists "exists " iA
+\exists $0
+endsnippet
+
+context "math()"
+snippet forall "forall" iA
+\forall $0
 endsnippet
 
 context "math()"
@@ -152,6 +197,16 @@ endsnippet
 context "math()"
 snippet RR "real" iA
 \mathbb{R}$0 
+endsnippet
+
+context "math()"
+snippet ZZ "integers" iA
+\mathbb{Z}$0 
+endsnippet
+
+context "math()"
+snippet pm "plus minus" iA
+\pm$0 
 endsnippet
 
 context "math()"
@@ -175,8 +230,28 @@ snippet UU "cup" iA
 endsnippet
 
 context "math()"
+snippet inf "inf" i
+\infty${0}
+endsnippet
+
+context "math()"
 snippet theta "theta" iA
 \theta${0}
+endsnippet
+
+context "math()"
+snippet tan "tan" wA
+\tan${0}
+endsnippet
+
+context "math()"
+snippet sin "sin" wA
+\sin${0}
+endsnippet
+
+context "math()"
+snippet cos "cos" wA
+\cos${0}
 endsnippet
 
 context "math()"
@@ -195,8 +270,13 @@ snippet psi "psi" iA
 endsnippet
 
 context "math()"
+snippet omega "omega" iA
+\omega ${0}
+endsnippet
+
+context "math()"
 snippet alpha "alpha" iA
-\alpha${0}
+\alpha ${0}
 endsnippet
 
 context "math()"
@@ -244,8 +324,16 @@ snippet vert "|" i
 \vert$0
 endsnippet
 
+context "math()"
 snippet rowvec "row vector" i
-\text{---} \hspace{-0.3cm} & ${1:x}_${2:1} & \hspace{-0.3cm} \text{---}
+\text{---} \hspace{-0.3cm} & \tilde{${1:x}}_${2:1}^{T} & \hspace{-0.3cm} \text{---}
+endsnippet
+
+context "math()"
+snippet colvecs "matrix of col vectors" i
+\vert & & \vert \\\\
+$ {1:x}_${2:1} & \ldots & $1_${3:n} \\\\
+\vert & & \vert
 endsnippet
 
 context "math()"
@@ -288,6 +376,23 @@ snippet tilde "tilde" iwA
 endsnippet
 
 
+context "math()"
+snippet leq "<=" w
+\le ${0}
+endsnippet
+
+context "math()"
+snippet geq ">=" w
+\ge ${0}
+endsnippet
+
+context "math()"
+snippet neq ">=" w
+\neq ${0}
+endsnippet
+
+
+
 ######################
 ### Math Operators ###
 ######################
@@ -316,16 +421,21 @@ snippet / "fraction" i
 \frac{${VISUAL}}{$1}$0
 endsnippet
 
+snippet sqrt "sqrt" iA
+\sqrt{${1:${VISUAL}}}$0
+endsnippet
+
 ############################
 ### Math  Quick Equations ###
 ############################
 
+context "math()"
 snippet cvec "column vector" iA
-\begin{bmatrix} ${1:x}_${2:1}\\\\ \vdots\\\\ $1_${2:n} \end{bmatrix}
+\begin{bmatrix} ${1:x}_1 \\\\ \vdots\\\\ $1_n \end{bmatrix}
 endsnippet
 
+context "math()"
 snippet rvec "row vector" iA
-
 \begin{bmatrix} 
 ${1:x}_${2:1} \ldots $1_${2:n} 
 \end{bmatrix}
@@ -356,9 +466,56 @@ snippet fun "Small function" i
 $1: $2 &\mapsto $3
 endsnippet
 
+context "math()"
 snippet bigfun "Big function" iA
 \begin{align*}
 	$1: $2 &\longrightarrow $3 \\\\
 	$4 &\longmapsto $1($4) = $0
 .\end{align*}
+endsnippet
+
+context "math()"
+snippet rarr "right arrow" i
+\rightarrow $0
+endsnippet
+
+context "math()"
+snippet larr "long left arrow" i
+\Longleftarrow $0
+endsnippet
+
+context "math()"
+snippet rang "right angle" i
+\rangle $0
+endsnippet
+
+context "math()"
+snippet lang "left angle" i
+\langle $0
+endsnippet
+
+context "math()"
+snippet int "integral" w
+\int_{${1:-\infty}}^{${2:\infty}} ${3:${VISUAL}} $0
+endsnippet
+
+
+### FIGURES ###
+
+snippet fig "Figure environment" b
+\begin{figure}[${1:htpb}]
+	\centering
+	${2:\includegraphics[width=0.8\textwidth]{$3}}
+	\caption{${4:$3}}
+	\label{fig:${5:${3/\W+/-/g}}}
+\end{figure}
+endsnippet
+
+
+### BOX ### 
+snippet box "Box"
+`!p snip.rv = '┌' + '─' * (len(t[1]) + 2) + '┐'`
+│ $1 │
+`!p snip.rv = '└' + '─' * (len(t[1]) + 2) + '┘'`
+$0
 endsnippet

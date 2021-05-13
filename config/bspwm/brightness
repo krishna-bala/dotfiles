@@ -1,0 +1,28 @@
+#!/bin/sh
+
+m=$(xrandr | grep " connected " | wc -l);
+lid=$(cat /proc/acpi/button/lid/LID/state | grep "state:    " | awk '{ print $2 }')
+
+if [ "$m" -eq "1" ]; then
+	$HOME/.screenlayout/laptop.sh &
+	# xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
+elif [ "$m" -eq "3" ]; then
+	if [ "$lid" = "closed" ]; then
+		$HOME/.screenlayout/lid-closed-dual-monitors_right_portrait.sh &
+		# xrandr --output eDP-1-1 --off &
+		# xrandr --output DP-1-2 --mode 1920x1080 --primary --rate 60 &
+		# xrandr --output HDMI-1 --right-of DP-1-2 --mode 1920x1080 --rotate normal &
+	else
+		$HOME/.screenlayout/lid-opened-dual-monitors.sh &
+		# xrandr --output eDP-1-1 --mode 1920x1080 --primary &
+		# sleep 1
+		# xrandr --output DP-1-2 --mode 1920x1080 --above eDP-1-1 --rate 60 
+		# xrandr --output HDMI-1 --right-of DP-1-2 --mode 1920x1080 --rotate normal &
+	fi
+	# sleep 1 
+	# xrandr --output HDMI-1 --right-of DP-1-2 --rotate left #--panning 1920x1080 &
+else
+	$HOME/.screenlayout/laptop.sh &
+	# xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
+fi
+

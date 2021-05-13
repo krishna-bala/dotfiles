@@ -12,7 +12,7 @@
 	Plug '907th/vim-auto-save'
 	Plug 'francoiscabrol/ranger.vim'
 	Plug 'SirVer/ultisnips'
-	Plug 'honza/vim-snippets'
+	"Plug 'honza/vim-snippets'
     Plug 'arcticicestudio/nord-vim'
     "Plug 'vimwiki/vimwiki'
 	"Plug 'dylanaraps/wal.vim'
@@ -85,7 +85,10 @@
 	
 	" set text width
 	au FileType text setlocal textwidth=78
-
+	
+	" automatically save views and load views (for folding!)
+	autocmd BufWinLeave *.* mkview
+	autocmd BufWinEnter *.* silent loadview 
 
 """"""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""
@@ -225,7 +228,8 @@
 	" set runtimepath+=~/.config/nvim/plugged/
 	" set runtimepath+=~/.config/nvim/
 	"let g:UltiSnipsSnippetStorageDir=[$HOME.'/.config/nvim/krish_snippets/UltiSnips/']
-	let g:UltiSnipsSnippetDirectories=['krish_snippets', '/home/krish/.config/nvim/plugged/vim-snippets/UltiSnips/'] " , '/home/krish/.config/nvim/plugged/vim-snippets/snippets/']
+	" let g:UltiSnipsSnippetDirectories=['krish_snippets', '/home/krish/.config/nvim/plugged/vim-snippets/UltiSnips/'] " , '/home/krish/.config/nvim/plugged/vim-snippets/snippets/']
+	let g:UltiSnipsSnippetDirectories=['krish_snippets'] " , '/home/krish/.config/nvim/plugged/vim-snippets/snippets/']
 
 	" UltiSnips KeyMapping
 	noremap <leader>ue	:UltiSnipsEdit
