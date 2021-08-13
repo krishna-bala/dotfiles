@@ -7,19 +7,19 @@
 - link:
     ~/.dotfiles: ''
     ~/.bash_aliases: bash_aliases
-    ~/.bash_logout: bash_logout
-    ~/.bashrc: bashrc
-    ~/.condarc: condarc
-    ~/.config/bspwm: config/bspwm
-    ~/.config/nvim: config/nvim
-    ~/.config/polybar: config/polybar
-    ~/.config/ranger: config/ranger
-    ~/.config/sxhkd: config/sxhkd
+    # ~/.bash_logout: bash_logout
+    # ~/.bashrc: bashrc
+    # ~/.condarc: condarc
+    # ~/.config/bspwm: config/bspwm
+    # ~/.config/nvim: config/nvim
+    # ~/.config/polybar: config/polybar
+    # ~/.config/ranger: config/ranger
+    # ~/.config/sxhkd: config/sxhkd
     ~/.inputrc: inputrc
-    ~/.profile: profile
+    # ~/.profile: profile
     ~/.tmux.conf: tmux.conf
     ~/.vimrc: vimrc
-    ~/.Xresources: Xresources
+    # ~/.Xresources: Xresources
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
