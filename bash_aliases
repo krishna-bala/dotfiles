@@ -1,16 +1,3 @@
 # My aliases:
-alias matlabroot='cd /usr/local/MATLAB/R2020b/bin'
-alias matlab='tmux new -d -s matlab "/usr/local/MATLAB/R2020b/bin/matlab"'
 alias vim='nvim'
-alias soc-nav='cd /home/krish/scripts; ./google-soc-nav-folder.sh'
-alias unmount-wd='udiskie-umount /media/krish/WD'
-alias qt-creator='/home/krish/tools/Qt/Tools/QtCreator/bin/qtcreator'
-alias keylight-on='sudo tee /sys/class/leds/asus::kbd_backlight/brightness <<< 3'
-alias keylight-off='sudo tee /sys/class/leds/asus::kbd_backlight/brightness <<< 0'
-alias mthrbrn='ssh ugrads@10.158.54.112'
-alias charm='tmux new -d -s charm "charm"'
-alias clion='tmux new -d -s clion "~/tools/clion-2020.2.4/bin/clion.sh"'
-alias inkscape='tmux new -d -s inkscape "inkscape"'
-alias discord='tmux new -d -s discord "discord"'
-alias ssh-lab='ssh pathbot@10.19.190.233'
-#alias jupyter-lab='tmux new -d -s jupyter-lab "jupyter-lab"'
+

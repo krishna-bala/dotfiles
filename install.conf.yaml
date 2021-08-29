@@ -5,13 +5,13 @@
 - clean: ['~']
 
 - link:
-    ~/.dotfiles: ''
+    # ~/.dotfiles: ''
     ~/.bash_aliases: bash_aliases
     # ~/.bash_logout: bash_logout
     # ~/.bashrc: bashrc
     # ~/.condarc: condarc
     # ~/.config/bspwm: config/bspwm
-    # ~/.config/nvim: config/nvim
+    ~/.config/nvim: config/nvim
     # ~/.config/polybar: config/polybar
     # ~/.config/ranger: config/ranger
     # ~/.config/sxhkd: config/sxhkd
