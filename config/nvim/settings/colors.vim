@@ -4,7 +4,8 @@
 """"""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""
 
-colorscheme nightfox
+" colorscheme nightfox
+colorscheme OceanicNext
 set termguicolors
 
 
