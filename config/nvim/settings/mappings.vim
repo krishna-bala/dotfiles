@@ -58,10 +58,13 @@ nnoremap <leader>wL			<C-w>L
 "open window new tab
 nnoremap <leader>wT     <C-w>T
 " Window resize
-nnoremap <leader>wr			:vertical resize 
+nnoremap <leader>wvr		:vertical resize 
+nnoremap <leader>wr			:resize 
 nnoremap <leader>w.			<C-w>>
 nnoremap <leader>w,			<C-w><
 nnoremap <leader>w=			<C-w>=
+nnoremap <leader>w<     <C-w>-
+nnoremap <leader>w>     <C-w>+
 
 " Terminal
 nnoremap <leader>t<Space>		:terminal<CR>
