@@ -3,27 +3,46 @@
 m=$(xrandr | grep " connected " | wc -l);
 lid=$(cat /proc/acpi/button/lid/LID/state | grep "state:    " | awk '{ print $2 }')
 
+# Allow passing of dual monitor mode to script
+if [ $# -eq 0 ]; then
+	mode="dual_landscape"
+else
+	mode=$1
+fi
+
+
 
 if [ "$m" -eq "1" ]; then
+
 	$HOME/.screenlayout/laptop.sh &
-	# xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
+
 elif [ "$m" -eq "3" ]; then
+
 	if [ "$lid" = "closed" ]; then
-		$HOME/.screenlayout/lid-closed-dual-monitors_right_portrait.sh &
-		# xrandr --output eDP-1-1 --off &
-		# xrandr --output DP-1-2 --mode 1920x1080 --primary --rate 60 &
-		# xrandr --output HDMI-1 --right-of DP-1-2 --mode 1920x1080 --rotate normal &
+
+		if [ "$mode" = "dual_landscape" ]; then
+			$HOME/.screenlayout/lid-closed-dual-monitors.sh &
+		elif [ "$mode" = "right_portrait" ]; then
+			$HOME/.screenlayout/lid-closed-dual-monitors_right_portrait.sh &
+		else
+			$HOME/.screenlayout/lid-closed-dual-monitors_right_portrait.sh &
+		fi
+
 	else
 		$HOME/.screenlayout/lid-opened-dual-monitors.sh &
-		# xrandr --output eDP-1-1 --mode 1920x1080 --primary &
-		# sleep 1
-		# xrandr --output DP-1-2 --mode 1920x1080 --above eDP-1-1 --rate 60 
-		# xrandr --output HDMI-1 --right-of DP-1-2 --mode 1920x1080 --rotate normal &
 	fi
-	# sleep 1 
-	# xrandr --output HDMI-1 --right-of DP-1-2 --rotate left #--panning 1920x1080 &
+
+elif [ "$m" -eq "2" ]; then
+
+	if [ "$lid" = "closed" ]; then
+		$HOME/.screenlayout/lid-closed-single-monitor.sh &
+	else
+		$HOME/.screenlayout/lid-opened-single-monitor.sh &
+	fi
+
 else
+	# Unknown setup
 	$HOME/.screenlayout/laptop.sh &
-	# xrandr --output eDP-1-1 --mode 1920x1080 --primary --dpi 161 &
+
 fi
 

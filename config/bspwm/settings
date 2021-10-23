@@ -3,4 +3,18 @@
 setxkbmap -option caps:swapescape &				# caps = esc, esc = caps
 # redshift -l geoclue2 -t 4000:2200 &				# f.lux equivalent, use long/lat
 xset r rate 200 40 &							# set key repeat rate faster
+xset dpms 0 0 300 &								# blank screen after 300 secs
+
+m=$(xrandr | grep " connected " | wc -l);
+lid=$(cat /proc/acpi/button/lid/LID/state | grep "state:    " | awk '{ print $2 }')
+
+
+if [ "$m" -eq "1" ]; then
+	xautolock -time 30 -locker "systemctl suspend" &
+elif [ "$m" -eq "3" ]; then
+	if [ "$lid" -ne "closed" ]; then
+		xautolock -time 30 -locker "systemctl suspend" &
+	fi
+fi
+
 xsetroot -cursor_name left_ptr &				# cursor config

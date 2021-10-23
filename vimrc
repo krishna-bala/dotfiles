@@ -11,7 +11,7 @@
 	Plug 'lervag/vimtex'
 	Plug '907th/vim-auto-save'
 	Plug 'francoiscabrol/ranger.vim'
-	Plug 'SirVer/ultisnips'
+	"Plug 'SirVer/ultisnips'
 	"Plug 'honza/vim-snippets'
     Plug 'arcticicestudio/nord-vim'
     "Plug 'vimwiki/vimwiki'

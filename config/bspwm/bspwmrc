@@ -1,7 +1,8 @@
 #!/bin/sh
 
 
-$HOME/.config/bspwm/display &					# set xrandr for connected monitors
+#$HOME/.config/bspwm/display right_portrait &					# set xrandr for connected monitors (right_portrait mode)
+$HOME/.config/bspwm/display &					# set xrandr for connected monitors (dual_landscape mode)
 $HOME/.config/bspwm/monitors &					# update bspwm for monitor config
 $HOME/.config/bspwm/touchpad &					# disable touchpad if lid closed
 $HOME/.config/bspwm/settings &					# disable touchpad if lid closed
