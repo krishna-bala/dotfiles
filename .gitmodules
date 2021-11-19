@@ -2,20 +2,3 @@
 	path = dotbot
 	url = https://github.com/anishathalye/dotbot
 	ignore = dirty
-
-[submodule "config/nvim/plugged/darcula"]
-	path = config/nvim/plugged/darcula
-	url = git@github.com:doums/darcula.git
-
-[submodule "config/nvim/plugged/vimtex"]
-	path = config/nvim/plugged/vimtex
-	url = git@github.com:lervag/vimtex.git
-
-[submodule "config/nvim/plugged/vim-auto-save"]
-	path = config/nvim/plugged/vim-auto-save
-	url = git@github.com:907th/vim-auto-save.git
-
-[submodule "config/nvim/plugged/ranger.vim"]
-	path = config/nvim/plugged/ranger.vim
-	url = git@github.com:francoiscabrol/ranger.vim.git
-
