@@ -1,6 +1,6 @@
 #!/bin/sh
 
-setxkbmap -option caps:swapescape &				# caps = esc, esc = caps
+#setxkbmap -option caps:swapescape &				# caps = esc, esc = caps
 # redshift -l geoclue2 -t 4000:2200 &				# f.lux equivalent, use long/lat
 xset r rate 200 40 &							# set key repeat rate faster
 xset dpms 0 0 300 &								# blank screen after 300 secs

@@ -8,18 +8,24 @@ super + Return
 
 # reset xkbmap
 super + alt + Return
-	setxkbmap -option caps:swapesxcape
+	setxkbmap -option caps:swapescape
 
 # window switcher
 alt + Tab
 	rofi -show window
 
-# program launcher
+# desktop file application launcher
 super + @space
+	rofi -show drun
+
+# $PATH application launcher
+super + alt @space
 	rofi -show run
 
-super + alt + @space
-	rofi -dmenu
+# #dmenu mode
+# super + alt + @space
+# 	rofi -dmenu
+
 # make sxhkd reload its configuration files:
 super + Escape
 	pkill -USR1 -x sxhkd

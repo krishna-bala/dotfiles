@@ -27,4 +27,4 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 xset r rate 200 75
-setxkbmap -option caps:swapescape
+# setxkbmap -option caps:swapescape
