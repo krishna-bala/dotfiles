@@ -21,8 +21,8 @@
     ~/.inputrc: inputrc
     ~/.profile: profile
     ~/.tmux.conf: tmux.conf
-    ~/.tmux/tpm.conf: tmux.conf
-    ~/.tmux/settings.conf: tmux.conf
+    ~/.tmux/tpm.conf: tmux/tpm.conf
+    ~/.tmux/settings.conf: tmux/settings.conf
     ~/.vimrc: vimrc
     # ~/.Xresources: Xresources
 
