@@ -12,7 +12,12 @@ let g:airline_right_sep = ''
 
 " Switch to your current theme
 let g:airline_theme = 'onedark'
+" let g:airline_theme = 'minimalist'
 
+" remove utf-8
+let g:airline_section_y = ''
+"let g:airline_section_error = ''
+"let g:airline_section_gutter = ''
 " Always show tabs
 set showtabline=2
 

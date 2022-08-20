@@ -7,17 +7,22 @@
 - link:
     # ~/.dotfiles: ''
     ~/.bash_aliases: bash_aliases
+    ~/.bash_functions: bash_functions
     # ~/.bash_logout: bash_logout
-    # ~/.bashrc: bashrc
+    ~/.bashrc: bashrc
     # ~/.condarc: condarc
     # ~/.config/bspwm: config/bspwm
-    ~/.config/nvim: config/nvim
+    # ~/.config/nvim: config/nvim
+    ~/.config/nvim/init.vim: config/nvim/init.vim
+    ~/.config/nvim/settings: config/nvim/settings
     # ~/.config/polybar: config/polybar
     # ~/.config/ranger: config/ranger
     # ~/.config/sxhkd: config/sxhkd
     ~/.inputrc: inputrc
-    # ~/.profile: profile
+    ~/.profile: profile
     ~/.tmux.conf: tmux.conf
+    ~/.tmux/tpm.conf: tmux.conf
+    ~/.tmux/settings.conf: tmux.conf
     ~/.vimrc: vimrc
     # ~/.Xresources: Xresources
 

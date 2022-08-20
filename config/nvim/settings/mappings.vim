@@ -23,40 +23,77 @@ nnoremap <leader>tgf    <C-w>gf
 nnoremap <leader>td			:tabclose<CR>
 
 " Buffers
-nnoremap <leader>ls			:ls<CR>:buffer<Space>
-nnoremap <leader>lsd		:ls<CR>:bd<Space>
+nnoremap <leader>ls			    :ls<CR>:buffer<Space>
+nnoremap <leader>bd		      :ls<CR>:bd<Space>
 "cycle
 nnoremap <leader>bh			:bp<CR>
 nnoremap <leader>bl			:bn<CR>
-"close buffer
-nnoremap <leader>bd			:bd<CR>
 "expand current buff to full window
 nnoremap <leader>ba			:ba<CR>
+
+"""""""""""
+" Splits "
+"""""""""""
+
+"window splits
+nnoremap <localleader>vnH			:topleft    vnew<CR>
+nnoremap <localleader>vnL			:botright   vnew<CR>
+nnoremap <localleader>vnl			:rightbelow vnew<CR>
+nnoremap <localleader>vnh			:leftabove  vnew<CR>
+
+nnoremap <localleader>nK		  :topleft    new<CR>
+nnoremap <localleader>nJ			:botright   new<CR>
+nnoremap <localleader>nj			:rightbelow new<CR>
+nnoremap <localleader>nk			:leftabove  new<CR>
+
+"buffer splits
+nnoremap <leader>vnH			:topleft    vsplit<CR>
+nnoremap <leader>vnL			:botright   vsplit<CR>
+nnoremap <leader>vnl			:rightbelow vsplit<CR>
+nnoremap <leader>vnh			:leftabove  vsplit<CR>
+
+nnoremap <leader>nK		  :topleft    split<CR>
+nnoremap <leader>nJ			:botright   split<CR>
+nnoremap <leader>nj			:rightbelow split<CR>
+nnoremap <leader>nk			:leftabove  split<CR>
 
 """""""""""
 " Windows "
 """""""""""
 
-"window splits
-nnoremap <leader>wv			<C-w>v
-nnoremap <leader>ws			<C-w>s
-"move curosr 1 win [h,j,k,l]
+"Window navigation
 nnoremap <leader>wh			<C-w>h
 nnoremap <leader>wj			<C-w>j
 nnoremap <leader>wk			<C-w>k
 nnoremap <leader>wl			<C-w>l
+
+" Window navigation
+map <M-h> <C-w>h
+map <M-k> <C-w>k
+map <M-j> <C-w>j
+map <M-l> <C-w>l
+
 "delete window
 nnoremap <leader>wd			:close<CR>
+
 "make current window full screen (close others)
 nnoremap <leader>wo			<C-w>o
+
+"make current window full screen (close others)
+nnoremap <leader>wT			<C-w>T
+
+"rotate current focused window with closests window to the right
 nnoremap <leader>wx			<C-w>x
+nnoremap <leader>wR			<C-w>r
+
 "move window to full [width,height] on [left,bottom,top,right]
 nnoremap <leader>wH			<C-w>H
 nnoremap <leader>wJ			<C-w>J
 nnoremap <leader>wK			<C-w>K
 nnoremap <leader>wL			<C-w>L
+
 "open window new tab
-nnoremap <leader>wT     <C-w>T
+
 " Window resize
 nnoremap <leader>wvr		:vertical resize 
 nnoremap <leader>wr			:resize 
@@ -81,12 +118,6 @@ au VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
 " Splits open at bottom and right
 set splitright splitbelow 
 
-" Shortcutting split navigation:
-map <M-h> <C-w>h
-map <M-k> <C-w>k
-map <M-j> <C-w>j
-map <M-l> <C-w>l
-
 " stop c and s from yanking
 nnoremap c "_c
 xnoremap c "_c
@@ -104,3 +135,17 @@ nnoremap <leader>sv :source $MYVIMRC<CR>
 
 " nvim-treesitter apply folding for current window
 nnoremap <leader>nf :set foldmethod=expr<CR>:set foldexpr=nvim_treesitter#foldexpr()<CR>
+
+" allows * to highlight and search but not jump (preserves jump list)
+nnoremap * :keepjumps normal! mi*`i<CR>
+
+" load quickfix item into previously used window
+set switchbuf+=uselast
+
+" turn off nvim lsp diagnostics (helpful when using git difftool)
+nnoremap <leader>dh :lua vim.diagnostic.hide()<CR>
+
+nnoremap <leader>so :let &scrolloff=999-&scrolloff<CR>
+
+nnoremap <leader>y "+y
+vnoremap <leader>y "+y
