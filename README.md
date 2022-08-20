@@ -1,11 +1,11 @@
-# Install
+# dotfiles
 
-neovim
-tmux
-polybar
-ranger
-sxhkd
-conda
-git
-vim
+## Requirements
+- neovim (0.8.0+)
+- tmux
+- git
 
+If not using GDE:
+- bspwm
+- polybar
+- sxhkd
