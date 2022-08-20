@@ -9,3 +9,11 @@ If not using GDE:
 - bspwm
 - polybar
 - sxhkd
+
+# `Git` setup process
+
+# Neovim setup process
+
+# tmux setup process
+
+
