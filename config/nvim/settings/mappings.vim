@@ -17,8 +17,6 @@ nnoremap <leader>th			:tabprev<CR>
 "new tabs
 nnoremap <leader>tn			:tabnew<CR>
 nnoremap <leader>te			:tabedit<Space>
-"open new tab and edit file name under cursor
-nnoremap <leader>tgf    <C-w>gf
 "close tabs
 nnoremap <leader>td			:tabclose<CR>
 
