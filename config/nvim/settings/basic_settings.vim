@@ -62,3 +62,5 @@ set textwidth=78
 set conceallevel=1
 
 set scrolloff=0
+
+set switchbuf+=uselast

@@ -21,7 +21,7 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'hrsh7th/cmp-buffer'
   Plug 'hrsh7th/cmp-path'
   Plug 'hrsh7th/cmp-cmdline' 
-	Plug 'hrsh7th/nvim-cmp'
+  Plug 'hrsh7th/nvim-cmp'
   Plug 'hrsh7th/cmp-vsnip'
   Plug 'hrsh7th/vim-vsnip'
   Plug 'windwp/nvim-autopairs'
@@ -31,7 +31,7 @@ call plug#begin('~/.config/nvim/plugged')
   """"""""""""""""
   Plug 'joshdick/onedark.vim'
   Plug 'rmehri01/onenord.nvim'
-	"Plug 'EdenEast/nightfox.nvim'
+      " "Plug 'EdenEast/nightfox.nvim'
   "Plug 'mhartington/oceanic-next'
   "Plug 'haystackandroid/carbonized'
   "Plug 'romainl/Apprentice'
@@ -45,8 +45,8 @@ call plug#begin('~/.config/nvim/plugged')
   """""""""""""""""""""""""""""""""
   " Icons, Status Bars, Explorers "
   """""""""""""""""""""""""""""""""
-	"Plug 'vim-airline/vim-airline'
-	"Plug 'vim-airline/vim-airline-themes'
+      " "Plug 'vim-airline/vim-airline'
+      " "Plug 'vim-airline/vim-airline-themes'
   Plug 'nvim-lualine/lualine.nvim'
   Plug 'akinsho/bufferline.nvim'
   Plug 'kyazdani42/nvim-tree.lua'
@@ -68,7 +68,7 @@ call plug#begin('~/.config/nvim/plugged')
   """""""""""""
   " Utilities "
   """""""""""""
-	Plug 'mhinz/vim-signify'
+  Plug 'mhinz/vim-signify'
   Plug 'liuchengxu/vim-which-key'
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
   Plug 'junegunn/fzf.vim'
@@ -88,12 +88,19 @@ call plug#begin('~/.config/nvim/plugged')
   "Plug 'lervag/wiki.vim'
   "Plug 'lervag/wiki-ft.vim'
 
+  """"""""""""""""
+  " Experimental "
+  """"""""""""""""
+  Plug 'nvim-lua/plenary.nvim'
+  Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+
 call plug#end()
 
 " luafile   ~/.config/nvim/settings/plug-config/lua-server.lua
 luafile   ~/.config/nvim/settings/plug-config/treesitter.lua
 luafile   ~/.config/nvim/settings/plug-config/cmp-config.lua
-source    ~/.config/nvim/settings/plug-config/lspconfig.vim
+luafile   ~/.config/nvim/settings/plug-config/lspconfig.lua
+" source    ~/.config/nvim/settings/plug-config/lspconfig.vim
 source    ~/.config/nvim/settings/plug-config/vsnip.vim
 luafile   ~/.config/nvim/settings/plug-config/autopairs.lua
 source    ~/.config/nvim/settings/plug-config/nvim-tree.vim
