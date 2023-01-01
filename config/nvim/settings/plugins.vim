@@ -11,6 +11,7 @@ call plug#begin('~/.config/nvim/plugged')
   """""""""""""""""""""
 	Plug 'neovim/nvim-lspconfig'
  	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  
+  Plug 'nvim-treesitter/nvim-treesitter-textobjects'
   " We recommend updating the parsers on update
   "Plug 'kabouzeid/nvim-lspinstall'
  
@@ -29,8 +30,11 @@ call plug#begin('~/.config/nvim/plugged')
   """"""""""""""""
   " Color Themes "
   """"""""""""""""
-  Plug 'joshdick/onedark.vim'
+  " Plug 'joshdick/onedark.vim'
   Plug 'rmehri01/onenord.nvim'
+  " Plug 'rebelot/kanagawa.nvim'
+  " Plug 'monsonjeremy/onedark.nvim'
+  Plug 'navarasu/onedark.nvim'
       " "Plug 'EdenEast/nightfox.nvim'
   "Plug 'mhartington/oceanic-next'
   "Plug 'haystackandroid/carbonized'
@@ -76,6 +80,11 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'airblade/vim-rooter'
   Plug 'karb94/neoscroll.nvim'
   Plug 'APZelos/blamer.nvim'
+  Plug 'numToStr/Comment.nvim'
+  Plug 'tpope/vim-fugitive'
+  Plug 'tommcdo/vim-fubitive'
+  Plug 'jdhao/better-escape.vim'
+  " Plug 'wesleimp/stylua.nvim'
   " Plug 'mfussenegger/nvim-dap'
   "Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh' }
  
@@ -92,13 +101,14 @@ call plug#begin('~/.config/nvim/plugged')
   " Experimental "
   """"""""""""""""
   Plug 'nvim-lua/plenary.nvim'
-  Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+  " Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+  " Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
 call plug#end()
 
 " luafile   ~/.config/nvim/settings/plug-config/lua-server.lua
 luafile   ~/.config/nvim/settings/plug-config/treesitter.lua
-luafile   ~/.config/nvim/settings/plug-config/cmp-config.lua
+" luafile   ~/.config/nvim/settings/plug-config/cmp-config.lua
 luafile   ~/.config/nvim/settings/plug-config/lspconfig.lua
 " source    ~/.config/nvim/settings/plug-config/lspconfig.vim
 source    ~/.config/nvim/settings/plug-config/vsnip.vim
@@ -115,6 +125,9 @@ source    ~/.config/nvim/settings/plug-config/centerpad.vim
 " source    ~/.config/nvim/settings/plug-config/TrueZen.lua
 luafile   ~/.config/nvim/settings/plug-config/neoscroll.lua
 luafile   ~/.config/nvim/settings/plug-config/blamer.lua
+luafile   ~/.config/nvim/settings/plug-config/Comment.lua
+source    ~/.config/nvim/settings/plug-config/better-escape.vim
+" luafile   ~/.config/nvim/settings/plug-config/telescope.lua
 " luafile   ~/.config/nvim/settings/plug-config/nvim-dap.lua
 "luafile   ~/.config/nvim/settings/plug-config/zen-mode.lua
 "source  ~/.config/nvim/settings/plug-config/nightfox.vim

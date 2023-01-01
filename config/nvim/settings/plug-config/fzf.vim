@@ -1,17 +1,17 @@
-" nnoremap <localleader>f     :Files<CR>
-nnoremap <localleader>f     :Telescope find_files<CR>
-" nnoremap <localleader>g     :GFiles<CR>
-nnoremap <localleader>g     :Telescope git_files<CR>
-" nnoremap <localleader>m     :Maps<CR>
-nnoremap <localleader>m     :Telescope keymaps<CR>
-" nnoremap <leader>ls         :Buffers<CR>
-nnoremap <leader>ls         :Telescope buffers<CR>
+nnoremap <localleader>f     :Files<CR>
+" nnoremap <localleader>f     :Telescope find_files<CR>
+nnoremap <localleader>g     :GFiles<CR>
+" nnoremap <localleader>g     :Telescope git_files<CR>
+nnoremap <localleader>m     :Maps<CR>
+" nnoremap <localleader>m     :Telescope keymaps<CR>
+nnoremap <leader>ls         :Buffers<CR>
+" nnoremap <leader>ls         :Telescope buffers<CR>
 nnoremap <leader>bd         :BD<CR>
 nnoremap <localleader>w     :Windows<CR>
-" nnoremap <leader>rg         :Rg<CR>
-nnoremap <leader>rg         :Telescope live_grep<CR>
-" nnoremap <localleader>rg    :Rg!<CR>
-nnoremap <localleader>rg    :lua require('telescope.builtin').live_grep({layout_strategy='horizontal',layout_config={width=0.99, height=0.99, preview_width=0.5}})<CR>
+nnoremap <leader>rg         :Rg<CR>
+" nnoremap <leader>rg         :Telescope live_grep<CR>
+nnoremap <localleader>rg    :Rg!<CR>
+" nnoremap <localleader>rg    :lua require('telescope.builtin').live_grep({layout_strategy='horizontal',layout_config={width=0.99, height=0.99, preview_width=0.5}})<CR>
 nnoremap <localleader>bl    :BLines<CR>
 nnoremap <localleader>l     :Lines<CR>
 

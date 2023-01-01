@@ -106,10 +106,6 @@ nnoremap <leader>w>     <C-w>+
 " Terminal
 nnoremap <leader>t<Space>		:terminal<CR>
 tnoremap <leader><Esc>			<C-\><C-n>
-tnoremap <leader>ls					<C-\><C-n>:ls<CR>:buffer<Space>
-tnoremap <leader>bh					<C-\><C-n>:bp<CR>
-tnoremap <leader>bl					<C-\><C-n>:bn<CR>
-tnoremap <leader>bd					<C-\><C-n>:bd!<CR>
 
 " Esc
 au VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
@@ -118,7 +114,7 @@ au VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
 " Splits open at bottom and right
 set splitright splitbelow 
 
-" stop c and s from yanking
+" stop c, s, and x from yanking
 nnoremap c "_c
 xnoremap c "_c
 nnoremap s "_s
@@ -148,4 +144,7 @@ nnoremap <leader>dh :lua vim.diagnostic.hide()<CR>
 nnoremap <leader>so :let &scrolloff=999-&scrolloff<CR>
 
 nnoremap <leader>y "+y
+nnoremap <leader>v "+p
 vnoremap <leader>y "+y
+vnoremap <leader>v "+p
+tnoremap <localleader>v <C-\><C-N>"+pi

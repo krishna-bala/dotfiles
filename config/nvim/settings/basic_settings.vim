@@ -7,11 +7,10 @@
 set nocompatible
 filetype plugin indent on
 syntax on
-let mapleader = ";"
-let maplocalleader = ";;"
-" nnoremap <SPACE> <Nop>
-" let mapleader = " "
-" let maplocalleader = "  "
+nnoremap <SPACE> <Nop>
+let mapleader = "\<SPACE>"
+let maplocalleader = "\<SPACE>\<SPACE>"
+tnoremap <leader> <SPACE>
 
 set ignorecase	" Allow non-case-sensitive case when using only lowercase
 set smartcase

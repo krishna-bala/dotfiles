@@ -1,9 +1,8 @@
 " Settings from Chris@Machine
 
 " Map leader to which_key
-nnoremap <silent> <leader> :silent WhichKey ';'<CR>
-vnoremap <silent> <leader> :silent <c-u> :silent WhichKeyVisual ';'<CR>
-nnoremap <silent> <localleader> :silent WhichKey ';;'<CR>
+nnoremap <silent> <leader> :silent WhichKey '<SPACE>'<CR>
+vnoremap <silent> <leader> :silent <c-u> :silent WhichKeyVisual '<SPACE>'<CR>
 
 " Create map to add keys to
 let g:which_key_map =  {}
