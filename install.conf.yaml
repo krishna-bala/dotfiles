@@ -6,10 +6,10 @@
 
 - link:
     # ~/.dotfiles: ''
-    # ~/.bash_aliases: bash_aliases
-    # ~/.bash_functions: bash_functions
-    # ~/.bash_logout: bash_logout
-    # ~/.bashrc: bashrc
+    ~/.bash_aliases: bash_aliases
+    ~/.bash_functions: bash_functions
+    ~/.bash_logout: bash_logout
+    ~/.bashrc: bashrc
     # ~/.condarc: condarc
     # ~/.config/bspwm: config/bspwm
     # ~/.config/nvim: config/nvim
@@ -20,9 +20,9 @@
     # ~/.config/sxhkd: config/sxhkd
     # ~/.inputrc: inputrc
     # ~/.profile: profile
-    # ~/.tmux.conf: tmux.conf
-    # ~/.tmux/tpm.conf: tmux.conf
-    # ~/.tmux/settings.conf: tmux.conf
+    ~/.tmux.conf: tmux.conf
+    ~/.tmux/tpm.conf: tmux/tpm.conf
+    ~/.tmux/settings.conf: tmux/settings.conf
     # ~/.vimrc: vimrc
     # ~/.Xresources: Xresources
 
