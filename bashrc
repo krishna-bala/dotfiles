@@ -156,6 +156,8 @@ export CAMERA_SUITE_GENICAM_ROOT_V3_0=/usr/src/framos/camerasuite/GenICam
 export PATH="$PATH:$HOME/neovim/bin"
 
 # Pyenv Requirements
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
