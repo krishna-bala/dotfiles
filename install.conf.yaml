@@ -6,24 +6,25 @@
 
 - link:
     # ~/.dotfiles: ''
-    ~/.bash_aliases: bash_aliases
-    ~/.bash_functions: bash_functions
+    ~/.bash_aliases:          bash_aliases
+    ~/.bash_functions:        bash_functions
     # ~/.bash_logout: bash_logout
-    ~/.bashrc: bashrc
+    ~/.bashrc:                bashrc
     # ~/.condarc: condarc
     # ~/.config/bspwm: config/bspwm
     # ~/.config/nvim: config/nvim
-    ~/.config/nvim/init.vim: config/nvim/init.vim
-    ~/.config/nvim/settings: config/nvim/settings
+    ~/.config/nvim/init.vim:  config/nvim/init.vim
+    ~/.config/nvim/settings:  config/nvim/settings
     # ~/.config/polybar: config/polybar
     # ~/.config/ranger: config/ranger
     # ~/.config/sxhkd: config/sxhkd
-    ~/.git-prompt.sh: git-prompt.sh
+    ~/.git-prompt.sh:         git-prompt.sh
     # ~/.inputrc: inputrc
     # ~/.profile: profile
-    ~/.tmux.conf: tmux.conf
-    ~/.tmux/tpm.conf: tmux/tpm.conf
-    ~/.tmux/settings.conf: tmux/settings.conf
+    ~/.tmux.conf:             tmux.conf
+    ~/.tmux/tpm.conf:         tmux/tpm.conf
+    ~/.tmux/settings.conf:    tmux/settings.conf
+    # ~/.tmux/plugins:          tmux/plugins
     # ~/.vimrc: vimrc
     # ~/.Xresources: Xresources
 
