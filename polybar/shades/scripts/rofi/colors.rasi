@@ -1,0 +1,17 @@
+/* colors
+ *
+ * Mirrors the polybar palette (polybar/shades/colors.ini): bg/fg match
+ * background/foreground; bg1-4 are the opaque base shades. rasi uses
+ * #RRGGBBAA while colors.ini uses #AARRGGBB - convert when syncing.
+ * Edit both files together; nothing regenerates this one.
+ */
+
+* {
+  al:    #00000000;
+  bg:    #1F1F1FFF;
+  bg1:   #37474FFF;
+  bg2:   #455A64FF;
+  bg3:   #546E7AFF;
+  bg4:   #607D8BFF;
+  fg:    #FFFFFFFF;
+}
