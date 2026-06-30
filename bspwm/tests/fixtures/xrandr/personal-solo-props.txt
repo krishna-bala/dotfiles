@@ -1,0 +1,195 @@
+Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 16384 x 16384
+eDP-1 connected primary 1920x1080+0+0 (normal left inverted right x axis y axis) 336mm x 210mm
+	EDID: 
+		00ffffffffffff008d0ef9c4c2fa565e
+		4157afb021929e4e63886604c3562352
+		50ff564d53bac3878d0ef9c4c2fa565e
+		4157afb021929e4e63886604c3562352
+		50ff564d53bac3878d0ef9c4c2fa565e
+		4157afb021929e4e63886604c3562352
+		50ff564d53bac3878d0ef9c4c2fa565e
+		4157afb021929e4e63886604c3562352
+	vrr_capable: 0 
+		range: (0, 1)
+	Colorspace: Default 
+		supported: Default, BT709_YCC, XVYCC_601, XVYCC_709, SYCC_601, opYCC_601, opRGB, BT2020_CYCC, BT2020_RGB, BT2020_YCC, DCI-P3_RGB_D65, RGB_WIDE_FIXED, RGB_WIDE_FLOAT, BT601_YCC
+	max bpc: 12 
+		range: (6, 12)
+	Broadcast RGB: Automatic 
+		supported: Automatic, Full, Limited 16:235
+	panel orientation: Normal 
+		supported: Normal, Upside Down, Left Side Up, Right Side Up
+	scaling mode: Full aspect 
+		supported: Full, Center, Full aspect
+	link-status: Good 
+		supported: Good, Bad
+	CTM: 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 
+		0 1 
+	CONNECTOR_ID: 236 
+		supported: 236
+	non-desktop: 0 
+		range: (0, 1)
+   1920x1200     59.95 +  47.96  
+   1920x1080     59.95* 
+   1600x1200     59.95  
+   1680x1050     59.95  
+   1400x1050     59.95  
+   1600x900      59.95  
+   1280x1024     59.95  
+   1400x900      59.95  
+   1280x960      59.95  
+   1440x810      59.95  
+   1368x768      59.95  
+   1280x800      59.95  
+   1280x720      59.95  
+   1024x768      59.95  
+   960x720       59.95  
+   928x696       59.95  
+   896x672       59.95  
+   1024x576      59.95  
+   960x600       59.95  
+   960x540       59.95  
+   800x600       59.95  
+   840x525       59.95  
+   864x486       59.95  
+   700x525       59.95  
+   800x450       59.95  
+   640x512       59.95  
+   700x450       59.95  
+   640x480       59.95  
+   720x405       59.95  
+   684x384       59.95  
+   640x360       59.95  
+   512x384       59.95  
+   512x288       59.95  
+   480x270       59.95  
+   400x300       59.95  
+   432x243       59.95  
+   320x240       59.95  
+   360x202       59.95  
+   320x180       59.95  
+DP-1 disconnected (normal left inverted right x axis y axis)
+	HDCP Content Type: HDCP Type0 
+		supported: HDCP Type0, HDCP Type1
+	Content Protection: Undesired 
+		supported: Undesired, Desired, Enabled
+	vrr_capable: 0 
+		range: (0, 1)
+	Colorspace: Default 
+		supported: Default, BT709_YCC, XVYCC_601, XVYCC_709, SYCC_601, opYCC_601, opRGB, BT2020_CYCC, BT2020_RGB, BT2020_YCC, DCI-P3_RGB_D65, RGB_WIDE_FIXED, RGB_WIDE_FLOAT, BT601_YCC
+	max bpc: 12 
+		range: (6, 12)
+	Broadcast RGB: Automatic 
+		supported: Automatic, Full, Limited 16:235
+	audio: auto 
+		supported: force-dvi, off, auto, on
+	subconnector: Unknown 
+		supported: Unknown, VGA, DVI-D, HDMI, DP, Wireless, Native
+	link-status: Good 
+		supported: Good, Bad
+	CTM: 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 
+		0 1 
+	CONNECTOR_ID: 245 
+		supported: 245
+	non-desktop: 0 
+		range: (0, 1)
+HDMI-1 disconnected (normal left inverted right x axis y axis)
+	HDCP Content Type: HDCP Type0 
+		supported: HDCP Type0, HDCP Type1
+	Content Protection: Undesired 
+		supported: Undesired, Desired, Enabled
+	max bpc: 12 
+		range: (8, 12)
+	content type: No Data 
+		supported: No Data, Graphics, Photo, Cinema, Game
+	Colorspace: Default 
+		supported: Default, SMPTE_170M_YCC, BT709_YCC, XVYCC_601, XVYCC_709, SYCC_601, opYCC_601, opRGB, BT2020_CYCC, BT2020_RGB, BT2020_YCC, DCI-P3_RGB_D65, DCI-P3_RGB_Theater
+	aspect ratio: Automatic 
+		supported: Automatic, 4:3, 16:9
+	Broadcast RGB: Automatic 
+		supported: Automatic, Full, Limited 16:235
+	audio: auto 
+		supported: force-dvi, off, auto, on
+	link-status: Good 
+		supported: Good, Bad
+	CTM: 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 
+		0 1 
+	CONNECTOR_ID: 257 
+		supported: 257
+	non-desktop: 0 
+		range: (0, 1)
+DP-2 disconnected (normal left inverted right x axis y axis)
+	HDCP Content Type: HDCP Type0 
+		supported: HDCP Type0, HDCP Type1
+	Content Protection: Undesired 
+		supported: Undesired, Desired, Enabled
+	vrr_capable: 0 
+		range: (0, 1)
+	Colorspace: Default 
+		supported: Default, BT709_YCC, XVYCC_601, XVYCC_709, SYCC_601, opYCC_601, opRGB, BT2020_CYCC, BT2020_RGB, BT2020_YCC, DCI-P3_RGB_D65, RGB_WIDE_FIXED, RGB_WIDE_FLOAT, BT601_YCC
+	max bpc: 12 
+		range: (6, 12)
+	Broadcast RGB: Automatic 
+		supported: Automatic, Full, Limited 16:235
+	audio: auto 
+		supported: force-dvi, off, auto, on
+	subconnector: Unknown 
+		supported: Unknown, VGA, DVI-D, HDMI, DP, Wireless, Native
+	link-status: Good 
+		supported: Good, Bad
+	CTM: 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 
+		0 1 
+	CONNECTOR_ID: 263 
+		supported: 263
+	non-desktop: 0 
+		range: (0, 1)
+DP-3 disconnected (normal left inverted right x axis y axis)
+	HDCP Content Type: HDCP Type0 
+		supported: HDCP Type0, HDCP Type1
+	Content Protection: Undesired 
+		supported: Undesired, Desired, Enabled
+	vrr_capable: 0 
+		range: (0, 1)
+	Colorspace: Default 
+		supported: Default, BT709_YCC, XVYCC_601, XVYCC_709, SYCC_601, opYCC_601, opRGB, BT2020_CYCC, BT2020_RGB, BT2020_YCC, DCI-P3_RGB_D65, RGB_WIDE_FIXED, RGB_WIDE_FLOAT, BT601_YCC
+	max bpc: 12 
+		range: (6, 12)
+	Broadcast RGB: Automatic 
+		supported: Automatic, Full, Limited 16:235
+	audio: auto 
+		supported: force-dvi, off, auto, on
+	subconnector: Unknown 
+		supported: Unknown, VGA, DVI-D, HDMI, DP, Wireless, Native
+	link-status: Good 
+		supported: Good, Bad
+	CTM: 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 
+		0 1 
+	CONNECTOR_ID: 272 
+		supported: 272
+	non-desktop: 0 
+		range: (0, 1)
+DP-4 disconnected (normal left inverted right x axis y axis)
+	HDCP Content Type: HDCP Type0 
+		supported: HDCP Type0, HDCP Type1
+	Content Protection: Undesired 
+		supported: Undesired, Desired, Enabled
+	vrr_capable: 0 
+		range: (0, 1)
+	Colorspace: Default 
+		supported: Default, BT709_YCC, XVYCC_601, XVYCC_709, SYCC_601, opYCC_601, opRGB, BT2020_CYCC, BT2020_RGB, BT2020_YCC, DCI-P3_RGB_D65, RGB_WIDE_FIXED, RGB_WIDE_FLOAT, BT601_YCC
+	max bpc: 12 
+		range: (6, 12)
+	Broadcast RGB: Automatic 
+		supported: Automatic, Full, Limited 16:235
+	audio: auto 
+		supported: force-dvi, off, auto, on
+	subconnector: Unknown 
+		supported: Unknown, VGA, DVI-D, HDMI, DP, Wireless, Native
+	link-status: Good 
+		supported: Good, Bad
+	CTM: 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 
+		0 1 
+	CONNECTOR_ID: 281 
+		supported: 281
+	non-desktop: 0 
+		range: (0, 1)

@@ -1,0 +1,88 @@
+name: work-office-2
+description: Work laptop with dual 1080p externals (ViewSonic upper-left, HP upper-right, laptop below center)
+
+# Detection rules - how to identify this configuration
+detection:
+  # Laptop display (active, centered below the two upper monitors)
+  laptop:
+    output: eDP-1-1
+    edid: 88bc0b497d91a0d4  # sha256(full EDID hex)[:16] -- see bspwm/lib/edid.py
+    alias: laptop
+
+  # External monitors via Anker PowerExpand USB-C → 2x HDMI dongle
+  monitors:
+    # HP 24mh — upper right
+    - output: DP-0.1
+      edid: 51017c7b74d014dd
+      alias: upper_right
+
+    # ViewSonic VG2448 — upper left
+    - output: DP-0.2
+      edid: f4baae2572c9d4f8
+      alias: upper_left
+
+# Physical display configuration (xrandr)
+display:
+  # ViewSonic VG2448 — upper-left landscape
+  upper_left:
+    enabled: true
+    resolution: "1920x1080"
+    position: "0x0"
+    rotation: normal
+    primary: false
+
+  # HP 24mh — upper-right landscape
+  upper_right:
+    enabled: true
+    resolution: "1920x1080"
+    position: "1920x0"
+    rotation: normal
+    primary: false
+
+  # Laptop — centered below the two upper monitors, primary
+  # Upper row total width = 3840, laptop width = 1920, so x = (3840-1920)/2 = 960
+  # Upper row height = 1080, so y = 1080
+  laptop:
+    enabled: true
+    resolution: "1920x1080"
+    position: "960x1080"
+    rotation: normal
+    primary: true
+
+# Window manager configuration (BSPWM)
+window_manager:
+  # Monitor order: primary first, then upper row left-to-right (30 workspaces total)
+  monitor_order: [laptop, upper_left, upper_right]
+
+  # Workspace distribution
+  workspaces:
+    laptop: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    upper_left: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    upper_right: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+
+
+# UI configuration (polybar)
+ui:
+  bars:
+    - monitor: laptop
+      orientation: landscape
+      modules:
+        left: launcher workspaces
+        center: date time
+        right: network battery alsa tray
+
+    - monitor: upper_left
+      orientation: landscape
+      font_size: 12
+      modules:
+        left: launcher workspaces
+        center: date
+        right: time
+
+    - monitor: upper_right
+      orientation: landscape
+      font_size: 12
+      modules:
+        left: launcher workspaces
+        center: date
+        right: time

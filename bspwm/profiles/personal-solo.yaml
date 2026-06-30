@@ -1,0 +1,43 @@
+name: personal-solo
+description: Personal laptop with built-in display only
+
+# Detection rules - how to identify this configuration
+detection:
+  # Laptop display (matches eDP output)
+  laptop:
+    output: eDP-1
+    alias: laptop
+    edid: "076ca4d7e755d5ea"  # sha256(full EDID hex)[:16] -- see bspwm/lib/edid.py
+
+  # No external monitors required for this profile
+  monitors: []
+
+# Physical display configuration (xrandr)
+display:
+  laptop:
+    enabled: true
+    resolution: "1920x1200"
+    position: "0x0"
+    rotation: normal
+    scale: "1x1"
+    primary: true
+
+# Window manager configuration (BSPWM)
+window_manager:
+  # Single monitor, so only laptop in the order
+  monitor_order: [laptop]
+
+  # All 10 workspaces on laptop display
+  workspaces:
+    laptop: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+
+# UI configuration (polybar)
+ui:
+  bars:
+    - monitor: laptop
+      orientation: landscape
+      modules:
+        left: launcher workspaces
+        center: date
+        right: network battery backlight alsa tray time

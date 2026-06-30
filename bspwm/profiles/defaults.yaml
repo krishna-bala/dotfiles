@@ -1,0 +1,18 @@
+# Shared defaults merged under every profile at load time (deep merge,
+# profile values win). A profile only specifies what differs from here.
+# This file is not a profile; list/match skip it.
+#
+# focused_border_color also appears as the picom shadow color
+# (picom.conf shadow-color) and the lockscreen background
+# (bin/lockscreen uses normal_border_color) - keep them in sync.
+
+window_manager:
+  settings:
+    border_width: 7
+    window_gap: 15
+    focused_border_color: "#629dc8"
+    normal_border_color: "#1f2339"
+
+ui:
+  # Bars without an explicit font_size inherit this
+  font_size: 16
