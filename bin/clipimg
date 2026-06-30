@@ -1,0 +1,21 @@
+#!/bin/bash
+# Pull an image from the host kitty terminal's clipboard into a local file.
+# Requires: invoked inside a kitty `kitten ssh` session on a host running kitty
+# with `allow_remote_control yes`.
+set -euo pipefail
+
+dest="${1:-/tmp/clipimg-$(date +%Y%m%d-%H%M%S).png}"
+case "$dest" in
+  /*|./*|../*) ;;
+  *) dest="/tmp/$dest" ;;
+esac
+
+kitten clipboard -g "$dest" 2>/dev/null || { echo "clipimg: kitten clipboard failed" >&2; exit 1; }
+
+if [ ! -s "$dest" ]; then
+  rm -f "$dest"
+  echo "clipimg: no image on host clipboard (empty result)" >&2
+  exit 1
+fi
+
+echo "$dest"
