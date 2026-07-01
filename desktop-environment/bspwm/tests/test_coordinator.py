@@ -1,5 +1,8 @@
 """Tests for coordinator service."""
 
+import re
+import shutil
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -66,12 +69,34 @@ class TestCoordinator(unittest.TestCase):
         machines (eDP-1 vs eDP-1-1), matching profile selection behavior."""
         props = self.personal_solo_props.replace("eDP-1", "eDP-1-1")
         display_service = DisplayService(executor=MockXrandrExecutor(props))
-        coordinator = MonitorManagerCoordinator(
-            display_service=display_service,
-            profile_service=ProfileService(Path(__file__).parent.parent / "profiles"),
-        )
 
-        resolved = coordinator.resolve_profile("personal-solo")
+        # The tracked profiles pin real hardware EDID hashes, which the
+        # fixture's synthetic EDID can never match. Re-pin a copy of the
+        # profile to the fixture's hash so resolution must go through the
+        # EDID map; the output-name fallback (eDP-1) cannot succeed after
+        # the rename above.
+        fixture_edid = next(
+            m.edid for m in display_service.detect_monitors() if m.output == "eDP-1-1"
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            profiles_dir = Path(tmp)
+            for src in (Path(__file__).parent.parent / "profiles").glob("*.yaml"):
+                shutil.copy(src, profiles_dir)
+            solo = profiles_dir / "personal-solo.yaml"
+            solo.write_text(
+                re.sub(
+                    r'edid: "[0-9a-f]+"',
+                    f'edid: "{fixture_edid}"',
+                    solo.read_text(),
+                    count=1,
+                )
+            )
+            coordinator = MonitorManagerCoordinator(
+                display_service=display_service,
+                profile_service=ProfileService(profiles_dir),
+            )
+
+            resolved = coordinator.resolve_profile("personal-solo")
 
         self.assertEqual(resolved.alias_to_output["laptop"], "eDP-1-1")
 
