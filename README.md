@@ -1,4 +1,4 @@
-# public-dotfiles
+# dotfiles
 
 Consolidated personal dotfiles: a shell/terminal/dev foundation plus a
 bspwm-based X11 desktop. This repo merges two formerly-separate public
@@ -47,8 +47,8 @@ Shared:
 ## Install
 
 ```sh
-git clone --recurse-submodules https://github.com/krishna-bala/public-dotfiles
-cd public-dotfiles
+git clone --recurse-submodules https://github.com/krishna-bala/dotfiles
+cd dotfiles
 ./provision.sh   # installs pinned CLI tooling + X11/WM packages
 ./install        # symlinks everything into place via dotbot
 ```

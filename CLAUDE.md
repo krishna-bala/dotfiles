@@ -4,7 +4,7 @@ Guidance for working on this repository.
 
 ## What this repo is
 
-`public-dotfiles` consolidates two formerly-separate public dotfiles repos,
+`dotfiles` consolidates two formerly-separate public dotfiles repos,
 `shell-env` and `desktop-environment`, into one. Full commit history from
 both is preserved (merged via `git subtree`).
 
