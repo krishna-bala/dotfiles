@@ -44,10 +44,13 @@ with this file (guidance for editing this repo).
 
 ## Supply-chain / version-pinning policy
 
-Both provisioning scripts pin every tool to a specific version (no
-fetch-latest). Bumping a pin is a deliberate, reviewed change: update the
-version variable, review the upstream diff, then re-run the relevant
-`provision*.sh`.
+Every tool fetched from an upstream release — nvm, uv, glab, lazygit,
+starship, fzf — is pinned to a specific version (no fetch-latest). Bumping a
+pin is a deliberate, reviewed change: update the version variable, review the
+upstream diff, then re-run the relevant `provision*.sh`. The exceptions are
+tools taken from distro apt repos (lsd, fd, ripgrep, plus the X11/WM
+packages) and node, which tracks the current LTS — these follow whatever the
+package source provides.
 
 ## Commits
 
