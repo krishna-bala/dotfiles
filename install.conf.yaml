@@ -3,6 +3,7 @@
       relink: true
 
 - link:
+    # --- shell/terminal/dev foundation (bash/, git/, tmux/, kitty/, starship/, claude/) ---
     ~/.bash_aliases:
       force: true
       path: bash/bash_aliases
@@ -37,6 +38,7 @@
       path: claude/status-line.sh
       create: true
       force: true
+    # --- desktop-environment (bspwm/sxhkd/polybar/picom/dunst stack + standalone leaf configs) ---
     ~/.config/bspwm:
       path: desktop-environment/bspwm
       force: true
@@ -78,6 +80,7 @@
         git submodule update --init --recursive,
         Installing/updating submodules,
       ]
+    # --- desktop-environment-only steps ---
     - command: "[ ! -f ~/.config/redshift.conf ] && mkdir -p ~/.config && cp redshift.conf ~/.config/redshift.conf || true"
       description: Copying redshift.conf if needed
       quiet: true
