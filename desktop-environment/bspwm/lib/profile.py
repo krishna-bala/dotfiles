@@ -106,7 +106,9 @@ def _deep_merge(base: dict, override: dict) -> dict:
 class ProfileService:
     """Service for profile loading, validation, and matching."""
 
-    DEFAULT_PROFILES_DIR = Path.home() / ".dotfiles/bspwm/profiles"
+    # Derived from this file's location (lib/profile.py -> ../profiles) so it
+    # tracks the repo wherever it lives, rather than a hard-coded ~/.dotfiles path.
+    DEFAULT_PROFILES_DIR = Path(__file__).resolve().parent.parent / "profiles"
 
     # Shared defaults merged under every profile at load time; profiles
     # only specify what differs. Not a profile itself.
@@ -116,7 +118,7 @@ class ProfileService:
         """Initialize profile service.
 
         Args:
-            profiles_dir: Directory containing YAML profiles (default: ~/.dotfiles/bspwm/profiles)
+            profiles_dir: Directory containing YAML profiles (default: the repo's bspwm/profiles)
         """
         self.profiles_dir = Path(profiles_dir or self.DEFAULT_PROFILES_DIR)
         self._defaults: Optional[dict] = None

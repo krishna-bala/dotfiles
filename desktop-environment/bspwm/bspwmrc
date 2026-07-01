@@ -8,7 +8,10 @@
 # 4. Launch background apps
 # 5. Start sxhkd LAST (ensures all key grabs succeed)
 
-BSPWM_DIR="$HOME/.dotfiles/bspwm"
+# Resolve the repo dir from this script's own (symlinked) location so a move
+# of the repo can't leave a stale hard-coded path behind. ~/.config/bspwm is a
+# Dotbot symlink into the repo; readlink -f follows it to the real bspwm/ dir.
+BSPWM_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}"
 LOG_FILE="$STATE_DIR/bspwm/bspwm.log"
 SXHKD_LOG="$STATE_DIR/sxhkd/sxhkd.log"
@@ -33,7 +36,12 @@ echo "=== bspwmrc started at $(date) ===" >>"$LOG_FILE"
 # runs setxkbmap and needs DISPLAY/XAUTHORITY)
 systemctl --user import-environment DISPLAY XAUTHORITY 2>/dev/null
 
-cd "$BSPWM_DIR" || exit 1
+log "BSPWM_DIR=$BSPWM_DIR"
+if ! cd "$BSPWM_DIR"; then
+  log "FATAL: cannot cd to BSPWM_DIR '$BSPWM_DIR' — bspwmrc aborting before monitor/polybar/picom setup"
+  notify-send -u critical "bspwm" "bspwmrc: BSPWM_DIR missing: $BSPWM_DIR" 2>/dev/null
+  exit 1
+fi
 
 # 1. Wait for X/display driver to be ready
 log "Waiting for X..."
