@@ -1,88 +1,48 @@
 #!/usr/bin/env bash
 #
-# provision.sh - idempotent provisioning for the shell/terminal/dev tools this
-# repo's configs assume are present.
+# provision-shell.sh - idempotent provisioning for the shell/terminal/dev
+# tools this repo's configs assume are present.
 #
-# Installs CLI tooling. Every step is guarded by an existence/version check,
-# so re-running is always safe. Run ./install afterwards to symlink the
-# dotfiles themselves.
+# Every downloaded tool is pinned to an exact version and verified against a
+# recorded sha256 (helpers in provision-lib.sh). A tool already at its pin is
+# skipped, so re-running is safe; any other outcome - download failure, hash
+# mismatch, failed install - aborts loudly with a nonzero exit. Run ./install
+# afterwards to symlink the dotfiles themselves.
 
-set -uo pipefail
-
-# ----------------------------------------------------------------------------
-# Safety: never run as root (user-level installs go to ~/.local, ~/.cargo, etc.)
-# ----------------------------------------------------------------------------
-if [ "$(id -u)" -eq 0 ]; then
-  echo "ERROR: do not run provision.sh as root. It uses sudo where needed." >&2
-  exit 1
-fi
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LOG_FILE="$SCRIPT_DIR/provision.log"
+# shellcheck source=provision-lib.sh
+. "$SCRIPT_DIR/provision-lib.sh"
 
-# Trim the log so it never grows unbounded
-if [ -f "$LOG_FILE" ]; then
-  tail -n 2000 "$LOG_FILE" >"$LOG_FILE.tmp" && mv "$LOG_FILE.tmp" "$LOG_FILE"
-fi
-exec > >(tee -a "$LOG_FILE") 2>&1
-
-log() { printf '\n==> [%s] %s\n' "$(date '+%F %T')" "$*"; }
-skip() { printf '    [skip] %s\n' "$*"; }
-have() { command -v "$1" >/dev/null 2>&1; }
+require_not_root
+init_provision_log "$SCRIPT_DIR/provision.log"
 
 mkdir -p "$HOME/.local/bin" "$HOME/.local/share"
 
 # ----------------------------------------------------------------------------
-# Pinned versions - bump deliberately, review upstream changes, then re-run
-# (supply chain policy: no fetch-latest, see CLAUDE.md)
+# Pinned versions + sha256s of the exact artifacts downloaded below. Bumping
+# a pin is a deliberate, reviewed change: update the version AND its sha256
+# (from the upstream release's published checksums), review the upstream
+# diff, then re-run. (supply chain policy: no fetch-latest, see CLAUDE.md)
+# UV_VERSION/UV_SHA256 live in provision-lib.sh, shared with the desktop half.
 # ----------------------------------------------------------------------------
 NVM_VERSION="v0.40.3"
-UV_VERSION="0.11.20"
+NVM_INSTALL_SHA256="2d8359a64a3cb07c02389ad88ceecd43f2fa469c06104f92f98df5b6f315275f"
 GLAB_VERSION="v1.102.0"
+GLAB_SHA256="2e06f278bb1762126e9b695f67baf5e3210df431b2039c76c1991252bf9c0868"
 LAZYGIT_VERSION="v0.62.2"
+LAZYGIT_SHA256="8b9a4c2d0969cbea92b45c956dd2a44e1ba76900c9df49f1c60984045ce77984"
 STARSHIP_VERSION="v1.25.1"
+STARSHIP_SHA256="4488c11ca632327d1f1f16fb2f102c0646094c35479cd5435991385da43c61ac"
 FZF_VERSION="v0.73.1" # bashrc's `fzf --bash` integration needs >= 0.48.0
-
-# Print a tool's installed version as x.y.z (PATH first, then ~/.local/bin,
-# which may not be on PATH yet during a fresh provision). Prints nothing when
-# the tool is missing or its version output is unparseable.
-installed_version() {
-  local bin
-  bin="$(command -v "$1" || true)"
-  [ -z "$bin" ] && [ -x "$HOME/.local/bin/$1" ] && bin="$HOME/.local/bin/$1"
-  [ -z "$bin" ] && return 0
-  "$bin" --version 2>/dev/null | grep -oEm1 '[0-9]+\.[0-9]+(\.[0-9]+)?' | head -n1
-}
-
-# usage: meets_pin <cmd> <pinned-version>
-# True when the installed version is at least the pin, so a stale binary gets
-# reinstalled at the pinned version. Missing/unparseable also fails the check.
-meets_pin() {
-  local cur pin="${2#v}"
-  cur="$(installed_version "$1")"
-  [ -n "$cur" ] || return 1
-  [ "$(printf '%s\n' "$pin" "$cur" | sort -V | head -n1)" = "$pin" ]
-}
-
-# Download a release tarball and install one binary from it into ~/.local/bin
-# usage: install_release_binary <url> <member-path-in-tar> <dest-name> [strip]
-install_release_binary() {
-  local url="$1" member="$2" dest="$3" strip="${4:-0}"
-  local tmp
-  tmp="$(mktemp -d)"
-  if curl -fsSL -o "$tmp/archive.tar.gz" "$url" &&
-    tar -xzf "$tmp/archive.tar.gz" -C "$tmp" --strip-components="$strip" "$member"; then
-    install -m 0755 "$tmp/$(basename "$member")" "$HOME/.local/bin/$dest"
-  else
-    echo "    [error] failed to download/extract $url"
-  fi
-  rm -rf "$tmp"
-}
+FZF_SHA256="f3252c2c366bc1700d3c85781ec8c9695998927ac127870eb049ceea2d540f8a"
 
 log "Provisioning started"
 
 # ----------------------------------------------------------------------------
-# apt packages (git-core PPA for a current git)
+# apt packages (git-core PPA for a current git). These follow the distro's
+# versions; only the release-tarball tools below are content-pinned.
 # ----------------------------------------------------------------------------
 log "System packages (apt)"
 if ! command -v add-apt-repository >/dev/null 2>&1; then
@@ -102,48 +62,51 @@ sudo apt-get install -y -qq \
 # ----------------------------------------------------------------------------
 # nvm + node LTS
 # ----------------------------------------------------------------------------
-export NVM_DIR="$HOME/.nvm"
-log "nvm + node LTS"
+# Must match bashrc's NVM_DIR logic exactly, or provisioning installs node
+# somewhere the shell never looks.
+if [[ -z "${XDG_CONFIG_HOME-}" ]]; then
+  export NVM_DIR="$HOME/.nvm"
+else
+  export NVM_DIR="$XDG_CONFIG_HOME/nvm"
+fi
+log "nvm $NVM_VERSION + node LTS (NVM_DIR=$NVM_DIR)"
 if [ ! -s "$NVM_DIR/nvm.sh" ]; then
-  curl -fsSL "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash
+  mkdir -p "$NVM_DIR"
+  # PROFILE=/dev/null: bashrc already has its own nvm block; never let the
+  # installer append one to the repo-symlinked ~/.bashrc.
+  PROFILE=/dev/null run_verified_installer \
+    "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" \
+    "$NVM_INSTALL_SHA256"
 else
   skip "nvm already installed"
 fi
 # shellcheck disable=SC1091
-. "$NVM_DIR/nvm.sh"
+. "$NVM_DIR/nvm.sh" || die "failed to load $NVM_DIR/nvm.sh"
 if ! nvm ls --no-colors lts/* >/dev/null 2>&1; then
-  NVM_SYMLINK_CURRENT=true nvm install --lts
+  NVM_SYMLINK_CURRENT=true nvm install --lts || die "nvm install --lts failed"
 else
   skip "node LTS already installed"
 fi
 
 # ----------------------------------------------------------------------------
-# uv (python package/venv manager)
+# uv (python package/venv manager; pin shared with the desktop half)
 # ----------------------------------------------------------------------------
-log "uv $UV_VERSION"
-if meets_pin uv "$UV_VERSION"; then
-  skip "uv $(installed_version uv) already installed (>= $UV_VERSION)"
-else
-  install_release_binary \
-    "https://github.com/astral-sh/uv/releases/download/$UV_VERSION/uv-x86_64-unknown-linux-gnu.tar.gz" \
-    "uv-x86_64-unknown-linux-gnu/uv" uv 1
-  [ -x "$HOME/.local/bin/uv" ] || echo "    [error] uv install failed"
-fi
+install_uv
 
 # ----------------------------------------------------------------------------
 # glab (GitLab CLI)
 # ----------------------------------------------------------------------------
 log "glab $GLAB_VERSION"
-if meets_pin glab "$GLAB_VERSION"; then
-  skip "glab $(installed_version glab) already installed (>= ${GLAB_VERSION#v})"
+if at_pinned_version glab "$GLAB_VERSION"; then
+  skip "glab $(installed_version glab) already at pin"
 else
   install_release_binary \
     "https://gitlab.com/gitlab-org/cli/-/releases/$GLAB_VERSION/downloads/glab_${GLAB_VERSION#v}_linux_amd64.tar.gz" \
-    "bin/glab" glab 1
+    "$GLAB_SHA256" "bin/glab" glab 1
 fi
 
 # ----------------------------------------------------------------------------
-# Rust/Go CLI tools: lsd, fd, ripgrep, lazygit, starship
+# apt-managed CLI tools: lsd, fd, ripgrep (distro versions, presence-checked)
 # ----------------------------------------------------------------------------
 log "lsd"
 if have lsd; then skip "lsd already installed"; else
@@ -163,34 +126,34 @@ if have rg; then skip "ripgrep already installed"; else
   sudo apt-get install -y -qq ripgrep
 fi
 
+# ----------------------------------------------------------------------------
+# Release-tarball tools: lazygit, starship, fzf (exact pin + sha256)
+# ----------------------------------------------------------------------------
 log "lazygit $LAZYGIT_VERSION"
-if meets_pin lazygit "$LAZYGIT_VERSION"; then
-  skip "lazygit $(installed_version lazygit) already installed (>= ${LAZYGIT_VERSION#v})"
+if at_pinned_version lazygit "$LAZYGIT_VERSION"; then
+  skip "lazygit $(installed_version lazygit) already at pin"
 else
   install_release_binary \
     "https://github.com/jesseduffield/lazygit/releases/download/$LAZYGIT_VERSION/lazygit_${LAZYGIT_VERSION#v}_Linux_x86_64.tar.gz" \
-    "lazygit" lazygit
+    "$LAZYGIT_SHA256" "lazygit" lazygit
 fi
 
 log "starship $STARSHIP_VERSION"
-if meets_pin starship "$STARSHIP_VERSION"; then
-  skip "starship $(installed_version starship) already installed (>= ${STARSHIP_VERSION#v})"
+if at_pinned_version starship "$STARSHIP_VERSION"; then
+  skip "starship $(installed_version starship) already at pin"
 else
   install_release_binary \
     "https://github.com/starship/starship/releases/download/$STARSHIP_VERSION/starship-x86_64-unknown-linux-gnu.tar.gz" \
-    "starship" starship
+    "$STARSHIP_SHA256" "starship" starship
 fi
 
-# ----------------------------------------------------------------------------
-# fzf (GitHub release binary)
-# ----------------------------------------------------------------------------
 log "fzf $FZF_VERSION"
-if meets_pin fzf "$FZF_VERSION"; then
-  skip "fzf $(installed_version fzf) already installed (>= ${FZF_VERSION#v})"
+if at_pinned_version fzf "$FZF_VERSION"; then
+  skip "fzf $(installed_version fzf) already at pin"
 else
   install_release_binary \
     "https://github.com/junegunn/fzf/releases/download/$FZF_VERSION/fzf-${FZF_VERSION#v}-linux_amd64.tar.gz" \
-    "fzf" fzf
+    "$FZF_SHA256" "fzf" fzf
 fi
 
 # ----------------------------------------------------------------------------
@@ -217,6 +180,8 @@ for tool in uv glab lazygit starship fzf; do
     fi
   done < <(type -aP "$tool" 2>/dev/null | awk '!seen[$0]++')
 done
-[ "$stale_found" -eq 0 ] && skip "no stale copies found"
+if [ "$stale_found" -eq 0 ]; then
+  skip "no stale copies found"
+fi
 
 log "Provisioning complete. Run ./install to symlink dotfiles."
