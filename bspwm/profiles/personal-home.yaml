@@ -6,7 +6,7 @@ detection:
   # Laptop display (present but disabled)
   laptop:
     output: eDP-1
-    edid: "076ca4d7e755d5ea"  # sha256(full EDID hex)[:16] -- see bspwm/lib/edid.py
+    edid: "7f43020e9adaddcd"  # sha256(full EDID hex)[:16] -- see bspwm/lib/edid.py
     alias: laptop
 
   # External monitors (output names are informational; matching is EDID-based)

@@ -25,8 +25,8 @@ class TestPlanCommand(unittest.TestCase):
         # Expected monitor from fixture (edid is the truncated EDID hash)
         self.expected_monitor = Monitor(
             output="eDP-1",
-            edid="076ca4d7e755d5ea",
-            manufacturer="LGD",
+            edid="7f43020e9adaddcd",
+            manufacturer="SYN",
             model="Generic",
             resolution="1920x1080",
             connected=True,

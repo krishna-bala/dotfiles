@@ -1,15 +1,20 @@
+# NOTE: the eDP-1 EDID below is synthetic, not real hardware (hashes to
+# 7f43020e9adaddcd via bspwm/lib/edid.py). personal-solo.yaml and
+# personal-home.yaml's laptop `edid:` are pinned to that hash -- don't
+# run redact-edid.py over this file, it would replace this with a
+# different (all-zero dummy) block and break that match.
 Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 16384 x 16384
 eDP-1 connected primary 1920x1080+0+0 (normal left inverted right x axis y axis) 336mm x 210mm
-	EDID: 
-		00ffffffffffff008d0ef9c4c2fa565e
-		4157afb021929e4e63886604c3562352
-		50ff564d53bac3878d0ef9c4c2fa565e
-		4157afb021929e4e63886604c3562352
-		50ff564d53bac3878d0ef9c4c2fa565e
-		4157afb021929e4e63886604c3562352
-		50ff564d53bac3878d0ef9c4c2fa565e
-		4157afb021929e4e63886604c3562352
-	vrr_capable: 0 
+	EDID:
+		00ffffffffffff00aabbccdd00000000
+		00ffffffffffff00aabbccdd00000000
+		00ffffffffffff00aabbccdd00000000
+		00ffffffffffff00aabbccdd00000000
+		00ffffffffffff00aabbccdd00000000
+		00ffffffffffff00aabbccdd00000000
+		00ffffffffffff00aabbccdd00000000
+		00ffffffffffff00aabbccdd00000000
+	vrr_capable: 0
 		range: (0, 1)
 	Colorspace: Default 
 		supported: Default, BT709_YCC, XVYCC_601, XVYCC_709, SYCC_601, opYCC_601, opRGB, BT2020_CYCC, BT2020_RGB, BT2020_YCC, DCI-P3_RGB_D65, RGB_WIDE_FIXED, RGB_WIDE_FLOAT, BT601_YCC

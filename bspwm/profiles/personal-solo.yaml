@@ -7,7 +7,7 @@ detection:
   laptop:
     output: eDP-1
     alias: laptop
-    edid: "076ca4d7e755d5ea"  # sha256(full EDID hex)[:16] -- see bspwm/lib/edid.py
+    edid: "7f43020e9adaddcd"  # sha256(full EDID hex)[:16] -- see bspwm/lib/edid.py
 
   # No external monitors required for this profile
   monitors: []
