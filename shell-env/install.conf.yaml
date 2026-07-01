@@ -1,0 +1,45 @@
+- defaults:
+    link:
+      relink: true
+
+- link:
+    ~/.bash_aliases:
+      force: true
+      path: bash_aliases
+    ~/.bashrc:
+      force: true
+      path: bashrc
+    ~/.profile:
+      force: true
+      path: profile
+    ~/.inputrc: inputrc
+    ~/.bazel_completions.bash: bazel_completions.bash
+    ~/.gitconfig:
+      force: true
+      path: gitconfig
+    ~/.gitmessage: gitmessage
+    ~/.git-prompt.sh: git-prompt.sh
+    ~/.config/lazygit/config.yml:
+      path: lazygit.yml
+      force: true
+      create: true
+    ~/.config/starship.toml: starship.toml
+    ~/.tmux: tmux
+    ~/.tmux.conf: tmux.conf
+    ~/.config/kitty:
+      path: kitty
+      create: true
+      force: true
+    ~/.claude/CLAUDE.md:
+      path: claude/CLAUDE.md
+      create: true
+    ~/.claude/scripts/status-line.sh:
+      path: claude/status-line.sh
+      create: true
+      force: true
+
+- shell:
+    - [
+        git submodule update --init --recursive,
+        Installing/updating submodules,
+      ]
