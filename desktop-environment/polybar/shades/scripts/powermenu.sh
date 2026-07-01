@@ -33,7 +33,7 @@ options="$lock\n$suspend\n$logout\n$reboot\n$shutdown"
 
 chosen="$(echo -e "$options" | $rofi_command -p "Uptime: $uptime" -dmenu -selected-row 0)"
 case $chosen in
-$shutdown)
+"$shutdown")
   ans=$(confirm_exit &)
   if [[ $ans == "yes" || $ans == "YES" || $ans == "y" || $ans == "Y" ]]; then
     systemctl poweroff
@@ -43,7 +43,7 @@ $shutdown)
     msg
   fi
   ;;
-$reboot)
+"$reboot")
   ans=$(confirm_exit &)
   if [[ $ans == "yes" || $ans == "YES" || $ans == "y" || $ans == "Y" ]]; then
     systemctl reboot
@@ -53,10 +53,10 @@ $reboot)
     msg
   fi
   ;;
-$lock)
+"$lock")
   "$HOME/.local/bin/lockscreen"
   ;;
-$suspend)
+"$suspend")
   ans=$(confirm_exit &)
   if [[ $ans == "yes" || $ans == "YES" || $ans == "y" || $ans == "Y" ]]; then
     command -v pactl >/dev/null && pactl set-sink-mute @DEFAULT_SINK@ 1
@@ -67,7 +67,7 @@ $suspend)
     msg
   fi
   ;;
-$logout)
+"$logout")
   ans=$(confirm_exit &)
   if [[ $ans == "yes" || $ans == "YES" || $ans == "y" || $ans == "Y" ]]; then
     if [[ "$DESKTOP_SESSION" == "Openbox" ]]; then
