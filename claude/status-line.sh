@@ -5,14 +5,13 @@
 # with the \x1f unit separator (a non-whitespace IFS char, so empty fields
 # survive read's word splitting).
 input=$(cat)
-IFS=$'\x1f' read -r current_dir worktree ctx_used_pct ctx_total_in ctx_window_size \
+IFS=$'\x1f' read -r current_dir worktree ctx_used_pct ctx_total_in \
 	cache_read model_name five_hr five_hr_reset seven_day seven_day_reset < <(
 	echo "$input" | jq -r '[
 		(.workspace.current_dir // ""),
 		(.workspace.git_worktree // ""),
 		(.context_window.used_percentage // ""),
 		(.context_window.total_input_tokens // ""),
-		(.context_window.context_window_size // ""),
 		(.context_window.current_usage.cache_read_input_tokens // ""),
 		(.model.display_name // .model.id // ""),
 		(.rate_limits.five_hour.used_percentage // ""),
