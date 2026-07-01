@@ -4,9 +4,8 @@ Guidance for working on this repository.
 
 ## What this repo is
 
-`dotfiles` consolidates two formerly-separate public dotfiles repos,
-`shell-env` and `desktop-environment`, into one. Full commit history from
-both is preserved (merged via `git subtree`).
+Personal dotfiles: a shell/terminal/dev foundation plus a bspwm-based X11
+desktop, all installed via one Dotbot pass from the repo root.
 
 Do not confuse `claude/CLAUDE.md` (the file this repo symlinks to
 `~/.claude/CLAUDE.md` on install — guidance for using Claude Code itself)
@@ -15,16 +14,15 @@ with this file (guidance for editing this repo).
 ## Layout
 
 - `bash/`, `git/`, `tmux/`, `kitty/`, `starship/`, `claude/` — the shell/
-  terminal/dev foundation (formerly `shell-env`). Each is independent of
-  the others, so they get their own top-level directory rather than
-  nesting under one umbrella.
+  terminal/dev foundation. Each is independent of the others, so they get
+  their own top-level directory rather than nesting under one umbrella.
 - `desktop-environment/` — the bspwm + sxhkd + polybar X11 stack, plus
   picom and dunst. These stay grouped under one directory because they're
   developed and tested together (sxhkd's hotkeys and polybar's toggle
   scripts reference bspwm's installed config paths directly).
 - `redshift.conf`, `Xresources`, `systemd/`, `docs/`, `bin/` — standalone
-  leaf configs and scripts (from both source repos) that don't reference
-  anything else, so they live at the top level.
+  leaf configs and scripts that don't reference anything else, so they live
+  at the top level.
 - See `README.md` for the full directory-by-directory breakdown.
 
 ## Architecture
