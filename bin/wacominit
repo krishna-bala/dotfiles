@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Map the Wacom Intuos BT M to the primary monitor.
+set -euo pipefail
+
+output=$(xrandr --query | awk '/ connected primary/ {print $1; exit}')
+output=${output:-$(xrandr --query | awk '/ connected/ {print $1; exit}')}
+
+if [[ -z "$output" ]]; then
+  echo "wacominit: no connected output found" >&2
+  exit 1
+fi
+
+xsetwacom set "Wacom Intuos BT M Pen stylus" MapToOutput "$output"
+xsetwacom set "Wacom Intuos BT M Pen stylus" Area 0 0 21600 12150
+xsetwacom set "Wacom Intuos BT M Pad pad"    MapToOutput "$output"

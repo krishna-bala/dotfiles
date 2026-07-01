@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Lock screen wrapper. Plain i3lock (i3lock-fancy is unmaintained); the
+# color matches the bspwm normal border. Everything that locks the screen
+# (sxhkd, powermenu) goes through this script so the locker is one edit.
+exec i3lock -c 1f2339 "$@"

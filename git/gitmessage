@@ -1,0 +1,16 @@
+# <scope>: <description>
+
+# [optional body: what changed and why, wrapped at 72 columns]
+
+# [optional trailer(s)]
+
+# Scoped commits (https://scopedcommits.com):
+# * scope is the subsystem, area, or module the commit touches
+#   (e.g. bspwm, kitty, provision, tmux, claude, install)
+# * pick the most specific scope that covers the whole change
+# * description is short, imperative, lowercase, no trailing period
+#
+# Examples:
+# * kitty: bump font size to 12.0
+# * provision: pin tool versions
+# * bspwm: add work-office monitor profile

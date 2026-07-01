@@ -1,0 +1,147 @@
+#!/bin/bash
+# BSPWM configuration with monitor-manager integration
+#
+# Startup order matters:
+# 1. Wait for X/display driver to be ready
+# 2. Apply monitor profile (takes ~7s, gives X time to fully init)
+# 3. Configure bspwm
+# 4. Launch background apps
+# 5. Start sxhkd LAST (ensures all key grabs succeed)
+
+# Resolve the repo dir from this script's own (symlinked) location so a move
+# of the repo can't leave a stale hard-coded path behind. ~/.config/bspwm is a
+# Dotbot symlink into the repo; readlink -f follows it to the real bspwm/ dir.
+BSPWM_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}"
+LOG_FILE="$STATE_DIR/bspwm/bspwm.log"
+SXHKD_LOG="$STATE_DIR/sxhkd/sxhkd.log"
+mkdir -p "$STATE_DIR/bspwm" "$STATE_DIR/sxhkd"
+
+log() {
+  echo "[$(date +%s.%N)] $1" >>"$LOG_FILE"
+}
+
+# Rotate logs larger than 256KB, keeping one .1 backup
+rotate_if_large() {
+  local file="$1"
+  [ -f "$file" ] && [ "$(stat -c%s "$file")" -gt 262144 ] && mv "$file" "$file.1"
+}
+rotate_if_large "$LOG_FILE"
+rotate_if_large "$SXHKD_LOG"
+
+# Append so a failing run's diagnostics survive a subsequent restart
+echo "=== bspwmrc started at $(date) ===" >>"$LOG_FILE"
+
+# Make the X session env available to systemd user units (swapescape.service
+# runs setxkbmap and needs DISPLAY/XAUTHORITY)
+systemctl --user import-environment DISPLAY XAUTHORITY 2>/dev/null
+
+log "BSPWM_DIR=$BSPWM_DIR"
+if ! cd "$BSPWM_DIR"; then
+  log "FATAL: cannot cd to BSPWM_DIR '$BSPWM_DIR' — bspwmrc aborting before monitor/polybar/picom setup"
+  notify-send -u critical "bspwm" "bspwmrc: BSPWM_DIR missing: $BSPWM_DIR" 2>/dev/null
+  exit 1
+fi
+
+# 1. Wait for X/display driver to be ready
+log "Waiting for X..."
+x_ready=false
+for i in {1..20}; do
+  if xrandr --query 2>&1 | grep -q " connected"; then
+    log "X ready after $i attempts"
+    x_ready=true
+    break
+  fi
+  sleep 0.3
+done
+
+if [ "$x_ready" = false ]; then
+  log "ERROR: X not ready after 20 attempts, proceeding with fallback"
+  xrandr --auto
+  notify-send -u critical "Monitor Manager" "X not ready - emergency fallback"
+fi
+
+# 2a. Disable phantom outputs (disconnected but still active in xrandr).
+# Happens after unplugging externals — xrandr keeps stale modes/positions,
+# bspwm/apps get mapped into dead space. Profile apply only --offs outputs
+# it explicitly lists, so sweep them here.
+xrandr --query | awk '/ disconnected [0-9]+x[0-9]+\+/ {print $1}' | while read -r out; do
+  log "Disabling phantom output: $out"
+  xrandr --output "$out" --off
+done
+
+# 2b. Apply monitor profile
+PYTHON="$BSPWM_DIR/.venv/bin/python"
+
+log "Getting best profile..."
+profile=$("$PYTHON" monitor-manager.py match --best 2>>"$LOG_FILE")
+match_exit=$?
+log "Profile match returned (exit=$match_exit): $profile"
+
+if [ $match_exit -ne 0 ] || [ -z "$profile" ]; then
+  log "ERROR: No profile found (exit=$match_exit), using fallback"
+  xrandr --auto
+  notify-send -u critical "Monitor Manager" "No matching profile - fallback"
+else
+  log "Applying profile: $profile"
+  "$PYTHON" monitor-manager.py apply-all --profile "$profile" --force >>"$LOG_FILE" 2>&1
+  apply_exit=$?
+  if [ $apply_exit -ne 0 ]; then
+    log "ERROR: apply-all failed (exit=$apply_exit), using fallback"
+    xrandr --auto
+    notify-send -u critical "Monitor Manager" "Profile failed - fallback"
+  fi
+  log "Profile applied"
+fi
+
+# 3. BSPWM settings (profiles override these, but set defaults)
+log "Configuring bspwm..."
+bspc config border_width 7
+bspc config focused_border_color "#629dc8"
+bspc config normal_border_color "#1f2339"
+bspc config window_gap 15
+bspc config split_ratio 0.5
+bspc config borderless_monocle false
+bspc config gapless_monocle false
+
+# Window rules
+bspc rule -a Screenkey manage=off
+bspc rule -a dunst border=off
+bspc rule -a Notifications border=off
+log "bspwm configured"
+
+# 4. Background applications (all non-blocking, only start if not running)
+log "Starting background apps..."
+xsetroot -cursor_name left_ptr
+xinput list --name-only | grep -i touchpad | while read -r tp; do
+  xinput set-prop "$tp" "libinput Tapping Enabled" 1 2>/dev/null
+done
+setsid -f nitrogen --restore
+
+pgrep -x picom >/dev/null || picom -b
+pgrep -f monocle-border.sh >/dev/null || setsid -f "$BSPWM_DIR/scripts/monocle-border.sh"
+pgrep -x redshift >/dev/null || setsid -f redshift -c ~/.config/redshift.conf
+pgrep -x nm-applet >/dev/null || setsid -f nm-applet
+pgrep -x blueman-applet >/dev/null || setsid -f blueman-applet
+pgrep -x protonvpn-app >/dev/null || setsid -f protonvpn-app
+
+# 5. Start sxhkd LAST (X fully ready after monitor setup, all transient grabs released)
+# Wrapped in a watchdog so a crash auto-restarts — losing sxhkd locks you out of all hotkeys.
+log "Starting sxhkd (with watchdog)..."
+pkill -x sxhkd
+pkill -f "sxhkd-watchdog"
+sleep 0.2
+echo "=== sxhkd watchdog started at $(date) ===" >>"$SXHKD_LOG"
+(
+    exec -a sxhkd-watchdog bash -c '
+        while true; do
+            sxhkd 2>>"'"$SXHKD_LOG"'"
+            echo "=== sxhkd exited at $(date), restarting in 1s ===" >>"'"$SXHKD_LOG"'"
+            sleep 1
+        done
+    '
+) &
+disown
+log "sxhkd started"
+
+log "=== bspwmrc complete ==="

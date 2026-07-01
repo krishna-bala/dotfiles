@@ -1,0 +1,73 @@
+name: work-office
+description: Work laptop with dual Dell monitors at office (vertical left, landscape right, laptop disabled)
+
+# Detection rules - how to identify this configuration
+detection:
+  # Laptop display (present but disabled)
+  laptop:
+    output: eDP-1-1
+    edid: 88bc0b497d91a0d4  # sha256(full EDID hex)[:16] -- see bspwm/lib/edid.py
+    alias: laptop
+
+  # External monitors - Dell SE2419HR (identical model; the EDID hash still
+  # distinguishes them because the per-unit serial is hashed in, not dropped)
+  monitors:
+    - output: DP-0.1
+      edid: 03ee7ddd6dc0e828
+      alias: vertical
+
+    - output: DP-0.2
+      edid: a6f5dd63dfb8c151
+      alias: main
+
+# Physical display configuration (xrandr)
+display:
+  # Left vertical 1080p monitor (rotated left)
+  vertical:
+    enabled: true
+    resolution: "1920x1080"
+    position: "0x0"
+    rotation: right
+    primary: false
+
+  # Right main 1080p monitor (landscape)
+  main:
+    enabled: true
+    resolution: "1920x1080"
+    position: "1080x420"  # After rotated monitor (1080 wide), centered vertically ((1920-1080)/2)
+    rotation: normal
+    primary: true
+
+  # Laptop display - disabled for office setup
+  laptop:
+    enabled: false
+
+# Window manager configuration (BSPWM)
+window_manager:
+  # Monitor order: main, vertical (20 workspaces total)
+  monitor_order: [main, vertical]
+
+  # Workspace distribution
+  workspaces:
+    main: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    vertical: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+
+# UI configuration (polybar)
+ui:
+  bars:
+    - monitor: main
+      orientation: landscape
+      font_size: 12
+      modules:
+        left: launcher workspaces
+        center: date time
+        right: network battery alsa tray
+
+    - monitor: vertical
+      orientation: portrait
+      font_size: 12
+      modules:
+        left: launcher workspaces
+        center: date
+        right: time

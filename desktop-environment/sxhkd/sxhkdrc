@@ -1,0 +1,247 @@
+#########################
+## bspwm/sxhkd hotkeys ##
+#########################
+
+# quit bspwm
+super + alt + q
+	bspc quit
+
+# re-detect topology and apply best-matching monitor profile
+super + alt + r
+	~/.config/bspwm/scripts/apply-auto.sh
+
+# emergency: in-place bspwm restart (rarely needed; topology changes go through super+alt+r)
+super + alt + ctrl + r
+	bspc wm -r
+
+# make sxhkd reload its configuration files:
+super + Escape
+	pkill -USR1 -x sxhkd
+
+#####################
+## Node Management ##
+#####################
+
+# close and kill
+super + {_,shift + }w
+	bspc node -{c,k}
+
+# alternate between the tiled and monocle layout
+super + m
+	bspc desktop -l next
+
+# set the window state
+super + {t,shift + t,s,f}
+	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+# set the node flags
+# super + shift + {m,x,y,z}
+# 	bspc node -g {marked,locked,sticky,private}
+super + shift + y
+	bspc node -g sticky
+
+# TODO: Figure out what these do
+#
+# # send the newest marked node to the newest preselected node
+# super + y
+# 	bspc node newest.marked.local -n newest.!automatic.local
+#
+# # swap the current node and the biggest window
+# super + g
+# 	bspc node -s biggest.window
+
+###############################
+## Node & Desktop focus/swap ##
+###############################
+
+# focus the node/monitor in the given direction
+super + {h,j,k,l}
+  ~/.config/bspwm/scripts/smart_focus.sh {west,south,north,east}
+
+super + shift + {h,j,k,l}
+	~/.config/bspwm/scripts/smart_send.sh {west,south,north,east}
+
+# focus the next/previous desktop (current monitor)
+super + bracket{left,right}
+	bspc desktop -f {prev,next}.local
+
+# Swap and follow node across desktops (current monitor)
+super + shift + bracket{left,right}
+    bspc node -d {prev,next}.local --follow
+
+super + ctrl + bracket{left,right}
+    bspc node -d {prev,next}.local
+
+# focus desktop n on current monitor
+super + {1-9,0}
+	bspc desktop focused:^{1-9,10} -f
+
+# send window to desktop n and follow focus
+super + shift + {1-9,0}
+	bspc node -d focused:^{1-9,10} --follow
+
+# send window in direction, don't follow
+super + ctrl + {h,j,k,l}
+	bspc node -n {west,south,north,east}
+
+# send window to desktop n, don't follow
+super + ctrl + {1-9,0}
+	bspc node -d focused:^{1-9,10}
+
+# focus the last node/desktop
+super + {Tab, grave}
+	bspc {node,desktop} -f last
+
+# focus the next/previous window in the current desktop
+super + {_,shift + }c
+	bspc node -f {next,prev}.local.!hidden.window
+
+# cycle windows (useful in monocle layout)
+super + {comma,period}
+	bspc node -f {prev,next}.local.!hidden.window
+
+# focus the older or newer node in the focus history
+super + {o,i}
+	bspc wm -h off; \
+	bspc node {older,newer} -f; \
+	bspc wm -h on
+
+# TODO: Figure out what these do
+
+# focus the node for the given path jump
+# super + {p,b,comma,period}
+# 	bspc node -f @{parent,brother,first,second}
+
+###############
+## preselect ##
+###############
+
+# preselect the direction
+super + alt + {h,j,k,l}
+	bspc node -p {west,south,north,east}
+
+# preselect the ratio
+super + alt + {1-9}
+	bspc node -o 0.{1-9}
+
+# cancel the preselection for the focused node
+super + alt + space
+	bspc node -p cancel
+
+# cancel the preselection for the focused desktop
+super + alt + shift + space
+	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+#################
+## move/resize ##
+#################
+
+# Smart expand/contract a window
+super + {Left,Down,Up,Right}
+	~/.config/bspwm/scripts/smart_resize.sh {west,south,north,east}
+
+# move a floating window
+super + shift + {Left,Down,Up,Right}
+	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+############################
+## wm independent hotkeys ##
+############################
+
+# Increase volume
+XF86AudioRaiseVolume
+    pactl set-sink-volume @DEFAULT_SINK@ +5%
+
+# Decrease volume
+XF86AudioLowerVolume
+    pactl set-sink-volume @DEFAULT_SINK@ -5%
+
+# Mute/Unmute volume
+XF86AudioMute
+    pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# Increase brightness
+XF86MonBrightnessUp
+    brightnessctl set +1%
+
+# Decrease brightness
+XF86MonBrightnessDown
+    brightnessctl set 1%-
+
+# Increase brightness
+shift + XF86MonBrightnessUp
+    brightnessctl set +10%
+
+# Decrease brightness
+shift + XF86MonBrightnessDown
+    brightnessctl set 10%-
+
+Print
+    scrot ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_full.png' -e 'xclip -selection clipboard -t image/png -i $f'
+
+super + Print
+    scrot -s ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_region.png' -e 'xclip -selection clipboard -t image/png -i $f'
+
+super + shift + Print
+    scrot -u ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_window.png' -e 'xclip -selection clipboard -t image/png -i $f'
+
+# terminal emulator
+super + Return
+	~/.config/kitty/launch.sh
+
+# terminal emulator (always local, ignores kitten ssh)
+super + shift + Return
+	~/.config/kitty/launch.sh --home
+
+# program launcher
+super + @space
+	rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/polybar/shades/scripts/rofi/launcher.rasi
+
+# program launcher
+alt + Tab
+	rofi -no-config -no-lazy-grab -show window -modi window -theme ~/.config/polybar/shades/scripts/rofi/launcher.rasi
+
+super + BackSpace
+	~/.config/polybar/shades/scripts/powermenu.sh
+
+
+# Restart polybar (re-apply current profile via the reconciliation pipeline)
+super + shift + p
+  ~/.config/bspwm/scripts/apply-auto.sh
+
+# toggle polybar visibility
+super + p
+  ~/.config/bspwm/scripts/toggle_polybar.sh
+
+# lock screen
+super + alt + ctrl + l
+    ~/.local/bin/lockscreen
+
+# Suspend system (lock first; i3lock forks, so wait a beat before suspending)
+super + shift + s
+    ~/.local/bin/lockscreen; sleep 1; systemctl suspend
+
+# Toggle Redshift on/off
+super + shift + r
+    pkill -x redshift || redshift -c ~/.config/redshift.conf &
+
+# Clear all notifications
+super + shift + d
+  dunstctl close-all
+
+# Monitor manager - Interactive profile selection
+super + shift + x
+  ~/.config/bspwm/scripts/monitor-switch.sh
+
+# Emergency laptop display recovery (works blind - enables any connected eDP-* output)
+super + shift + F1
+  xrandr --query | grep -o '^eDP[^ ]* connected' | cut -d' ' -f1 | \
+  xargs -r -n1 -I OUT xrandr --output OUT --auto; \
+  notify-send "Display Recovery" "Laptop screen enabled"
+
+# Toggle caps:swapescape via systemd user service. Bound to both keysyms
+# because the swap itself changes which one the physical key emits.
+super + shift + {Caps_Lock,Escape}
+  systemctl --user is-active --quiet swapescape.service \
+    && systemctl --user stop swapescape.service \
+    || systemctl --user start swapescape.service
