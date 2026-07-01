@@ -1,0 +1,13 @@
+[Unit]
+Description=Swap Caps Lock and Escape (setxkbmap caps:swapescape)
+
+# DISPLAY/XAUTHORITY come from the systemd user manager; bspwmrc imports
+# them at session start via `systemctl --user import-environment`.
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/setxkbmap -option caps:swapescape
+ExecStop=/usr/bin/setxkbmap -option
+
+[Install]
+WantedBy=default.target

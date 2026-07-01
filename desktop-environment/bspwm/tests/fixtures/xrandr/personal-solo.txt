@@ -1,0 +1,46 @@
+Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 16384 x 16384
+eDP-1 connected primary 1920x1080+0+0 (normal left inverted right x axis y axis) 336mm x 210mm
+   1920x1200     59.95 +  47.96  
+   1920x1080     59.95* 
+   1600x1200     59.95  
+   1680x1050     59.95  
+   1400x1050     59.95  
+   1600x900      59.95  
+   1280x1024     59.95  
+   1400x900      59.95  
+   1280x960      59.95  
+   1440x810      59.95  
+   1368x768      59.95  
+   1280x800      59.95  
+   1280x720      59.95  
+   1024x768      59.95  
+   960x720       59.95  
+   928x696       59.95  
+   896x672       59.95  
+   1024x576      59.95  
+   960x600       59.95  
+   960x540       59.95  
+   800x600       59.95  
+   840x525       59.95  
+   864x486       59.95  
+   700x525       59.95  
+   800x450       59.95  
+   640x512       59.95  
+   700x450       59.95  
+   640x480       59.95  
+   720x405       59.95  
+   684x384       59.95  
+   640x360       59.95  
+   512x384       59.95  
+   512x288       59.95  
+   480x270       59.95  
+   400x300       59.95  
+   432x243       59.95  
+   320x240       59.95  
+   360x202       59.95  
+   320x180       59.95  
+DP-1 disconnected (normal left inverted right x axis y axis)
+HDMI-1 disconnected (normal left inverted right x axis y axis)
+DP-2 disconnected (normal left inverted right x axis y axis)
+DP-3 disconnected (normal left inverted right x axis y axis)
+DP-4 disconnected (normal left inverted right x axis y axis)

@@ -1,0 +1,72 @@
+name: work-home
+description: Work laptop with dual external monitors at home (laptop display disabled)
+
+# Detection rules - how to identify this configuration
+detection:
+  # Laptop display (present but disabled)
+  laptop:
+    output: eDP-1-1
+    edid: 88bc0b497d91a0d4  # sha256(full EDID hex)[:16] -- see bspwm/lib/edid.py
+    alias: laptop
+
+  # External monitors
+  monitors:
+    - output: DP-0
+      edid: 9fa855ab75aa6ab9
+      alias: vertical
+
+    - output: DP-3
+      edid: 4de818eda99fcaa2
+      alias: main
+
+# Physical display configuration (xrandr)
+display:
+  # Left vertical 4K monitor (rotated left)
+  vertical:
+    enabled: true
+    resolution: "3840x2160"
+    position: "0x0"
+    rotation: left
+    scale: "0.6x0.6"
+    primary: false
+
+  # Right/main 2K monitor
+  main:
+    enabled: true
+    resolution: "2560x1440"
+    position: "1296x432"  # 1296 = scaled width of vertical monitor (2160 * 0.6), 432 for vertical centering ((2304-1440)/2)
+    rotation: normal
+    scale: "1x1"
+    primary: true
+
+  # Laptop display - disabled for home setup
+  laptop:
+    enabled: false
+
+# Window manager configuration (BSPWM)
+window_manager:
+  # Monitor order: main, vertical (20 workspaces total)
+  monitor_order: [main, vertical]
+
+  # Workspace distribution
+  workspaces:
+    main: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]       # Main monitor: workspaces 1-10
+    vertical: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]  # Vertical monitor: workspaces 11-20
+
+
+# UI configuration (polybar)
+ui:
+  bars:
+    - monitor: main
+      orientation: landscape
+      modules:
+        left: launcher workspaces
+        center: date time
+        right: network battery alsa tray
+
+    - monitor: vertical
+      orientation: portrait
+      modules:
+        left: launcher workspaces
+        center: date
+        right: time
