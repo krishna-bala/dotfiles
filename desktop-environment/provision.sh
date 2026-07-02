@@ -22,16 +22,25 @@ mkdir -p "$HOME/.local/bin"
 log "Provisioning started"
 
 # ----------------------------------------------------------------------------
-# WM/X11 stack (apt). i3lock and libnotify-bin aren't in the upstream
-# package list this slice was cut from, but bin/lockscreen and bspwmrc's
-# startup-failure notifications hard-depend on them, so they're added here.
+# WM/X11 stack (apt). Everything bspwmrc, sxhkd, dunst, and the systemd user
+# units invoke:
+#   nitrogen             - wallpaper restore at bspwm startup
+#   network-manager-gnome, blueman - nm-applet / blueman-applet tray apps
+#   x11-xkb-utils        - setxkbmap (swapescape.service ExecStart)
+#   xdg-utils            - xdg-open (dunstrc browser)
+#   i3lock, libnotify-bin - bin/lockscreen and startup-failure notifications
+# protonvpn-app is deliberately NOT here: it comes from Proton's own repo
+# and bspwmrc pgrep-guards it, so its absence is harmless.
+# kitty (sxhkd's terminal, monitor-switch.sh) is provisioned by
+# provision-shell.sh as a pinned upstream bundle.
 # ----------------------------------------------------------------------------
 log "WM/X11 packages (apt)"
 sudo apt-get update -qq
 sudo apt-get install -y -qq \
-  bspwm sxhkd polybar rofi picom dunst feh \
+  bspwm sxhkd polybar rofi picom dunst nitrogen \
   redshift brightnessctl pulseaudio-utils scrot xclip \
-  x11-xserver-utils xserver-xorg-input-wacom \
+  x11-xserver-utils x11-xkb-utils xserver-xorg-input-wacom \
+  network-manager-gnome blueman xdg-utils \
   i3lock libnotify-bin
 
 # ----------------------------------------------------------------------------

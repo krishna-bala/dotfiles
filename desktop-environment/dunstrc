@@ -252,8 +252,9 @@
 
     ### Misc/Advanced ###
 
-    # dmenu path.
-    dmenu = /usr/bin/dmenu -p dunst:
+    # Context-menu picker. rofi's dmenu mode, since rofi is already part of
+    # this stack and plain dmenu isn't provisioned.
+    dmenu = /usr/bin/rofi -dmenu -p dunst:
 
     # Browser for opening urls in context menu.
     browser = /usr/bin/xdg-open

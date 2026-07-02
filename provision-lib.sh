@@ -76,6 +76,30 @@ install_release_binary() {
   rm -rf "$tmp"
 }
 
+# usage: install_release_bundle <url> <sha256> <app-dir> <strip> <bin>...
+# Download a multi-file release bundle (an app that needs its lib/ and
+# share/ next to its binary), verify it against the recorded sha256, unpack
+# it to ~/.local/<app-dir>, and symlink the named bin/ entries into
+# ~/.local/bin. The old app dir is replaced only after a verified extract.
+install_release_bundle() {
+  local url="$1" sha256="$2" app="$3" strip="$4"
+  shift 4
+  local tmp bin
+  tmp="$(mktemp -d)"
+  curl -fsSL -o "$tmp/bundle" "$url" || die "download failed: $url"
+  verify_sha256 "$tmp/bundle" "$sha256"
+  mkdir -p "$tmp/app"
+  tar -xaf "$tmp/bundle" -C "$tmp/app" --strip-components="$strip" ||
+    die "extract failed: $url"
+  rm -rf "${HOME:?}/.local/$app"
+  mv "$tmp/app" "$HOME/.local/$app"
+  for bin in "$@"; do
+    [ -x "$HOME/.local/$app/bin/$bin" ] || die "bundle $app has no bin/$bin"
+    ln -sf "$HOME/.local/$app/bin/$bin" "$HOME/.local/bin/$bin"
+  done
+  rm -rf "$tmp"
+}
+
 # usage: run_verified_installer <url> <sha256>
 # Download an installer script, verify its content hash, then execute it.
 # The version pin in the URL alone isn't enough: a tag can be re-pointed
