@@ -33,8 +33,9 @@ with this file (guidance for editing this repo).
 - Configs are flat root-level files or per-tool directories, symlinked into
   place — no templating, no generated files.
 - Provisioning is split in two, matching the two stacks: `provision-shell.sh`
-  (CLI tooling: starship, fzf, lsd, fd, ripgrep, lazygit, glab, node/nvm, uv)
-  and `desktop-environment/provision.sh` (X11/WM packages + the bspwm
+  (CLI tooling: starship, fzf, lsd, fd, ripgrep, lazygit, glab, node/nvm,
+  uv, plus the kitty and neovim bundles) and
+  `desktop-environment/provision.sh` (X11/WM packages + the bspwm
   monitor-manager's venv). Root `provision.sh` runs both in sequence; each
   is also independently runnable and idempotent, and both source the
   shared `provision-lib.sh`. Targets Ubuntu 22.04+ on x86_64 only.
@@ -44,18 +45,21 @@ with this file (guidance for editing this repo).
 ## Supply-chain / version-pinning policy
 
 Every tool fetched from an upstream release — nvm, uv, glab, lazygit,
-starship, fzf — is pinned to an exact version (no fetch-latest) and
-verified against a recorded sha256 before installing (helpers live in
-`provision-lib.sh`). An installed version that differs from its pin in
-either direction is reinstalled at the pin, so machines converge on
-identical binaries. Bumping a pin is a deliberate, reviewed change: update
-the version variable and its sha256 (from the upstream release's published
-checksums), review the upstream diff, then re-run the relevant
-`provision*.sh`. The monitor-manager's Python dependencies are pinned the
-same way via the committed `uv.lock`; all syncs run `--locked`. The
-exceptions are tools taken from distro apt repos (lsd, fd, ripgrep, plus
-the X11/WM packages) and node, which tracks the current LTS — these follow
-whatever the package source provides.
+starship, fzf, lsd, kitty, neovim — is pinned to an exact version (no
+fetch-latest) and verified against a recorded sha256 before installing
+(helpers live in `provision-lib.sh`). An installed version that differs
+from its pin in either direction is reinstalled at the pin, so machines
+converge on identical binaries. Bumping a pin is a deliberate, reviewed
+change: update the version variable and its sha256 (from the upstream
+release's published checksums where they exist; kitty and neovim publish
+none, so their hashes are computed from the reviewed download), review the
+upstream diff, then re-run the relevant `provision*.sh`. The
+monitor-manager's Python dependencies are pinned the same way via the
+committed `uv.lock`; all syncs run `--locked`. The exceptions are tools
+taken from distro apt repos (fd, ripgrep, plus the X11/WM packages) and
+node, which tracks the current LTS — these follow whatever the package
+source provides. protonvpn-app is deliberately unprovisioned (Proton's own
+repo; bspwmrc pgrep-guards it).
 
 ## Commits
 

@@ -37,6 +37,15 @@ STARSHIP_VERSION="v1.25.1"
 STARSHIP_SHA256="4488c11ca632327d1f1f16fb2f102c0646094c35479cd5435991385da43c61ac"
 FZF_VERSION="v0.73.1" # bashrc's `fzf --bash` integration needs >= 0.48.0
 FZF_SHA256="f3252c2c366bc1700d3c85781ec8c9695998927ac127870eb049ceea2d540f8a"
+LSD_VERSION="v1.2.0" # not in 22.04's apt, so pinned like the other release tools
+LSD_SHA256="57d3b5859254adcfb8374ce98159cca97a14959997d2ae1176d2cff59556d829"
+# kitty and neovim publish no checksum files (kitty signs with GPG); these
+# sha256s were computed from the downloaded release artifacts when the pins
+# were set, so every machine gets byte-identical copies of what was reviewed.
+KITTY_VERSION="0.47.4"
+KITTY_SHA256="bc230142b2bd27f2a4bf1b1b67575f3d397a4ea2cc83f4ac2b912c306a939693"
+NVIM_VERSION="v0.12.3"
+NVIM_SHA256="c441b547142860bf01bcce39e36cbed185c41112813e15443b16e5237750724d"
 
 log "Provisioning started"
 
@@ -54,7 +63,7 @@ if ! grep -rq "git-core/ppa" /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/d
 fi
 sudo apt-get update -qq
 sudo apt-get install -y -qq \
-  git curl wget unzip \
+  git curl wget unzip xz-utils \
   build-essential pkg-config \
   tmux jq xclip \
   bash-completion
@@ -106,13 +115,8 @@ else
 fi
 
 # ----------------------------------------------------------------------------
-# apt-managed CLI tools: lsd, fd, ripgrep (distro versions, presence-checked)
+# apt-managed CLI tools: fd, ripgrep (distro versions, presence-checked)
 # ----------------------------------------------------------------------------
-log "lsd"
-if have lsd; then skip "lsd already installed"; else
-  sudo apt-get install -y -qq lsd || cargo install lsd
-fi
-
 log "fd"
 if have fd; then
   skip "fd already installed"
@@ -127,8 +131,17 @@ if have rg; then skip "ripgrep already installed"; else
 fi
 
 # ----------------------------------------------------------------------------
-# Release-tarball tools: lazygit, starship, fzf (exact pin + sha256)
+# Release-tarball tools: lsd, lazygit, starship, fzf (exact pin + sha256)
 # ----------------------------------------------------------------------------
+log "lsd $LSD_VERSION"
+if at_pinned_version lsd "$LSD_VERSION"; then
+  skip "lsd $(installed_version lsd) already at pin"
+else
+  install_release_binary \
+    "https://github.com/lsd-rs/lsd/releases/download/$LSD_VERSION/lsd-$LSD_VERSION-x86_64-unknown-linux-gnu.tar.gz" \
+    "$LSD_SHA256" "lsd-$LSD_VERSION-x86_64-unknown-linux-gnu/lsd" lsd 1
+fi
+
 log "lazygit $LAZYGIT_VERSION"
 if at_pinned_version lazygit "$LAZYGIT_VERSION"; then
   skip "lazygit $(installed_version lazygit) already at pin"
@@ -157,6 +170,35 @@ else
 fi
 
 # ----------------------------------------------------------------------------
+# kitty (upstream binary bundle -> ~/.local/kitty.app, kitty/kitten symlinked
+# into ~/.local/bin). Pinned rather than apt: 22.04's kitty (0.21) is too old
+# for this repo's kitty.conf and kittens, and the desktop half's sxhkd
+# bindings and monitor-switch.sh hard-depend on the binary.
+# ----------------------------------------------------------------------------
+log "kitty $KITTY_VERSION"
+if at_pinned_version kitty "$KITTY_VERSION"; then
+  skip "kitty $(installed_version kitty) already at pin"
+else
+  install_release_bundle \
+    "https://github.com/kovidgoyal/kitty/releases/download/v$KITTY_VERSION/kitty-$KITTY_VERSION-x86_64.txz" \
+    "$KITTY_SHA256" kitty.app 0 kitty kitten
+fi
+
+# ----------------------------------------------------------------------------
+# neovim (upstream bundle -> ~/.local/nvim.app). bashrc's EDITOR, gitconfig's
+# editor/difftool/mergetool, and lazygit's edit command all assume nvim;
+# 22.04's apt neovim (0.6) is far too old for a current config.
+# ----------------------------------------------------------------------------
+log "neovim $NVIM_VERSION"
+if at_pinned_version nvim "$NVIM_VERSION"; then
+  skip "nvim $(installed_version nvim) already at pin"
+else
+  install_release_bundle \
+    "https://github.com/neovim/neovim/releases/download/$NVIM_VERSION/nvim-linux-x86_64.tar.gz" \
+    "$NVIM_SHA256" nvim.app 1 nvim
+fi
+
+# ----------------------------------------------------------------------------
 # Stale duplicate binaries: tools this script manages in ~/.local/bin can also
 # exist elsewhere on PATH (old manual installs in /usr/local/bin, cargo, apt).
 # Flag every duplicate and say how to remove it. A duplicate that comes first
@@ -164,19 +206,24 @@ fi
 # ----------------------------------------------------------------------------
 log "Checking for stale duplicate binaries"
 stale_found=0
-for tool in uv glab lazygit starship fzf; do
+for tool in uv glab lazygit starship fzf lsd kitty nvim; do
   [ -x "$HOME/.local/bin/$tool" ] || continue
   while IFS= read -r path; do
     [ "$path" = "$HOME/.local/bin/$tool" ] && continue
     stale_found=1
-    rm_cmd="sudo rm"
-    case "$path" in "$HOME"/*) rm_cmd="rm" ;; esac
+    # dpkg-owned copies (e.g. an old apt lsd/kitty) must go through apt,
+    # since deleting the file by hand leaves dpkg in an inconsistent state
+    rm_hint="sudo rm $path"
+    case "$path" in "$HOME"/*) rm_hint="rm $path" ;; esac
+    if pkg="$(dpkg -S "$path" 2>/dev/null | head -n1 | cut -d: -f1)" && [ -n "$pkg" ]; then
+      rm_hint="sudo apt-get remove $pkg"
+    fi
     if [ "$(command -v "$tool")" = "$HOME/.local/bin/$tool" ]; then
-      printf '    [note] stale %s at %s (shadowed; clean up with: %s %s)\n' \
-        "$tool" "$path" "$rm_cmd" "$path"
+      printf '    [note] stale %s at %s (shadowed; clean up with: %s)\n' \
+        "$tool" "$path" "$rm_hint"
     else
-      printf '    [WARN] %s on PATH resolves to %s, which shadows the pinned ~/.local/bin/%s; remove it with: %s %s\n' \
-        "$tool" "$path" "$tool" "$rm_cmd" "$path"
+      printf '    [WARN] %s on PATH resolves to %s, which shadows the pinned ~/.local/bin/%s; remove it with: %s\n' \
+        "$tool" "$path" "$tool" "$rm_hint"
     fi
   done < <(type -aP "$tool" 2>/dev/null | awk '!seen[$0]++')
 done
