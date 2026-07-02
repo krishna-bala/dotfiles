@@ -1,79 +1,40 @@
+# Every link is forced: this repo is the single source of truth for these
+# paths, so install always converges to the same state -- a pre-existing
+# regular file at any target is replaced, never left to shadow the repo copy.
 - defaults:
     link:
       relink: true
+      force: true
+      create: true
 
 - link:
     # --- shell/terminal/dev foundation (bash/, git/, tmux/, kitty/, starship/, claude/) ---
-    ~/.bash_aliases:
-      force: true
-      path: bash/bash_aliases
-    ~/.bashrc:
-      force: true
-      path: bash/bashrc
-    ~/.profile:
-      force: true
-      path: bash/profile
+    ~/.bash_aliases: bash/bash_aliases
+    ~/.bashrc: bash/bashrc
+    ~/.profile: bash/profile
     ~/.inputrc: bash/inputrc
     ~/.bazel_completions.bash: bash/bazel_completions.bash
-    ~/.gitconfig:
-      force: true
-      path: git/gitconfig
+    ~/.gitconfig: git/gitconfig
     ~/.gitmessage: git/gitmessage
     ~/.git-prompt.sh: git/git-prompt.sh
-    ~/.config/lazygit/config.yml:
-      path: git/lazygit.yml
-      force: true
-      create: true
+    ~/.config/lazygit/config.yml: git/lazygit.yml
     ~/.config/starship.toml: starship/starship.toml
     ~/.tmux: tmux
     ~/.tmux.conf: tmux/tmux.conf
-    ~/.config/kitty:
-      path: kitty
-      create: true
-      force: true
-    ~/.claude/CLAUDE.md:
-      path: claude/CLAUDE.md
-      create: true
-    ~/.claude/scripts/status-line.sh:
-      path: claude/status-line.sh
-      create: true
-      force: true
+    ~/.config/kitty: kitty
+    ~/.claude/CLAUDE.md: claude/CLAUDE.md
+    ~/.claude/scripts/status-line.sh: claude/status-line.sh
     # --- desktop-environment (bspwm/sxhkd/polybar/picom/dunst stack + standalone leaf configs) ---
-    ~/.config/bspwm:
-      path: desktop-environment/bspwm
-      force: true
-      create: true
-    ~/.config/sxhkd:
-      path: desktop-environment/sxhkd
-      force: true
-      create: true
-    ~/.config/polybar:
-      path: desktop-environment/polybar
-      force: true
-      create: true
-    ~/.config/picom/picom.conf:
-      path: desktop-environment/picom.conf
-      force: true
-      create: true
-    ~/.config/dunst/dunstrc:
-      path: desktop-environment/dunstrc
-      force: true
-      create: true
-    ~/.Xresources:
-      path: Xresources
-      force: true
-    ~/.config/systemd/user/swapescape.service:
-      path: systemd/swapescape.service
-      create: true
-    ~/.local/bin/wacominit:
-      path: bin/wacominit
-      create: true
-    ~/.local/bin/lockscreen:
-      path: bin/lockscreen
-      create: true
-    ~/.local/bin/clipimg:
-      path: bin/clipimg
-      create: true
+    ~/.config/bspwm: desktop-environment/bspwm
+    ~/.config/sxhkd: desktop-environment/sxhkd
+    ~/.config/polybar: desktop-environment/polybar
+    ~/.config/picom/picom.conf: desktop-environment/picom.conf
+    ~/.config/dunst/dunstrc: desktop-environment/dunstrc
+    ~/.Xresources: Xresources
+    ~/.config/systemd/user/swapescape.service: systemd/swapescape.service
+    ~/.local/bin/wacominit: bin/wacominit
+    ~/.local/bin/lockscreen: bin/lockscreen
+    ~/.local/bin/clipimg: bin/clipimg
 
 - shell:
     - [
@@ -81,9 +42,14 @@
         Installing/updating submodules,
       ]
     # --- desktop-environment-only steps ---
+    # redshift.conf is seeded by copy, never symlinked: each machine tunes
+    # its own lat/lon and temperatures afterwards, so repo updates to this
+    # file intentionally do not propagate to already-seeded machines.
     - command: "[ ! -f ~/.config/redshift.conf ] && mkdir -p ~/.config && cp redshift.conf ~/.config/redshift.conf || true"
       description: Copying redshift.conf if needed
       quiet: true
-    - command: "cd desktop-environment/bspwm && uv sync"
+    # --locked: install exactly what uv.lock records; fails loudly if
+    # pyproject.toml and uv.lock have drifted apart.
+    - command: "cd desktop-environment/bspwm && uv sync --locked"
       description: Building monitor-manager venv
       quiet: false

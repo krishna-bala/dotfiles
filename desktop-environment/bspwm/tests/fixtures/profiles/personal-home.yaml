@@ -1,0 +1,72 @@
+# Test fixture: mirrors profiles/personal-home.yaml in shape, but every EDID
+# is synthetic (tests that use this profile pass alias_to_output explicitly,
+# so the external edids are opaque sentinels).
+name: personal-home
+description: Personal laptop with dual external monitors at home (laptop display disabled)
+
+# Detection rules - how to identify this configuration
+detection:
+  # Laptop display (present but disabled)
+  laptop:
+    output: eDP-1
+    edid: "7f43020e9adaddcd" # hash of the synthetic xrandr-fixture EDID
+    alias: laptop
+
+  # External monitors (output names are informational; matching is EDID-based)
+  monitors:
+    - output: DP-2
+      edid: "0000000000000001" # synthetic sentinel
+      alias: vertical
+
+    - output: DP-3
+      edid: "0000000000000002" # synthetic sentinel
+      alias: main
+
+# Physical display configuration (xrandr)
+display:
+  # Left vertical 4K monitor (rotated left)
+  vertical:
+    enabled: true
+    resolution: "3840x2160"
+    position: "0x0"
+    rotation: left
+    scale: "0.6x0.6"
+    primary: false
+
+  # Right/main 2K monitor
+  main:
+    enabled: true
+    resolution: "2560x1440"
+    position: "1296x432"
+    rotation: normal
+    scale: "1x1"
+    primary: true
+
+  # Laptop display - disabled for home setup
+  laptop:
+    enabled: false
+
+# Window manager configuration (BSPWM)
+window_manager:
+  monitor_order: [main, vertical]
+
+  workspaces:
+    main: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    vertical: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+# UI configuration (polybar)
+ui:
+  bars:
+    - monitor: main
+      orientation: landscape
+      modules:
+        left: launcher workspaces
+        center: date time
+        right: network battery alsa tray
+
+    - monitor: vertical
+      orientation: portrait
+      modules:
+        left: launcher workspaces
+        center: date
+        right: time

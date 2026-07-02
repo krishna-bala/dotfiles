@@ -24,6 +24,9 @@ if [ "${debian_chroot:-}" = "" ] && [ -r /etc/debian_chroot ]; then
   debian_chroot=$(cat /etc/debian_chroot)
 fi
 
+# Fallback prompt, used only where starship is skipped (dumb terminals and
+# agentic CLIs -- see the starship block near the end of this file, which
+# overwrites PS1 when it runs). __git_ps1 comes from ~/.git-prompt.sh below.
 PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
   # We have color support; assume it's compliant with Ecma-48
@@ -35,19 +38,14 @@ fi
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# enable color support of ls and also add handy aliases
+# enable color support and add handy aliases (ls/ll/la/l are aliased to lsd
+# further down, after the tool-managed PATH entries are in place)
 if [ -x /usr/bin/dircolors ]; then
   test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-  alias ls='ls --color=auto'
   alias grep='grep --color=auto'
   alias fgrep='fgrep --color=auto'
   alias egrep='egrep --color=auto'
 fi
-
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -72,8 +70,9 @@ fi
 # Terminal prompt settings
 # Trim directory
 export PROMPT_DIRTRIM=2
-# Enable git branch in prompt
-source "$HOME"/.git-prompt.sh
+# Enable git branch in prompt (symlinked by ./install; guarded so a shell
+# opened between provisioning and install still loads the rest of this file)
+[ -f "$HOME/.git-prompt.sh" ] && source "$HOME/.git-prompt.sh"
 
 # pip bash completion
 _pip_completion() {
@@ -83,7 +82,7 @@ _pip_completion() {
 }
 complete -o default -F _pip_completion pip
 
-source "$HOME"/.bazel_completions.bash
+[ -f "$HOME/.bazel_completions.bash" ] && source "$HOME/.bazel_completions.bash"
 
 # pyenv
 if [ -d "$HOME/.pyenv" ]; then
@@ -127,6 +126,7 @@ export EDITOR=nvim
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 # ===================================================
 
+# lsd replaces coreutils ls everywhere (installed by provision-shell.sh)
 alias ls='lsd --color=auto'
 alias ll='lsd -alF'
 alias la='lsd -A'

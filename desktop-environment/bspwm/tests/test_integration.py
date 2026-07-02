@@ -59,7 +59,7 @@ class TestFullWorkflow(unittest.TestCase):
 
         # Create services
         self.display_service = DisplayService(executor=self.mock_xrandr, dry_run=True)
-        self.profile_service = ProfileService(Path(__file__).parent.parent / "profiles")
+        self.profile_service = ProfileService(Path(__file__).parent / "fixtures" / "profiles")
 
         # Create coordinator
         self.coordinator = MonitorManagerCoordinator(
@@ -91,7 +91,7 @@ class TestFullWorkflow(unittest.TestCase):
 
         workspaces = {w.output: w.desktop_names for w in desired.workspaces}
         self.assertEqual(workspaces, {"eDP-1": tuple(str(n) for n in range(1, 11))})
-        # Settings come from profiles/defaults.yaml via the load-time merge
+        # Settings come from fixtures/profiles/defaults.yaml via the load-time merge
         self.assertEqual(desired.bspwm_settings.border_width, 7)
         self.assertEqual(desired.bspwm_settings.window_gap, 15)
 

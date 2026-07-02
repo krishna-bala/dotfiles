@@ -36,19 +36,26 @@ with this file (guidance for editing this repo).
   (CLI tooling: starship, fzf, lsd, fd, ripgrep, lazygit, glab, node/nvm, uv)
   and `desktop-environment/provision.sh` (X11/WM packages + the bspwm
   monitor-manager's venv). Root `provision.sh` runs both in sequence; each
-  is also independently runnable and idempotent.
+  is also independently runnable and idempotent, and both source the
+  shared `provision-lib.sh`. Targets Ubuntu 22.04+ on x86_64 only.
 - Tmux plugins (tpm, nord-tmux, tmux-sensible) and dotbot itself are git
   submodules, all anonymous-HTTPS so this repo clones without credentials.
 
 ## Supply-chain / version-pinning policy
 
 Every tool fetched from an upstream release — nvm, uv, glab, lazygit,
-starship, fzf — is pinned to a specific version (no fetch-latest). Bumping a
-pin is a deliberate, reviewed change: update the version variable, review the
-upstream diff, then re-run the relevant `provision*.sh`. The exceptions are
-tools taken from distro apt repos (lsd, fd, ripgrep, plus the X11/WM
-packages) and node, which tracks the current LTS — these follow whatever the
-package source provides.
+starship, fzf — is pinned to an exact version (no fetch-latest) and
+verified against a recorded sha256 before installing (helpers live in
+`provision-lib.sh`). An installed version that differs from its pin in
+either direction is reinstalled at the pin, so machines converge on
+identical binaries. Bumping a pin is a deliberate, reviewed change: update
+the version variable and its sha256 (from the upstream release's published
+checksums), review the upstream diff, then re-run the relevant
+`provision*.sh`. The monitor-manager's Python dependencies are pinned the
+same way via the committed `uv.lock`; all syncs run `--locked`. The
+exceptions are tools taken from distro apt repos (lsd, fd, ripgrep, plus
+the X11/WM packages) and node, which tracks the current LTS — these follow
+whatever the package source provides.
 
 ## Commits
 

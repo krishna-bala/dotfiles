@@ -1,8 +1,9 @@
 # NOTE: the eDP-1 EDID below is synthetic, not real hardware (hashes to
-# 7f43020e9adaddcd via bspwm/lib/edid.py). personal-solo.yaml and
-# personal-home.yaml's laptop `edid:` are pinned to that hash -- don't
-# run redact-edid.py over this file, it would replace this with a
-# different (all-zero dummy) block and break that match.
+# 7f43020e9adaddcd via bspwm/lib/edid.py). The fixture profiles in
+# tests/fixtures/profiles pin their laptop edid to exactly that hash;
+# test_coordinator's EDID-resolution test asserts the two stay in sync.
+# Don't run redact-edid.py over this file: it would replace the block
+# with an all-zero dummy and change the hash, breaking that pairing.
 Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 16384 x 16384
 eDP-1 connected primary 1920x1080+0+0 (normal left inverted right x axis y axis) 336mm x 210mm
 	EDID:

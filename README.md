@@ -40,9 +40,16 @@ Shared:
   comments marking which section came from which half.
 - `install` — the Dotbot wrapper script.
 - `provision.sh` / `provision-shell.sh` / `desktop-environment/provision.sh`
-  — see below.
+  — see below. `provision-lib.sh` holds the helpers both scripts share
+  (version pinning, sha256 verification, fail-fast install).
+- `.github/workflows/ci.yml` — runs the monitor-manager test suite and
+  shellcheck over every tracked shell script on each push/PR.
 
 ## Install
+
+Provisioning assumes Ubuntu 22.04+ on x86_64: package names are apt's,
+a PPA is added for git, and the pinned release tarballs are the
+`x86_64`/`amd64` Linux builds.
 
 ```sh
 git clone --recurse-submodules https://github.com/krishna-bala/dotfiles

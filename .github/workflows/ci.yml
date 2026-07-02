@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  monitor-manager-tests:
+    name: monitor-manager tests
+    # ubuntu-24.04 matches the newest machine this repo targets
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      # Reuse the repo's own pinned + sha256-verified uv installer instead of
+      # a third-party setup action; this also exercises provision-lib.sh on
+      # every run.
+      - name: Install uv (via provision-lib.sh)
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          . ./provision-lib.sh
+          install_uv
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      # One safety-snapshot test shells out to real xrandr, so the suite runs
+      # under a virtual X display.
+      - name: Install xvfb + xrandr
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq xvfb x11-xserver-utils
+
+      - name: Sync venv from lockfile
+        working-directory: desktop-environment/bspwm
+        run: uv sync --locked
+
+      - name: Run tests
+        working-directory: desktop-environment/bspwm
+        run: xvfb-run -a uv run --no-sync pytest -q
+
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+
+      # Check every tracked file with a sh/bash shebang, so new scripts are
+      # covered automatically (git ls-files never descends into submodules).
+      - name: Run shellcheck
+        run: |
+          mapfile -t scripts < <(
+            git ls-files | while IFS= read -r f; do
+              [ -f "$f" ] && head -n1 "$f" 2>/dev/null | grep -qE '^#!.*\b(ba)?sh\b' && echo "$f"
+            done
+          )
+          printf 'checking %d scripts\n' "${#scripts[@]}"
+          [ "${#scripts[@]}" -gt 0 ] || { echo "no scripts found - detection is broken" >&2; exit 1; }
+          shellcheck -S warning "${scripts[@]}"

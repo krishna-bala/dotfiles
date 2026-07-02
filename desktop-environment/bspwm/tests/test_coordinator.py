@@ -36,7 +36,7 @@ class TestCoordinator(unittest.TestCase):
         # Create services with mocked xrandr
         mock_executor = MockXrandrExecutor(self.personal_solo_props)
         display_service = DisplayService(executor=mock_executor)
-        profile_service = ProfileService(Path(__file__).parent.parent / "profiles")
+        profile_service = ProfileService(Path(__file__).parent / "fixtures" / "profiles")
 
         self.coordinator = MonitorManagerCoordinator(
             display_service=display_service,
@@ -63,12 +63,29 @@ class TestCoordinator(unittest.TestCase):
 
     def test_resolve_laptop_by_edid_when_output_name_differs(self):
         """Laptop alias resolves via EDID when the panel name differs across
-        machines (eDP-1 vs eDP-1-1), matching profile selection behavior."""
+        machines (eDP-1 vs eDP-1-1), matching profile selection behavior.
+        Renaming the output breaks the name fallback, so resolution can only
+        succeed through the EDID map."""
         props = self.personal_solo_props.replace("eDP-1", "eDP-1-1")
         display_service = DisplayService(executor=MockXrandrExecutor(props))
+        profile_service = ProfileService(Path(__file__).parent / "fixtures" / "profiles")
+
+        # Guard the invariant this test depends on: the fixture profile's
+        # laptop pin must equal the hash of the xrandr fixture's synthetic
+        # EDID. If this fires, someone changed one fixture without the other.
+        fixture_edid = next(
+            m.edid for m in display_service.detect_monitors() if m.output == "eDP-1-1"
+        )
+        self.assertEqual(
+            profile_service.load_profile("personal-solo").laptop.edid,
+            fixture_edid,
+            "fixtures/profiles/personal-solo.yaml laptop edid must equal the "
+            "hash of the EDID in fixtures/xrandr/personal-solo-props.txt",
+        )
+
         coordinator = MonitorManagerCoordinator(
             display_service=display_service,
-            profile_service=ProfileService(Path(__file__).parent.parent / "profiles"),
+            profile_service=profile_service,
         )
 
         resolved = coordinator.resolve_profile("personal-solo")

@@ -1,0 +1,17 @@
+# Test fixture: mirrors profiles/defaults.yaml so fixture profiles merge the
+# same way the tracked ones do. Tests assert on border_width/window_gap, so
+# keep those in sync with the assertions if you change them.
+#
+# Shared defaults merged under every profile at load time (deep merge,
+# profile values win). This file is not a profile; list/match skip it.
+
+window_manager:
+  settings:
+    border_width: 7
+    window_gap: 15
+    focused_border_color: "#629dc8"
+    normal_border_color: "#1f2339"
+
+ui:
+  # Bars without an explicit font_size inherit this
+  font_size: 16
