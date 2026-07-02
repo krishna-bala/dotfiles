@@ -1,15 +1,13 @@
-# public-dotfiles
+# dotfiles
 
-Consolidated personal dotfiles: a shell/terminal/dev foundation plus a
-bspwm-based X11 desktop. This repo merges two formerly-separate public
-repos, `shell-env` and `desktop-environment`, keeping their full commit
-history. Everything installs via one [Dotbot](https://github.com/anishathalye/dotbot)
+Personal dotfiles: a shell/terminal/dev foundation plus a bspwm-based X11
+desktop. Everything installs via one [Dotbot](https://github.com/anishathalye/dotbot)
 pass from the repo root.
 
 ## Layout
 
-Shell/terminal/dev foundation (formerly `shell-env` — these tools don't
-reference each other, so each gets its own top-level directory):
+Shell/terminal/dev foundation — these tools don't reference each other, so
+each gets its own top-level directory:
 
 - `bash/` — `bashrc`, `bash_aliases`, `profile`, `inputrc`,
   `bazel_completions.bash`
@@ -21,7 +19,7 @@ reference each other, so each gets its own top-level directory):
 - `claude/` — files this repo deploys to `~/.claude/` (`CLAUDE.md`,
   `status-line.sh`)
 
-Desktop (formerly `desktop-environment`):
+Desktop:
 
 - `desktop-environment/` — `bspwm/`, `sxhkd/`, `polybar/`, `picom.conf`,
   `dunstrc`. These stay grouped in one directory because they're developed
@@ -47,8 +45,8 @@ Shared:
 ## Install
 
 ```sh
-git clone --recurse-submodules https://github.com/krishna-bala/public-dotfiles
-cd public-dotfiles
+git clone --recurse-submodules https://github.com/krishna-bala/dotfiles
+cd dotfiles
 ./provision.sh   # installs pinned CLI tooling + X11/WM packages
 ./install        # symlinks everything into place via dotbot
 ```
