@@ -9,7 +9,7 @@ from lib.state.desired import compile_desired
 
 class TestCompilePersonalSolo(unittest.TestCase):
     def setUp(self):
-        self.profiles_dir = Path(__file__).parent.parent / "profiles"
+        self.profiles_dir = Path(__file__).parent / "fixtures" / "profiles"
         self.service = ProfileService(self.profiles_dir)
         self.profile = self.service.load_profile("personal-solo")
         self.desired = compile_desired(self.profile, alias_to_output={"laptop": "eDP-1"})
@@ -55,7 +55,7 @@ class TestCompilePersonalHome(unittest.TestCase):
     paths: rotation, sub-1.0 scale, multiple workspaces, multiple bars."""
 
     def setUp(self):
-        self.profiles_dir = Path(__file__).parent.parent / "profiles"
+        self.profiles_dir = Path(__file__).parent / "fixtures" / "profiles"
         self.service = ProfileService(self.profiles_dir)
         self.profile = self.service.load_profile("personal-home")
         self.desired = compile_desired(
@@ -112,7 +112,7 @@ class TestCompileDropsUnmappedAliases(unittest.TestCase):
     workspaces drop silently — same forgiveness the existing coordinator has."""
 
     def setUp(self):
-        self.profiles_dir = Path(__file__).parent.parent / "profiles"
+        self.profiles_dir = Path(__file__).parent / "fixtures" / "profiles"
         self.service = ProfileService(self.profiles_dir)
 
     def test_missing_alias_drops_output(self):
@@ -128,7 +128,7 @@ class TestCompileDropsUnmappedAliases(unittest.TestCase):
 class TestCompileSettings(unittest.TestCase):
     def test_profile_settings_override_defaults(self):
         profile = ProfileService(
-            Path(__file__).parent.parent / "profiles"
+            Path(__file__).parent / "fixtures" / "profiles"
         ).load_profile("personal-solo")
         desired = compile_desired(profile, alias_to_output={"laptop": "eDP-1"})
         # personal-solo sets border_width=7, window_gap=15 — same as defaults,

@@ -286,7 +286,7 @@ class TestPlannerExecutorRoundTrip(unittest.TestCase):
             XrandrOutput,
         )
 
-        profiles_dir = Path(__file__).parent.parent / "profiles"
+        profiles_dir = Path(__file__).parent / "fixtures" / "profiles"
 
         # The exact unplug pre-state
         dp2 = BspwmMonitor(

@@ -1,0 +1,46 @@
+# Test fixture: mirrors profiles/personal-solo.yaml in shape, but every EDID
+# is synthetic. The laptop edid below MUST equal
+# hash_edid(<EDID block in fixtures/xrandr/personal-solo-props.txt>);
+# test_coordinator asserts that invariant with a pointer back here.
+name: personal-solo
+description: Personal laptop with built-in display only
+
+# Detection rules - how to identify this configuration
+detection:
+  # Laptop display (matches eDP output)
+  laptop:
+    output: eDP-1
+    alias: laptop
+    edid: "7f43020e9adaddcd" # hash of the synthetic xrandr-fixture EDID
+
+  # No external monitors required for this profile
+  monitors: []
+
+# Physical display configuration (xrandr)
+display:
+  laptop:
+    enabled: true
+    resolution: "1920x1200"
+    position: "0x0"
+    rotation: normal
+    scale: "1x1"
+    primary: true
+
+# Window manager configuration (BSPWM)
+window_manager:
+  # Single monitor, so only laptop in the order
+  monitor_order: [laptop]
+
+  # All 10 workspaces on laptop display
+  workspaces:
+    laptop: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+# UI configuration (polybar)
+ui:
+  bars:
+    - monitor: laptop
+      orientation: landscape
+      modules:
+        left: launcher workspaces
+        center: date
+        right: network battery backlight alsa tray time

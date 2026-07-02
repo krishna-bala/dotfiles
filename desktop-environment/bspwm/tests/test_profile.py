@@ -25,8 +25,8 @@ class TestProfileService(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures."""
-        # Use actual profiles directory for integration tests
-        self.profiles_dir = Path(__file__).parent.parent / "profiles"
+        # Synthetic fixture profiles (tracked profiles are validated by test_tracked_profiles.py)
+        self.profiles_dir = Path(__file__).parent / "fixtures" / "profiles"
         self.service = ProfileService(self.profiles_dir)
 
     def test_load_personal_solo_profile(self):

@@ -94,7 +94,9 @@ Key bindings reference `~/.config/bspwm/scripts/` (symlinked by Dotbot). Notable
 
 ## Testing
 
-194 tests across 19 files. Unit tests mock hardware via Protocol implementations (MockXrandrExecutor, MockBspcExecutor, MockPolybarExecutor). Integration tests use xrandr fixture files in `tests/fixtures/xrandr/`; one safety-snapshot test shells out to real `xrandr` and needs a display (use `xvfb-run` headless).
+200 tests across 21 files. Unit tests mock hardware via Protocol implementations (MockXrandrExecutor, MockBspcExecutor, MockPolybarExecutor). Integration tests use xrandr fixture files in `tests/fixtures/xrandr/`; one safety-snapshot test shells out to real `xrandr` and needs a display (use `xvfb-run` headless).
+
+Tests never read the tracked `profiles/` directory (production config with real-hardware EDID pins); they use the synthetic profiles in `tests/fixtures/profiles/` instead. The one exception is `test_tracked_profiles.py`, which exists to validate that the real profiles parse, merge with defaults.yaml, and pass validation. The fixture profiles' laptop edid must stay equal to the hash of the synthetic EDID in `tests/fixtures/xrandr/personal-solo-props.txt`; test_coordinator asserts this.
 
 ```bash
 uv run pytest                                      # all

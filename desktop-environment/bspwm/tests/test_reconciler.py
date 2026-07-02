@@ -41,7 +41,7 @@ from lib.state.hardware import (
     XrandrOutput,
 )
 
-PROFILES_DIR = Path(__file__).parent.parent / "profiles"
+PROFILES_DIR = Path(__file__).parent / "fixtures" / "profiles"
 
 
 def _personal_solo():

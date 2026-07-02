@@ -33,7 +33,7 @@ class TestPlanCommand(unittest.TestCase):
         )
 
         # Profile service pointing to test profiles
-        self.profile_dir = Path(__file__).parent.parent / "profiles"
+        self.profile_dir = Path(__file__).parent / "fixtures" / "profiles"
         self.profile_service = ProfileService(self.profile_dir)
 
     def test_plan_shows_display_configuration(self):
