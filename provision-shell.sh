@@ -182,6 +182,20 @@ else
   install_release_bundle \
     "https://github.com/kovidgoyal/kitty/releases/download/v$KITTY_VERSION/kitty-$KITTY_VERSION-x86_64.txz" \
     "$KITTY_SHA256" kitty.app 0 kitty kitten
+  # Desktop integration, per kitty's install docs: launcher entries with
+  # absolute Exec/Icon paths (the bundle's .desktop files assume kitty is on
+  # the system PATH), and xdg-terminal-exec registration. These embed $HOME,
+  # so they're generated here rather than symlinked by dotbot.
+  mkdir -p "$HOME/.local/share/applications" "$HOME/.config"
+  cp "$HOME/.local/kitty.app/share/applications/kitty.desktop" \
+    "$HOME/.local/kitty.app/share/applications/kitty-open.desktop" \
+    "$HOME/.local/share/applications/"
+  sed -i \
+    -e "s|Icon=kitty|Icon=$HOME/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" \
+    -e "s|Exec=kitty|Exec=$HOME/.local/kitty.app/bin/kitty|g" \
+    "$HOME/.local/share/applications/kitty.desktop" \
+    "$HOME/.local/share/applications/kitty-open.desktop"
+  echo 'kitty.desktop' >"$HOME/.config/xdg-terminals.list"
 fi
 
 # ----------------------------------------------------------------------------
