@@ -34,7 +34,7 @@ with this file (guidance for editing this repo).
   place — no templating, no generated files.
 - Provisioning is split in two, matching the two stacks: `provision-shell.sh`
   (CLI tooling: starship, fzf, lsd, fd, ripgrep, lazygit, glab, node/nvm,
-  uv, plus the kitty and neovim bundles) and
+  uv, rust/tree-sitter, plus the kitty and neovim bundles) and
   `desktop-environment/provision.sh` (X11/WM packages + the bspwm
   monitor-manager's venv). Root `provision.sh` runs both in sequence; each
   is also independently runnable and idempotent, and both source the
@@ -55,7 +55,11 @@ release's published checksums where they exist; kitty and neovim publish
 none, so their hashes are computed from the reviewed download), review the
 upstream diff, then re-run the relevant `provision*.sh`. The
 monitor-manager's Python dependencies are pinned the same way via the
-committed `uv.lock`; all syncs run `--locked`. The exceptions are tools
+committed `uv.lock`; all syncs run `--locked`. The rust toolchain is pinned the same way
+(verified rustup-init, pinned toolchain version), and the tree-sitter CLI
+is built from source at a pinned version with it — upstream prebuilts
+target glibc 2.39 and won't run on 22.04; cargo verifies every crate
+against the crates.io registry checksums. The exceptions are tools
 taken from distro apt repos (fd, ripgrep, plus the X11/WM packages) and
 node, which tracks the current LTS — these follow whatever the package
 source provides. protonvpn-app is deliberately unprovisioned (Proton's own
