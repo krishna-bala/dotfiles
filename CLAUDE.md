@@ -45,7 +45,8 @@ with this file (guidance for editing this repo).
 ## Supply-chain / version-pinning policy
 
 Every tool fetched from an upstream release — nvm, uv, glab, lazygit,
-starship, fzf, lsd, kitty, neovim — is pinned to an exact version (no
+starship, fzf, lsd, kitty, neovim, and the Nerd Fonts (JetBrainsMono,
+Iosevka, FantasqueSansMono) — is pinned to an exact version (no
 fetch-latest) and verified against a recorded sha256 before installing
 (helpers live in `provision-lib.sh`). An installed version that differs
 from its pin in either direction is reinstalled at the pin, so machines

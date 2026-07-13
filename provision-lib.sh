@@ -115,6 +115,52 @@ run_verified_installer() {
 }
 
 # ----------------------------------------------------------------------------
+# Nerd Fonts (one release pins all per-font archives; sha256s from the
+# release's published SHA-256.txt). Both halves install from this set:
+# kitty uses JetBrainsMono (shell), polybar/dunst/rofi use all three
+# (desktop), so the pins live here.
+# ----------------------------------------------------------------------------
+NERD_FONTS_VERSION="v3.4.0"
+# shellcheck disable=SC2034  # consumed by the scripts that source this lib
+NERD_FONT_JETBRAINSMONO_SHA256="ef552a3e638f25125c6ad4c51176a6adcdce295ab1d2ffacf0db060caf8c1582"
+# shellcheck disable=SC2034
+NERD_FONT_IOSEVKA_SHA256="213ee24cda99ca84d0a8326de133e7e8b2baf9ba23659ce829f589f771d357d2"
+# shellcheck disable=SC2034
+NERD_FONT_FANTASQUESANSMONO_SHA256="462b5490475fb8560dded4eb6cdd9cfd0049b800acee329094def095557d0ffd"
+
+# usage: install_nerd_font <ArchiveName> <sha256>
+# Installs one nerd-fonts archive into a versioned directory under
+# ~/.local/share/fonts/nerd-fonts/. The directory name is the pin check;
+# older versions of the same font are removed so machines converge, and
+# the fontconfig cache is refreshed only when something changed.
+install_nerd_font() {
+  local name="$1" sha256="$2"
+  local fonts_root="$HOME/.local/share/fonts/nerd-fonts"
+  local dest="$fonts_root/$name-$NERD_FONTS_VERSION"
+  log "nerd-font $name $NERD_FONTS_VERSION"
+  if [ -d "$dest" ]; then
+    skip "$name $NERD_FONTS_VERSION already installed"
+    return 0
+  fi
+  local tmp
+  tmp="$(mktemp -d)"
+  curl -fsSL -o "$tmp/font.tar.xz" \
+    "https://github.com/ryanoasis/nerd-fonts/releases/download/$NERD_FONTS_VERSION/$name.tar.xz" ||
+    die "download failed: nerd-font $name $NERD_FONTS_VERSION"
+  verify_sha256 "$tmp/font.tar.xz" "$sha256"
+  mkdir -p "$tmp/font"
+  tar -xJf "$tmp/font.tar.xz" -C "$tmp/font" || die "extract failed: $name"
+  mkdir -p "$fonts_root"
+  rm -rf "$fonts_root/$name-"*
+  mv "$tmp/font" "$dest"
+  rm -rf "$tmp"
+  # The versioned dir doubles as the pin check, so it must not survive a
+  # failed cache rebuild - remove it before dying to keep the step atomic.
+  fc-cache -f "$fonts_root" >/dev/null ||
+    { rm -rf "$dest"; die "fc-cache failed (is fontconfig installed?)"; }
+}
+
+# ----------------------------------------------------------------------------
 # uv is needed by both halves (shell dev tooling; building the bspwm
 # monitor-manager venv), so its pin lives here as the single source of truth.
 # ----------------------------------------------------------------------------

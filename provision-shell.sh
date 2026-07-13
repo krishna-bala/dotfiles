@@ -71,7 +71,7 @@ sudo apt-get install -y -qq \
   git curl wget unzip xz-utils \
   build-essential pkg-config \
   tmux jq xclip \
-  bash-completion
+  bash-completion fontconfig
 
 # ----------------------------------------------------------------------------
 # nvm + node LTS
@@ -202,6 +202,9 @@ else
     "$HOME/.local/share/applications/kitty-open.desktop"
   echo 'kitty.desktop' >"$HOME/.config/xdg-terminals.list"
 fi
+
+# kitty.conf's font_family is "JetBrainsMono Nerd Font Mono"
+install_nerd_font JetBrainsMono "$NERD_FONT_JETBRAINSMONO_SHA256"
 
 # ----------------------------------------------------------------------------
 # neovim (upstream bundle -> ~/.local/nvim.app). bashrc's EDITOR, gitconfig's

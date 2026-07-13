@@ -41,7 +41,15 @@ sudo apt-get install -y -qq \
   redshift brightnessctl pulseaudio-utils scrot xclip \
   x11-xserver-utils x11-xkb-utils xserver-xorg-input-wacom \
   network-manager-gnome blueman xdg-utils \
-  i3lock libnotify-bin
+  i3lock libnotify-bin fontconfig xz-utils
+
+# ----------------------------------------------------------------------------
+# Nerd Fonts (pinned via provision-lib.sh): polybar's bars use
+# FantasqueSansM/Iosevka, dunst and the rofi themes use JetBrainsMono.
+# ----------------------------------------------------------------------------
+install_nerd_font JetBrainsMono "$NERD_FONT_JETBRAINSMONO_SHA256"
+install_nerd_font Iosevka "$NERD_FONT_IOSEVKA_SHA256"
+install_nerd_font FantasqueSansMono "$NERD_FONT_FANTASQUESANSMONO_SHA256"
 
 # ----------------------------------------------------------------------------
 # uv (python package/venv manager) - needed for `uv sync` below; pin and
