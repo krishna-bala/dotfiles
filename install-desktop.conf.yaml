@@ -1,0 +1,40 @@
+# Desktop-environment half of the install: the bspwm/sxhkd/polybar/picom/
+# dunst stack plus the X11-only leaf configs and scripts (Xresources,
+# swapescape, wacominit, lockscreen, clipimg). `./install` runs this config
+# after install.conf.yaml unless invoked with --no-desktop, so shell-only
+# machines (e.g. remote boxes) skip everything in this file.
+#
+# Every link is forced, same as install.conf.yaml: this repo is the single
+# source of truth for these paths, so install always converges to the same
+# state -- a pre-existing regular file at any target is replaced, never left
+# to shadow the repo copy.
+- defaults:
+    link:
+      relink: true
+      force: true
+      create: true
+
+- link:
+    ~/.config/bspwm: desktop-environment/bspwm
+    ~/.config/sxhkd: desktop-environment/sxhkd
+    ~/.config/polybar: desktop-environment/polybar
+    ~/.config/picom/picom.conf: desktop-environment/picom.conf
+    ~/.config/dunst/dunstrc: desktop-environment/dunstrc
+    ~/.Xresources: Xresources
+    ~/.config/systemd/user/swapescape.service: systemd/swapescape.service
+    ~/.local/bin/wacominit: bin/wacominit
+    ~/.local/bin/lockscreen: bin/lockscreen
+    ~/.local/bin/clipimg: bin/clipimg
+
+- shell:
+    # redshift.conf is seeded by copy, never symlinked: each machine tunes
+    # its own lat/lon and temperatures afterwards, so repo updates to this
+    # file intentionally do not propagate to already-seeded machines.
+    - command: "[ ! -f ~/.config/redshift.conf ] && mkdir -p ~/.config && cp redshift.conf ~/.config/redshift.conf || true"
+      description: Copying redshift.conf if needed
+      quiet: true
+    # --locked: install exactly what uv.lock records; fails loudly if
+    # pyproject.toml and uv.lock have drifted apart.
+    - command: "cd desktop-environment/bspwm && uv sync --locked"
+      description: Building monitor-manager venv
+      quiet: false

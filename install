@@ -1,15 +1,33 @@
 #!/usr/bin/env bash
+#
+# install - dotbot wrapper. Links the shell/terminal/dev configs
+# (install.conf.yaml), then the desktop-environment configs
+# (install-desktop.conf.yaml) unless --no-desktop is given. Any other
+# arguments are forwarded to dotbot itself (e.g. -v, -Q).
 
 set -e
 
 CONFIG="./install.conf.yaml"
+DESKTOP_CONFIG="./install-desktop.conf.yaml"
 DOTBOT_DIR="./dotbot"
 
 DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+DESKTOP=true
+DOTBOT_ARGS=()
+for arg in "$@"; do
+  case "$arg" in
+    --no-desktop) DESKTOP=false ;;
+    *) DOTBOT_ARGS+=("$arg") ;;
+  esac
+done
+
 cd "$BASEDIR"
 git -C "$DOTBOT_DIR" submodule sync --quiet --recursive
 git submodule update --init --recursive "$DOTBOT_DIR"
 
-"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "$BASEDIR" -c "$CONFIG" "${@}"
+"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "$BASEDIR" -c "$CONFIG" ${DOTBOT_ARGS[@]+"${DOTBOT_ARGS[@]}"}
+if "$DESKTOP"; then
+  "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "$BASEDIR" -c "$DESKTOP_CONFIG" ${DOTBOT_ARGS[@]+"${DOTBOT_ARGS[@]}"}
+fi

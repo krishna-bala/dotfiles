@@ -5,7 +5,8 @@ Guidance for working on this repository.
 ## What this repo is
 
 Personal dotfiles: a shell/terminal/dev foundation plus a bspwm-based X11
-desktop, all installed via one Dotbot pass from the repo root.
+desktop, installed via Dotbot from the repo root. The desktop half is
+optional: `--no-desktop` on `./install` and `./provision.sh` skips it.
 
 Do not confuse `claude/CLAUDE.md` (the file this repo symlinks to
 `~/.claude/CLAUDE.md` on install — guidance for using Claude Code itself)
@@ -28,17 +29,22 @@ with this file (guidance for editing this repo).
 ## Architecture
 
 - [Dotbot](https://github.com/anishathalye/dotbot) drives installation via
-  the single root `install.conf.yaml`; `./install` is the entry point.
-  There is one dotbot submodule, shared by both halves.
+  two root configs — `install.conf.yaml` (shell/terminal/dev, always
+  applied) and `install-desktop.conf.yaml` (the desktop-environment links
+  and steps, skipped when `./install` is given `--no-desktop`); `./install`
+  is the entry point. There is one dotbot submodule, shared by both halves.
+  When adding a config file, put its entry in whichever half it belongs to;
+  anything X11-dependent goes in the desktop config.
 - Configs are flat root-level files or per-tool directories, symlinked into
   place — no templating, no generated files.
 - Provisioning is split in two, matching the two stacks: `provision-shell.sh`
   (CLI tooling: starship, fzf, lsd, fd, ripgrep, lazygit, glab, node/nvm,
   uv, rust/tree-sitter, plus the kitty and neovim bundles) and
   `desktop-environment/provision.sh` (X11/WM packages + the bspwm
-  monitor-manager's venv). Root `provision.sh` runs both in sequence; each
-  is also independently runnable and idempotent, and both source the
-  shared `provision-lib.sh`. Targets Ubuntu 22.04+ on x86_64 only.
+  monitor-manager's venv). Root `provision.sh` runs both in sequence
+  (`--no-desktop` skips the X11 half); each is also independently runnable
+  and idempotent, and both source the shared `provision-lib.sh`. Targets
+  Ubuntu 22.04+ on x86_64 only.
 - Tmux plugins (tpm, nord-tmux, tmux-sensible) and dotbot itself are git
   submodules, all anonymous-HTTPS so this repo clones without credentials.
 

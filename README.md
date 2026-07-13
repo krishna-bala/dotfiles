@@ -1,8 +1,8 @@
 # dotfiles
 
 Personal dotfiles: a shell/terminal/dev foundation plus a bspwm-based X11
-desktop. Everything installs via one [Dotbot](https://github.com/anishathalye/dotbot)
-pass from the repo root.
+desktop. Everything installs via [Dotbot](https://github.com/anishathalye/dotbot)
+from the repo root; the desktop half is skippable with `--no-desktop`.
 
 ## Layout
 
@@ -36,9 +36,10 @@ Shared:
 - `bin/` — helper scripts installed to `~/.local/bin` (`wacominit`,
   `lockscreen`, `clipimg`) plus a placeholder for future shell helpers.
 - `dotbot/` — the single, shared Dotbot submodule.
-- `install.conf.yaml` — one merged Dotbot config for everything, with
-  comments marking which section came from which half.
-- `install` — the Dotbot wrapper script.
+- `install.conf.yaml` / `install-desktop.conf.yaml` — the two Dotbot
+  configs: the shell/terminal/dev half (always applied) and the
+  desktop-environment half (skipped by `./install --no-desktop`).
+- `install` — the Dotbot wrapper script; runs both configs by default.
 - `provision.sh` / `provision-shell.sh` / `desktop-environment/provision.sh`
   — see below. `provision-lib.sh` holds the helpers both scripts share
   (version pinning, sha256 verification, fail-fast install).
@@ -58,24 +59,29 @@ cd dotfiles
 ./install        # symlinks everything into place via dotbot
 ```
 
-`./install` is safe to re-run; it relinks everything via dotbot.
+`./install` is safe to re-run; it relinks everything via dotbot. Any
+arguments other than `--no-desktop` are forwarded to dotbot itself.
 
-### Installing just one half
+### Shell-only machines (no desktop)
 
-Provisioning is split so you can run just one half standalone:
+On machines that shouldn't get the X11/bspwm customization — remote boxes,
+servers, containers — pass `--no-desktop` to both scripts:
+
+```sh
+./provision.sh --no-desktop  # shell/terminal/dev tooling only
+./install --no-desktop       # links only the shell half's configs
+```
+
+`--no-desktop` skips `desktop-environment/provision.sh` and the
+`install-desktop.conf.yaml` dotbot pass, so no X11 packages are installed
+and none of the desktop configs (bspwm/sxhkd/polybar/picom/dunst,
+`Xresources`, `swapescape.service`, `wacominit`/`lockscreen`/`clipimg`) are
+linked. The two provisioning halves also remain independently runnable:
 
 ```sh
 ./provision-shell.sh               # shell/terminal/dev tooling only
 ./desktop-environment/provision.sh # X11/WM packages + bspwm venv only
 ```
-
-Symlinking, however, is unified: there's a single dotbot submodule and a
-single `install.conf.yaml`, so `./install` always links both halves in one
-pass (this is also why there's no separate `install.conf.yaml` nested in
-either half anymore). If you only want one half's symlinks, comment out the
-irrelevant block in `install.conf.yaml` — the two sections are marked — before
-running `./install`, or invoke dotbot directly with a filtered copy of the
-config.
 
 ## Machine-local overlay
 
@@ -97,5 +103,5 @@ simply absent and every reference is a no-op.
 A private meta-repo can pull this repo in as a submodule, run this repo's
 `install` (or its own dotbot pass over this repo's files), and then apply
 its overlay last. This repo intentionally does not run `clean: ["~"]` in
-its `install.conf.yaml`, so a parent meta-repo can own that single pass
+its dotbot configs, so a parent meta-repo can own that single pass
 without conflicts.

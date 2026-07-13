@@ -1,3 +1,7 @@
+# Shell/terminal/dev half of the install; `./install` always runs this
+# config, and additionally install-desktop.conf.yaml (the bspwm/X11 stack)
+# unless invoked with --no-desktop.
+#
 # Every link is forced: this repo is the single source of truth for these
 # paths, so install always converges to the same state -- a pre-existing
 # regular file at any target is replaced, never left to shadow the repo copy.
@@ -8,7 +12,6 @@
       create: true
 
 - link:
-    # --- shell/terminal/dev foundation (bash/, git/, tmux/, kitty/, starship/, claude/) ---
     ~/.bash_aliases: bash/bash_aliases
     ~/.bashrc: bash/bashrc
     ~/.profile: bash/profile
@@ -24,32 +27,9 @@
     ~/.config/kitty: kitty
     ~/.claude/CLAUDE.md: claude/CLAUDE.md
     ~/.claude/scripts/status-line.sh: claude/status-line.sh
-    # --- desktop-environment (bspwm/sxhkd/polybar/picom/dunst stack + standalone leaf configs) ---
-    ~/.config/bspwm: desktop-environment/bspwm
-    ~/.config/sxhkd: desktop-environment/sxhkd
-    ~/.config/polybar: desktop-environment/polybar
-    ~/.config/picom/picom.conf: desktop-environment/picom.conf
-    ~/.config/dunst/dunstrc: desktop-environment/dunstrc
-    ~/.Xresources: Xresources
-    ~/.config/systemd/user/swapescape.service: systemd/swapescape.service
-    ~/.local/bin/wacominit: bin/wacominit
-    ~/.local/bin/lockscreen: bin/lockscreen
-    ~/.local/bin/clipimg: bin/clipimg
 
 - shell:
     - [
         git submodule update --init --recursive,
         Installing/updating submodules,
       ]
-    # --- desktop-environment-only steps ---
-    # redshift.conf is seeded by copy, never symlinked: each machine tunes
-    # its own lat/lon and temperatures afterwards, so repo updates to this
-    # file intentionally do not propagate to already-seeded machines.
-    - command: "[ ! -f ~/.config/redshift.conf ] && mkdir -p ~/.config && cp redshift.conf ~/.config/redshift.conf || true"
-      description: Copying redshift.conf if needed
-      quiet: true
-    # --locked: install exactly what uv.lock records; fails loudly if
-    # pyproject.toml and uv.lock have drifted apart.
-    - command: "cd desktop-environment/bspwm && uv sync --locked"
-      description: Building monitor-manager venv
-      quiet: false
