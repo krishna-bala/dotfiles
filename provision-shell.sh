@@ -67,9 +67,11 @@ if ! grep -rq "git-core/ppa" /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/d
   sudo add-apt-repository -y ppa:git-core/ppa
 fi
 sudo apt-get update -qq
+# libclang-dev: the tree-sitter CLI source build below pulls in rquickjs-sys,
+# whose bindgen build step needs libclang.so at compile time.
 sudo apt-get install -y -qq \
   git curl wget unzip xz-utils \
-  build-essential pkg-config \
+  build-essential pkg-config libclang-dev \
   tmux jq xclip \
   bash-completion fontconfig
 
@@ -231,8 +233,9 @@ if [ -x "$CARGO_HOME/bin/rustup" ]; then
   skip "rustup already installed"
 else
   tmp="$(mktemp -d)"
-  curl -fsSL -o "$tmp/rustup-init" \
-    "https://static.rust-lang.org/rustup/archive/$RUSTUP_VERSION/x86_64-unknown-linux-gnu/rustup-init" ||
+  fetch_url \
+    "https://static.rust-lang.org/rustup/archive/$RUSTUP_VERSION/x86_64-unknown-linux-gnu/rustup-init" \
+    "$tmp/rustup-init" ||
     die "download failed: rustup-init $RUSTUP_VERSION"
   verify_sha256 "$tmp/rustup-init" "$RUSTUP_INIT_SHA256"
   chmod +x "$tmp/rustup-init"
