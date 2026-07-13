@@ -59,6 +59,16 @@ verify_sha256() {
     die "sha256 mismatch for $file (expected $expected) - refusing to install"
 }
 
+# usage: fetch_url <url> <dest-file>
+# curl with retries: transient failures (connection resets, timeouts, 5xx)
+# are retried before giving up, so one flaky transfer doesn't abort a whole
+# provisioning run. --retry-all-errors is safe here because every download
+# is sha256-verified before anything is installed.
+fetch_url() {
+  local url="$1" dest="$2"
+  curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o "$dest" "$url"
+}
+
 # usage: install_release_binary <url> <sha256> <member-path-in-tar> <dest-name> [strip]
 # Download a release tarball, verify it against the recorded sha256, and
 # install one binary from it into ~/.local/bin. On failure the temp dir is
@@ -67,7 +77,7 @@ install_release_binary() {
   local url="$1" sha256="$2" member="$3" dest="$4" strip="${5:-0}"
   local tmp
   tmp="$(mktemp -d)"
-  curl -fsSL -o "$tmp/archive.tar.gz" "$url" || die "download failed: $url"
+  fetch_url "$url" "$tmp/archive.tar.gz" || die "download failed: $url"
   verify_sha256 "$tmp/archive.tar.gz" "$sha256"
   tar -xzf "$tmp/archive.tar.gz" -C "$tmp" --strip-components="$strip" "$member" ||
     die "extract failed: $member from $url"
@@ -86,7 +96,7 @@ install_release_bundle() {
   shift 4
   local tmp bin
   tmp="$(mktemp -d)"
-  curl -fsSL -o "$tmp/bundle" "$url" || die "download failed: $url"
+  fetch_url "$url" "$tmp/bundle" || die "download failed: $url"
   verify_sha256 "$tmp/bundle" "$sha256"
   mkdir -p "$tmp/app"
   tar -xaf "$tmp/bundle" -C "$tmp/app" --strip-components="$strip" ||
@@ -108,7 +118,7 @@ run_verified_installer() {
   local url="$1" sha256="$2"
   local tmp
   tmp="$(mktemp -d)"
-  curl -fsSL -o "$tmp/installer.sh" "$url" || die "download failed: $url"
+  fetch_url "$url" "$tmp/installer.sh" || die "download failed: $url"
   verify_sha256 "$tmp/installer.sh" "$sha256"
   bash "$tmp/installer.sh" || die "installer failed: $url"
   rm -rf "$tmp"
@@ -144,8 +154,9 @@ install_nerd_font() {
   fi
   local tmp
   tmp="$(mktemp -d)"
-  curl -fsSL -o "$tmp/font.tar.xz" \
-    "https://github.com/ryanoasis/nerd-fonts/releases/download/$NERD_FONTS_VERSION/$name.tar.xz" ||
+  fetch_url \
+    "https://github.com/ryanoasis/nerd-fonts/releases/download/$NERD_FONTS_VERSION/$name.tar.xz" \
+    "$tmp/font.tar.xz" ||
     die "download failed: nerd-font $name $NERD_FONTS_VERSION"
   verify_sha256 "$tmp/font.tar.xz" "$sha256"
   mkdir -p "$tmp/font"

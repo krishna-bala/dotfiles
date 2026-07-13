@@ -231,8 +231,9 @@ if [ -x "$CARGO_HOME/bin/rustup" ]; then
   skip "rustup already installed"
 else
   tmp="$(mktemp -d)"
-  curl -fsSL -o "$tmp/rustup-init" \
-    "https://static.rust-lang.org/rustup/archive/$RUSTUP_VERSION/x86_64-unknown-linux-gnu/rustup-init" ||
+  fetch_url \
+    "https://static.rust-lang.org/rustup/archive/$RUSTUP_VERSION/x86_64-unknown-linux-gnu/rustup-init" \
+    "$tmp/rustup-init" ||
     die "download failed: rustup-init $RUSTUP_VERSION"
   verify_sha256 "$tmp/rustup-init" "$RUSTUP_INIT_SHA256"
   chmod +x "$tmp/rustup-init"
