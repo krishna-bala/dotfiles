@@ -93,3 +93,5 @@ kssh() {
   kitty +kitten ssh "$@"
 }
 # ===============
+
+alias claude='claude --allow-dangerously-skip-permissions'
