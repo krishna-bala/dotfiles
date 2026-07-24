@@ -69,11 +69,15 @@ fi
 sudo apt-get update -qq
 # libclang-dev: the tree-sitter CLI source build below pulls in rquickjs-sys,
 # whose bindgen build step needs libclang.so at compile time.
+# fonts-symbola: covers Miscellaneous Technical symbols that neither the Nerd
+# Fonts nor Noto Color Emoji carry. U+23F5 in particular is excluded from the
+# RGI emoji set, so nothing else on a clean install provides it and Claude
+# Code's permission-mode indicators render as tofu.
 sudo apt-get install -y -qq \
   git curl wget unzip xz-utils \
   build-essential pkg-config libclang-dev \
   tmux jq xclip \
-  bash-completion fontconfig
+  bash-completion fontconfig fonts-symbola
 
 # ----------------------------------------------------------------------------
 # nvm + node LTS
