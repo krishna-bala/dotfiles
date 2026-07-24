@@ -29,8 +29,8 @@ mkdir -p "$HOME/.local/bin" "$HOME/.local/share"
 # ----------------------------------------------------------------------------
 NVM_VERSION="v0.40.3"
 NVM_INSTALL_SHA256="2d8359a64a3cb07c02389ad88ceecd43f2fa469c06104f92f98df5b6f315275f"
-GLAB_VERSION="v1.102.0"
-GLAB_SHA256="2e06f278bb1762126e9b695f67baf5e3210df431b2039c76c1991252bf9c0868"
+GLAB_VERSION="v1.109.0"
+GLAB_SHA256="827d2bb5dfd96758d423e6e5559f6265bce7a18558d11436145484c62aff1965"
 LAZYGIT_VERSION="v0.62.2"
 LAZYGIT_SHA256="8b9a4c2d0969cbea92b45c956dd2a44e1ba76900c9df49f1c60984045ce77984"
 STARSHIP_VERSION="v1.25.1"
@@ -114,15 +114,27 @@ fi
 install_uv
 
 # ----------------------------------------------------------------------------
-# glab (GitLab CLI)
+# glab (GitLab CLI). Installed from upstream's .deb rather than the tarball so
+# it lands in /usr/bin - the same place a hand-run `dpkg -i` from the releases
+# page puts it. With one copy on PATH, a manual install actually replaces the
+# pinned one instead of being silently shadowed by ~/.local/bin/glab. Note the
+# pin still wins on the next run: this makes manual updates take effect, not
+# survive re-provisioning.
 # ----------------------------------------------------------------------------
 log "glab $GLAB_VERSION"
+# Migration off the old tarball layout: ~/.local/bin precedes /usr/bin on PATH,
+# so a leftover copy there would shadow the .deb and make the pin check read
+# the wrong binary. Remove it before checking the version.
+if [ -e "$HOME/.local/bin/glab" ]; then
+  rm -f "$HOME/.local/bin/glab"
+  printf '    [note] removed ~/.local/bin/glab left by the old tarball install\n'
+fi
 if at_pinned_version glab "$GLAB_VERSION"; then
   skip "glab $(installed_version glab) already at pin"
 else
-  install_release_binary \
-    "https://gitlab.com/gitlab-org/cli/-/releases/$GLAB_VERSION/downloads/glab_${GLAB_VERSION#v}_linux_amd64.tar.gz" \
-    "$GLAB_SHA256" "bin/glab" glab 1
+  install_release_deb \
+    "https://gitlab.com/gitlab-org/cli/-/releases/$GLAB_VERSION/downloads/glab_${GLAB_VERSION#v}_linux_amd64.deb" \
+    "$GLAB_SHA256" glab
 fi
 
 # ----------------------------------------------------------------------------
@@ -282,7 +294,7 @@ fi
 # ----------------------------------------------------------------------------
 log "Checking for stale duplicate binaries"
 stale_found=0
-for tool in uv glab lazygit starship fzf lsd kitty nvim; do
+for tool in uv lazygit starship fzf lsd kitty nvim; do
   [ -x "$HOME/.local/bin/$tool" ] || continue
   while IFS= read -r path; do
     [ "$path" = "$HOME/.local/bin/$tool" ] && continue

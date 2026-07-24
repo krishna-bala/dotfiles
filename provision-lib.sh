@@ -86,6 +86,21 @@ install_release_binary() {
   rm -rf "$tmp"
 }
 
+# usage: install_release_deb <url> <sha256> <package>
+# Download a release .deb, verify it against the recorded sha256, and install
+# it with dpkg. Used where upstream's .deb is the artifact users reach for by
+# hand: installing the same way puts the pinned copy exactly where a manual
+# `dpkg -i` would land it, so the two can't end up shadowing each other.
+install_release_deb() {
+  local url="$1" sha256="$2" pkg="$3"
+  local tmp
+  tmp="$(mktemp -d)"
+  fetch_url "$url" "$tmp/$pkg.deb" || die "download failed: $url"
+  verify_sha256 "$tmp/$pkg.deb" "$sha256"
+  sudo dpkg -i "$tmp/$pkg.deb" || die "dpkg install failed: $pkg"
+  rm -rf "$tmp"
+}
+
 # usage: install_release_bundle <url> <sha256> <app-dir> <strip> <bin>...
 # Download a multi-file release bundle (an app that needs its lib/ and
 # share/ next to its binary), verify it against the recorded sha256, unpack
