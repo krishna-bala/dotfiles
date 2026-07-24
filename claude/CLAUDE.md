@@ -1,3 +1,7 @@
+# Subagents and Exploration
+
+For all exploration tasks use your judgement to decide an appropriate lower power model and run that in a subagent
+
 # Git Commits
 
 Use scoped commits (<https://scopedcommits.com>), the style used by Linux,
