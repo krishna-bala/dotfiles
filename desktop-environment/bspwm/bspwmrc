@@ -102,7 +102,7 @@ fi
 
 # 3. BSPWM settings (profiles override these, but set defaults)
 log "Configuring bspwm..."
-bspc config border_width 7
+bspc config border_width 10
 bspc config focused_border_color "#629dc8"
 bspc config normal_border_color "#1f2339"
 bspc config window_gap 15
