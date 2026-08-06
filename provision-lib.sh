@@ -31,24 +31,27 @@ init_provision_log() {
   exec > >(tee -a "$log_file") 2>&1
 }
 
+# usage: installed_version <cmd> [version-arg]
 # Print a tool's installed version as x.y.z (PATH first, then ~/.local/bin,
 # which may not be on PATH yet during a fresh provision). Prints nothing when
-# the tool is missing or its version output is unparseable.
+# the tool is missing or its version output is unparseable. version-arg
+# defaults to --version, for the tools that don't take it (go reports its
+# version through a `version` subcommand and errors on --version).
 installed_version() {
-  local bin
+  local bin flag="${2:---version}"
   bin="$(command -v "$1" || true)"
   [ -z "$bin" ] && [ -x "$HOME/.local/bin/$1" ] && bin="$HOME/.local/bin/$1"
   [ -z "$bin" ] && return 0
-  "$bin" --version 2>/dev/null | grep -oEm1 '[0-9]+\.[0-9]+(\.[0-9]+)?' | head -n1 || true
+  "$bin" "$flag" 2>/dev/null | grep -oEm1 '[0-9]+\.[0-9]+(\.[0-9]+)?' | head -n1 || true
 }
 
-# usage: at_pinned_version <cmd> <pinned-version>
+# usage: at_pinned_version <cmd> <pinned-version> [version-arg]
 # True only when the installed version is exactly the pin. Anything else -
 # missing, older, newer, unparseable - fails, and the caller reinstalls the
 # pinned artifact so every machine converges to the same binary.
 at_pinned_version() {
   local cur pin="${2#v}"
-  cur="$(installed_version "$1")"
+  cur="$(installed_version "$1" "${3:---version}")"
   [ "$cur" = "$pin" ]
 }
 

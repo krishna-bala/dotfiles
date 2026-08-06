@@ -51,7 +51,7 @@ with this file (guidance for editing this repo).
 ## Supply-chain / version-pinning policy
 
 Every tool fetched from an upstream release — nvm, uv, glab, lazygit,
-starship, fzf, lsd, kitty, neovim, and the Nerd Fonts (JetBrainsMono,
+starship, fzf, lsd, kitty, neovim, go, and the Nerd Fonts (JetBrainsMono,
 Iosevka, FantasqueSansMono) — is pinned to an exact version (no
 fetch-latest) and verified against a recorded sha256 before installing
 (helpers live in `provision-lib.sh`). An installed version that differs
@@ -79,8 +79,10 @@ Use scoped commits (`<scope>: <description>`, e.g. `kitty: ...`, `bspwm:
 
 ## Machine-local overlay seams
 
-`bash/bashrc`, `git/gitconfig`, and `claude/CLAUDE.md` each reference an
-untracked `~/*.local` sidecar behind an existence guard, so a private
-overlay repo can inject machine-specific config without modifying these
-files. Never add a `*.local` file to this repo; it stays public and
-self-contained.
+`bash/bashrc`, `bash/bash_aliases`, `git/gitconfig`, and `claude/CLAUDE.md`
+each reference an untracked `~/*.local` sidecar behind an existence guard,
+so a private overlay repo can inject machine-specific config without
+modifying these files. Never add a `*.local` file to this repo; it stays
+public and self-contained. The same split applies to config that isn't a
+sidecar: work-machine bspwm profiles live in the overlay, not in
+`desktop-environment/bspwm/profiles/`.

@@ -44,3 +44,5 @@
 	defaultBranch = main
 [rebase]
 	updateRefs = true
+[feature]
+	manyFiles = true

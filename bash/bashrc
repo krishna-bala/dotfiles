@@ -160,8 +160,10 @@ if [[ -t 1 && "$TERM" != "dumb" ]] && command -v starship &>/dev/null; then
   eval "$(starship init bash)"
 fi
 
-# go install https://go.dev/doc/install
-[[ -d /usr/local/go ]] && export PATH=$PATH:/usr/local/go/bin
+# go: provision-shell.sh installs the pinned toolchain to ~/.local/go and
+# symlinks go/gofmt into ~/.local/bin (already on PATH above), so only the
+# default GOPATH bin dir - where `go install` drops binaries - needs adding
+[[ -d "$HOME/go/bin" ]] && export PATH="$PATH:$HOME/go/bin"
 
 # pnpm
 export PNPM_HOME="$HOME/.local/share/pnpm"

@@ -91,6 +91,8 @@ forking this repo:
 
 - `bash/bashrc` sources `~/.bashrc.local` if it exists (e.g. work-specific
   env vars)
+- `bash/bash_aliases` sources `~/.bash_aliases.local` if it exists (e.g.
+  work-specific shell functions)
 - `claude/CLAUDE.md` imports `~/.claude/CLAUDE.local.md` if it exists
 - `git/gitconfig` includes `~/.gitconfig.local` if it exists (identity,
   credential helpers)
