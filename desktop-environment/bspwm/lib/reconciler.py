@@ -333,12 +333,18 @@ class Reconciler:
         """Always restart polybar on profile change. Matches existing behaviour
         and avoids stale per-bar state when monitor topology shifts. Env vars
         match the polybar config's expectations: MONITOR + FONT_0/FONT_1 nerd-
-        font strings + MODULES_LEFT/CENTER/RIGHT."""
+        font strings + MODULES_LEFT/CENTER/RIGHT. Only the primary output owns
+        the native XEmbed tray; otherwise multiple bars race for tray clients."""
         if b.state.polybar_pids:
             b.emit(PolybarKillAll())
+        primary_outputs = {output.name for output in desired.outputs if output.primary}
         for bar in desired.bars:
             env: Tuple[Tuple[str, str], ...] = (
                 ("MONITOR", bar.output),
+                (
+                    "TRAY_POSITION",
+                    "right" if bar.output in primary_outputs else "none",
+                ),
                 (
                     "FONT_0",
                     f"JetBrainsMono Nerd Font:pixelsize={bar.font_size};3",

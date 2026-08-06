@@ -85,6 +85,14 @@ Profiles use logical aliases (laptop, main, vertical) resolved to actual outputs
 
 adi1090x "shades" theme. Single `[bar/main]` definition, customized per-monitor via env vars from UIService. `pin-workspaces = true` — each bar shows only its monitor's desktops.
 
+The system tray is polybar's native XEmbed tray (`tray-position`), not the
+`internal/tray` module — that module needs polybar >= 3.7.0 and 22.04 ships
+3.5.7. Only one bar may own the tray, so the reconciler sets `TRAY_POSITION`
+to `right` on the primary output's bar and `none` everywhere else; profiles
+must not list a `tray` module. `NETWORK_INTERFACE` (exported by bspwmrc and
+apply-auto.sh) points the network module at whichever interface holds the
+default route.
+
 ### sxhkd (../sxhkd/sxhkdrc)
 
 Key bindings reference `~/.config/bspwm/scripts/` (symlinked by Dotbot). Notable:

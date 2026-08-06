@@ -60,7 +60,7 @@ ui:
       modules:
         left: launcher workspaces
         center: date time
-        right: network battery alsa tray
+        right: network battery alsa
 
     - monitor: vertical
       orientation: portrait

@@ -23,6 +23,10 @@ cd "$PROJECT_ROOT" || {
     exit 1
 }
 
+# Keep Polybar's network module on the interface carrying the default route.
+NETWORK_INTERFACE="$(ip route show default 2>/dev/null | awk 'NR == 1 {print $5}')"
+export NETWORK_INTERFACE="${NETWORK_INTERFACE:-wlp9s0}"
+
 {
     echo "=== apply-auto run at $(date) ==="
     "$HOME/.local/bin/uv" run python monitor-manager.py apply-all --force
@@ -32,3 +36,10 @@ if [ $? -ne 0 ]; then
     notify-send -u critical "monitor-manager" "apply-auto failed — see $LOG"
     exit 1
 fi
+
+# Re-register Blueman with Polybar after the tray is recreated.
+if pgrep -x blueman-applet >/dev/null; then
+    pkill -x blueman-applet
+    sleep 1
+fi
+setsid -f blueman-applet
