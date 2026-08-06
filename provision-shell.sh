@@ -310,17 +310,40 @@ else
 fi
 
 # ----------------------------------------------------------------------------
-# Stale duplicate binaries: tools this script manages in ~/.local/bin can also
-# exist elsewhere on PATH (old manual installs in /usr/local/bin, cargo, apt).
-# Flag every duplicate and say how to remove it. A duplicate that comes first
-# on PATH is worse than clutter: it silently wins over the pinned copy.
+# Stale duplicate binaries: a tool this script manages can also exist elsewhere
+# on PATH (old manual installs in /usr/local/bin, cargo, apt, or an earlier
+# layout of this script). Flag every duplicate and say how to remove it. A
+# duplicate that comes first on PATH is worse than clutter: it silently wins
+# over the pinned copy, so `glab --version` and its update notice report the
+# stale one and a re-install of the real thing looks like it did nothing.
+#
+# Each entry pairs a tool with the path its pinned copy lands at, since that
+# is not always ~/.local/bin: glab is installed from upstream's .deb and so
+# lives in /usr/bin.
 # ----------------------------------------------------------------------------
 log "Checking for stale duplicate binaries"
 stale_found=0
-for tool in uv lazygit starship fzf lsd kitty nvim go gofmt; do
-  [ -x "$HOME/.local/bin/$tool" ] || continue
+for entry in \
+  "uv:$HOME/.local/bin/uv" \
+  "lazygit:$HOME/.local/bin/lazygit" \
+  "starship:$HOME/.local/bin/starship" \
+  "fzf:$HOME/.local/bin/fzf" \
+  "lsd:$HOME/.local/bin/lsd" \
+  "kitty:$HOME/.local/bin/kitty" \
+  "nvim:$HOME/.local/bin/nvim" \
+  "go:$HOME/.local/bin/go" \
+  "gofmt:$HOME/.local/bin/gofmt" \
+  "glab:/usr/bin/glab"; do
+  tool="${entry%%:*}"
+  pinned="${entry#*:}"
+  [ -x "$pinned" ] || continue
+  # On a merged-usr system /bin and /sbin are symlinks into /usr, so one
+  # binary is reachable under two paths and would otherwise be reported as
+  # a duplicate of itself. Compare the resolved file, not the spelling.
+  pinned_real="$(readlink -f "$pinned")"
+  first_real="$(readlink -f "$(command -v "$tool")" 2>/dev/null)"
   while IFS= read -r path; do
-    [ "$path" = "$HOME/.local/bin/$tool" ] && continue
+    [ "$(readlink -f "$path")" = "$pinned_real" ] && continue
     stale_found=1
     # dpkg-owned copies (e.g. an old apt lsd/kitty) must go through apt,
     # since deleting the file by hand leaves dpkg in an inconsistent state
@@ -329,12 +352,12 @@ for tool in uv lazygit starship fzf lsd kitty nvim go gofmt; do
     if pkg="$(dpkg -S "$path" 2>/dev/null | head -n1 | cut -d: -f1)" && [ -n "$pkg" ]; then
       rm_hint="sudo apt-get remove $pkg"
     fi
-    if [ "$(command -v "$tool")" = "$HOME/.local/bin/$tool" ]; then
-      printf '    [note] stale %s at %s (shadowed; clean up with: %s)\n' \
-        "$tool" "$path" "$rm_hint"
+    if [ "$first_real" = "$pinned_real" ]; then
+      printf '    [note] stale %s at %s (shadowed by %s; clean up with: %s)\n' \
+        "$tool" "$path" "$pinned" "$rm_hint"
     else
-      printf '    [WARN] %s on PATH resolves to %s, which shadows the pinned ~/.local/bin/%s; remove it with: %s\n' \
-        "$tool" "$path" "$tool" "$rm_hint"
+      printf '    [WARN] %s on PATH resolves to %s, which shadows the pinned %s; remove it with: %s\n' \
+        "$tool" "$path" "$pinned" "$rm_hint"
     fi
   done < <(type -aP "$tool" 2>/dev/null | awk '!seen[$0]++')
 done
