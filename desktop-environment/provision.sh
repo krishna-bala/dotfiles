@@ -21,10 +21,10 @@ mkdir -p "$HOME/.local/bin"
 
 log "Provisioning started"
 
-# Picom is built from its verified release source below because Ubuntu 22.04's
+# Picom is built from a pinned upstream commit below because Ubuntu 22.04's
 # package is v9, whose rounded-corner antialiasing is visibly uneven.
 PICOM_VERSION="13"
-PICOM_SHA256="db9791a54255742c924ef82a6a882042636d61de0fa61bc14c5e56279cf5791c"
+PICOM_COMMIT="d87a5ba3af7a9ee3c4e040ee29b2dea7e9e46317"
 # Polybar likewise: 22.04 packages 3.5.7, but modules.ini's [module/tray] needs
 # the internal/tray module added in 3.7.0. Unlike picom's, this artifact is an
 # asset upstream uploads rather than one GitHub generates on demand, so its
@@ -67,10 +67,13 @@ sudo apt-get install -y -qq \
   libxcb-xkb-dev libxcb-xrm-dev python3-xcbgen xcb-proto
 
 # ----------------------------------------------------------------------------
-# Picom (pinned source build). Ubuntu 22.04 only packages v9. The v13 GitHub
-# release has no binary assets or published checksums, so this hash was
-# computed from the reviewed tag archive. Meson's bundled libconfig fallback
-# is itself hash-pinned and handles Ubuntu 22.04's pre-1.7 libconfig.
+# Picom (pinned source build). Ubuntu 22.04 only packages v9. Upstream uploads
+# no release assets, and the alternative - a sha256 over GitHub's tag archive -
+# pins bytes GitHub generates on demand and has changed before, which fails the
+# hash through no fault of the tag. So this pins the commit instead: git's own
+# object hashing makes it the content hash, and a re-pointed tag is caught by
+# the check below rather than silently building something else. Meson's bundled
+# libconfig fallback is itself pinned and handles 22.04's pre-1.7 libconfig.
 # ----------------------------------------------------------------------------
 log "picom v$PICOM_VERSION (source build)"
 PICOM_BIN="$HOME/.local/bin/picom"
@@ -78,14 +81,17 @@ if [ -x "$PICOM_BIN" ] && [ "$("$PICOM_BIN" --version 2>/dev/null)" = "v$PICOM_V
   skip "picom $("$PICOM_BIN" --version) already at pin"
 else
   tmp="$(mktemp -d)"
-  fetch_url \
-    "https://github.com/yshui/picom/archive/refs/tags/v$PICOM_VERSION.tar.gz" \
-    "$tmp/picom.tar.gz" ||
-    die "download failed: picom v$PICOM_VERSION"
-  verify_sha256 "$tmp/picom.tar.gz" "$PICOM_SHA256"
-  mkdir -p "$tmp/src"
-  tar -xzf "$tmp/picom.tar.gz" -C "$tmp/src" --strip-components=1 ||
-    die "extract failed: picom v$PICOM_VERSION"
+  git -c advice.detachedHead=false clone --quiet --depth 1 \
+    --branch "v$PICOM_VERSION" https://github.com/yshui/picom "$tmp/src" ||
+    die "clone failed: picom v$PICOM_VERSION"
+  picom_head="$(git -C "$tmp/src" rev-parse HEAD)"
+  [ "$picom_head" = "$PICOM_COMMIT" ] ||
+    die "picom tag v$PICOM_VERSION is $picom_head, expected $PICOM_COMMIT - refusing to build"
+  # picom's meson.build stamps `git rev-parse` output into the version string
+  # when it builds inside a repository, so the binary would report "v13
+  # (revision d87a5ba)" and never match the pin check above - rebuilding on
+  # every run. Drop the metadata now that the commit is verified.
+  rm -rf "$tmp/src/.git"
   meson setup --buildtype=release "$tmp/src/build" "$tmp/src" ||
     die "picom v$PICOM_VERSION configure failed"
   ninja -C "$tmp/src/build" src/picom ||
