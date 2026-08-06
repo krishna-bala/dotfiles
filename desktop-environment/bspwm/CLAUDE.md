@@ -72,7 +72,7 @@ Profiles use logical aliases (laptop, main, vertical) resolved to actual outputs
 
 ### Shell Scripts (scripts/)
 
-- `apply-auto.sh` — re-detect topology, apply best profile via reconciliation (super+alt+r, super+shift+p)
+- `apply-auto.sh` — re-detect topology, apply best profile via reconciliation (super+alt+r, super+alt+shift+p)
 - `smart_focus.sh` — focus node in direction, fall through to monitor at edge
 - `smart_send.sh` — swap with neighbor node, or move to adjacent monitor
 - `smart_resize.sh` — expand toward direction if neighbor exists, else contract
@@ -97,7 +97,8 @@ default route.
 
 Key bindings reference `~/.config/bspwm/scripts/` (symlinked by Dotbot). Notable:
 - `super+shift+x` — interactive monitor manager
-- `super+shift+p` — re-apply current profile (restarts polybar) via apply-auto.sh
+- `super+alt+shift+p` — re-apply current profile (restarts polybar) via apply-auto.sh
+- `super+alt+p` — toggle polybar visibility via toggle_polybar.sh
 - `super+shift+F1` — emergency laptop display recovery (enables any connected eDP-* output)
 
 ## Testing
