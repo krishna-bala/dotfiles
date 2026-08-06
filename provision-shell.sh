@@ -51,6 +51,11 @@ RUSTUP_VERSION="1.29.0"
 RUSTUP_INIT_SHA256="4acc9acc76d5079515b46346a485974457b5a79893cfb01112423c89aeb5aa10"
 RUST_TOOLCHAIN="1.96.1"
 TREE_SITTER_VERSION="0.26.10"
+# go sha256 is upstream's published checksum for this archive (go.dev/dl lists
+# one per file). Upstream names .0 releases "go1.27", not "go1.27.0", so the
+# pin is whatever `go version` prints minus the "go" prefix.
+GO_VERSION="1.26.5"
+GO_SHA256="5c2c3b16caefa1d968a94c1daca04a7ca301a496d9b086e17ad77bb81393f053"
 
 log "Provisioning started"
 
@@ -287,6 +292,24 @@ else
 fi
 
 # ----------------------------------------------------------------------------
+# go (upstream archive -> ~/.local/go, go/gofmt symlinked into ~/.local/bin).
+# Pinned rather than apt: 22.04's golang-go is 1.18, far behind the toolchain
+# any current module expects. Fetched from dl.google.com, which is where
+# go.dev/dl's links resolve to, so this is upstream's own artifact. The archive
+# is a self-contained GOROOT and the go command finds it by resolving its own
+# symlink, so ~/.local/bin/go works without setting GOROOT. Binaries from
+# `go install` land in ~/go/bin, which bashrc adds to PATH.
+# ----------------------------------------------------------------------------
+log "go $GO_VERSION"
+if at_pinned_version go "$GO_VERSION" version; then
+  skip "go $(installed_version go version) already at pin"
+else
+  install_release_bundle \
+    "https://dl.google.com/go/go$GO_VERSION.linux-amd64.tar.gz" \
+    "$GO_SHA256" go 1 go gofmt
+fi
+
+# ----------------------------------------------------------------------------
 # Stale duplicate binaries: tools this script manages in ~/.local/bin can also
 # exist elsewhere on PATH (old manual installs in /usr/local/bin, cargo, apt).
 # Flag every duplicate and say how to remove it. A duplicate that comes first
@@ -294,7 +317,7 @@ fi
 # ----------------------------------------------------------------------------
 log "Checking for stale duplicate binaries"
 stale_found=0
-for tool in uv lazygit starship fzf lsd kitty nvim; do
+for tool in uv lazygit starship fzf lsd kitty nvim go gofmt; do
   [ -x "$HOME/.local/bin/$tool" ] || continue
   while IFS= read -r path; do
     [ "$path" = "$HOME/.local/bin/$tool" ] && continue
