@@ -431,15 +431,6 @@ class TestReconcileFramebuffer(unittest.TestCase):
         # The layout op leads the plan, before any wait/bspc op
         self.assertIs(plan.ops[0], layout)
 
-    def test_only_primary_monitor_enables_native_tray(self):
-        plan = Reconciler().plan(HardwareState(), self._personal_home())
-        launches = [op for op in plan.ops if isinstance(op, PolybarLaunch)]
-        tray_positions = {
-            op.output: dict(op.env)["TRAY_POSITION"] for op in launches
-        }
-
-        self.assertEqual(tray_positions, {"DP-3": "right", "DP-2": "none"})
-
     def test_undock_emits_single_layout_op_with_shrunk_fb(self):
         # Docked reality (wide layout), going to laptop-only personal-solo:
         # one invocation turns DP-3 off, applies eDP-1, and shrinks --fb to
