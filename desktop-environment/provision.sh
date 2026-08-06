@@ -21,6 +21,11 @@ mkdir -p "$HOME/.local/bin"
 
 log "Provisioning started"
 
+# Picom is built from its verified release source below because Ubuntu 22.04's
+# package is v9, whose rounded-corner antialiasing is visibly uneven.
+PICOM_VERSION="13"
+PICOM_SHA256="db9791a54255742c924ef82a6a882042636d61de0fa61bc14c5e56279cf5791c"
+
 # ----------------------------------------------------------------------------
 # WM/X11 stack (apt). Everything bspwmrc, sxhkd, dunst, and the systemd user
 # units invoke:
@@ -37,11 +42,47 @@ log "Provisioning started"
 log "WM/X11 packages (apt)"
 sudo apt-get update -qq
 sudo apt-get install -y -qq \
-  bspwm sxhkd polybar rofi picom dunst nitrogen \
-  redshift brightnessctl pulseaudio-utils scrot xclip \
+  bspwm sxhkd polybar rofi dunst nitrogen \
+  redshift brightnessctl pulseaudio-utils scrot xclip simplescreenrecorder \
   x11-xserver-utils x11-xkb-utils xserver-xorg-input-wacom \
   network-manager-gnome blueman xdg-utils \
-  i3lock libnotify-bin fontconfig xz-utils
+  i3lock libnotify-bin fontconfig xz-utils \
+  build-essential cmake curl git meson ninja-build pkg-config \
+  libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev libepoxy-dev \
+  libpcre2-dev libpixman-1-dev libx11-xcb-dev libxcb1-dev \
+  libxcb-composite0-dev libxcb-damage0-dev libxcb-glx0-dev \
+  libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev \
+  libxcb-render0-dev libxcb-render-util0-dev libxcb-shape0-dev \
+  libxcb-util-dev libxcb-xfixes0-dev uthash-dev
+
+# ----------------------------------------------------------------------------
+# Picom (pinned source build). Ubuntu 22.04 only packages v9. The v13 GitHub
+# release has no binary assets or published checksums, so this hash was
+# computed from the reviewed tag archive. Meson's bundled libconfig fallback
+# is itself hash-pinned and handles Ubuntu 22.04's pre-1.7 libconfig.
+# ----------------------------------------------------------------------------
+log "picom v$PICOM_VERSION (source build)"
+PICOM_BIN="$HOME/.local/bin/picom"
+if [ -x "$PICOM_BIN" ] && [ "$("$PICOM_BIN" --version 2>/dev/null)" = "v$PICOM_VERSION" ]; then
+  skip "picom $("$PICOM_BIN" --version) already at pin"
+else
+  tmp="$(mktemp -d)"
+  fetch_url \
+    "https://github.com/yshui/picom/archive/refs/tags/v$PICOM_VERSION.tar.gz" \
+    "$tmp/picom.tar.gz" ||
+    die "download failed: picom v$PICOM_VERSION"
+  verify_sha256 "$tmp/picom.tar.gz" "$PICOM_SHA256"
+  mkdir -p "$tmp/src"
+  tar -xzf "$tmp/picom.tar.gz" -C "$tmp/src" --strip-components=1 ||
+    die "extract failed: picom v$PICOM_VERSION"
+  meson setup --buildtype=release "$tmp/src/build" "$tmp/src" ||
+    die "picom v$PICOM_VERSION configure failed"
+  ninja -C "$tmp/src/build" src/picom ||
+    die "picom v$PICOM_VERSION build failed"
+  install -m 0755 "$tmp/src/build/src/picom" "$PICOM_BIN" ||
+    die "picom v$PICOM_VERSION install failed"
+  rm -rf "$tmp"
+fi
 
 # ----------------------------------------------------------------------------
 # Nerd Fonts (pinned via provision-lib.sh): polybar's bars use
