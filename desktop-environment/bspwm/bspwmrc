@@ -43,11 +43,11 @@ if ! cd "$BSPWM_DIR"; then
   exit 1
 fi
 
-# Let Polybar follow the interface carrying the default route. Fall back to
-# the usual laptop Wi-Fi interface when networking is not configured yet.
-NETWORK_INTERFACE="$(ip route show default 2>/dev/null | awk 'NR == 1 {print $5}')"
-export NETWORK_INTERFACE="${NETWORK_INTERFACE:-wlp9s0}"
-log "NETWORK_INTERFACE=$NETWORK_INTERFACE"
+# Point polybar's network module at the interface carrying the default route
+# shellcheck source=scripts/network-env.sh
+. "$BSPWM_DIR/scripts/network-env.sh"
+network_env
+log "NETWORK_INTERFACE=$NETWORK_INTERFACE NETWORK_LABEL=$NETWORK_LABEL"
 
 # 1. Wait for X/display driver to be ready
 log "Waiting for X..."

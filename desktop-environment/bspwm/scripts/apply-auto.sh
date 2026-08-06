@@ -23,9 +23,11 @@ cd "$PROJECT_ROOT" || {
     exit 1
 }
 
-# Keep Polybar's network module on the interface carrying the default route.
-NETWORK_INTERFACE="$(ip route show default 2>/dev/null | awk 'NR == 1 {print $5}')"
-export NETWORK_INTERFACE="${NETWORK_INTERFACE:-wlp9s0}"
+# Keep polybar's network module on the interface carrying the default route;
+# docking can move it, and the bars are relaunched below either way.
+# shellcheck source=network-env.sh
+. "$SCRIPT_DIR/network-env.sh"
+network_env
 
 {
     echo "=== apply-auto run at $(date) ==="

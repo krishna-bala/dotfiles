@@ -93,6 +93,12 @@ tray clients. The tray is destroyed and rebuilt on every polybar restart, and
 blueman-applet only registers its icon at startup, which is why apply-auto.sh
 restarts it afterwards (nm-applet re-registers on its own).
 
+`scripts/network-env.sh`, sourced by bspwmrc and apply-auto.sh, exports
+`NETWORK_INTERFACE` (whichever interface holds the default route) and
+`NETWORK_LABEL` for the network module — the literal token `%essid%` on Wi-Fi
+so polybar keeps it live, or a wired link's NetworkManager connection name,
+since polybar renders `%essid%` as junk on a wired interface.
+
 ### sxhkd (../sxhkd/sxhkdrc)
 
 Key bindings reference `~/.config/bspwm/scripts/` (symlinked by Dotbot). Notable:
