@@ -83,4 +83,6 @@ Use scoped commits (`<scope>: <description>`, e.g. `kitty: ...`, `bspwm:
 each reference an untracked `~/*.local` sidecar behind an existence guard,
 so a private overlay repo can inject machine-specific config without
 modifying these files. Never add a `*.local` file to this repo; it stays
-public and self-contained.
+public and self-contained. The same split applies to config that isn't a
+sidecar: work-machine bspwm profiles live in the overlay, not in
+`desktop-environment/bspwm/profiles/`.

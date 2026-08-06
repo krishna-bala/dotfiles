@@ -68,7 +68,7 @@ ui:            # polybar bars per monitor (orientation, font_size, modules)
 
 Profiles use logical aliases (laptop, main, vertical) resolved to actual outputs at runtime.
 
-**Current profiles:** personal-solo (eDP-1), personal-home, work-solo (eDP-1-1), work-home (DP-0 + DP-3, laptop off), work-office (DP-0.1 + DP-0.2, laptop off), work-office-2 (DP-0.1 + DP-0.2, laptop on)
+**Current profiles:** personal-solo (eDP-1), personal-home. Work-machine profiles are not tracked here; they live in the private overlay repo alongside the rest of the machine-local config.
 
 ### Shell Scripts (scripts/)
 
