@@ -79,8 +79,8 @@ Use scoped commits (`<scope>: <description>`, e.g. `kitty: ...`, `bspwm:
 
 ## Machine-local overlay seams
 
-`bash/bashrc`, `git/gitconfig`, and `claude/CLAUDE.md` each reference an
-untracked `~/*.local` sidecar behind an existence guard, so a private
-overlay repo can inject machine-specific config without modifying these
-files. Never add a `*.local` file to this repo; it stays public and
-self-contained.
+`bash/bashrc`, `bash/bash_aliases`, `git/gitconfig`, and `claude/CLAUDE.md`
+each reference an untracked `~/*.local` sidecar behind an existence guard,
+so a private overlay repo can inject machine-specific config without
+modifying these files. Never add a `*.local` file to this repo; it stays
+public and self-contained.
