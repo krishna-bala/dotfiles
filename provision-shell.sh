@@ -60,6 +60,12 @@ TREE_SITTER_VERSION="0.26.10"
 # pin is whatever `go version` prints minus the "go" prefix.
 GO_VERSION="1.26.5"
 GO_SHA256="5c2c3b16caefa1d968a94c1daca04a7ca301a496d9b086e17ad77bb81393f053"
+# typst publishes no checksum file either; this sha256 was computed from the
+# reviewed download. `typst --version` prints the release tag's commit
+# alongside the version (0.15.1 -> 9dfd3a08), which is a second check that the
+# installed binary is built from the tag that was reviewed.
+TYPST_VERSION="0.15.1"
+TYPST_SHA256="a6d077d0a95eed5a2eba715b2dae06be954f624ccbf85758a03f389ded33118c"
 
 log "Provisioning started"
 
@@ -295,6 +301,22 @@ if ! pin_satisfied go "$GO_VERSION" version; then
 fi
 
 # ----------------------------------------------------------------------------
+# typst (upstream archive -> ~/.local/bin/typst). Not packaged for 22.04 at
+# all, and upstream's own instructions are "unpack the archive, put it on
+# PATH" - the same thing, with the download pinned and verified. Only a musl
+# build is published for linux x86_64; it is statically linked, so it runs
+# whatever the host glibc is. `typst update` self-updates the binary in place,
+# and because the pin is a floor, a copy updated that way is kept and noted
+# rather than rolled back.
+# ----------------------------------------------------------------------------
+log "typst $TYPST_VERSION"
+if ! pin_satisfied typst "$TYPST_VERSION"; then
+  install_release_binary \
+    "https://github.com/typst/typst/releases/download/v$TYPST_VERSION/typst-x86_64-unknown-linux-musl.tar.xz" \
+    "$TYPST_SHA256" "typst-x86_64-unknown-linux-musl/typst" typst 1
+fi
+
+# ----------------------------------------------------------------------------
 # Stale duplicate binaries: a tool this script manages can also exist elsewhere
 # on PATH (old manual installs in /usr/local/bin, cargo, apt, or an earlier
 # layout of this script). Flag every duplicate and say how to remove it. A
@@ -318,6 +340,7 @@ for entry in \
   "nvim:$HOME/.local/bin/nvim" \
   "go:$HOME/.local/bin/go" \
   "gofmt:$HOME/.local/bin/gofmt" \
+  "typst:$HOME/.local/bin/typst" \
   "glab:/usr/bin/glab"; do
   tool="${entry%%:*}"
   pinned="${entry#*:}"

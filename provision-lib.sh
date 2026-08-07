@@ -109,15 +109,16 @@ fetch_url() {
 
 # usage: install_release_binary <url> <sha256> <member-path-in-tar> <dest-name> [strip]
 # Download a release tarball, verify it against the recorded sha256, and
-# install one binary from it into ~/.local/bin. On failure the temp dir is
-# left behind for inspection.
+# install one binary from it into ~/.local/bin. tar reads the compression
+# from the archive itself, so .tar.gz and .tar.xz both work. On failure the
+# temp dir is left behind for inspection.
 install_release_binary() {
   local url="$1" sha256="$2" member="$3" dest="$4" strip="${5:-0}"
   local tmp
   tmp="$(mktemp -d)"
-  fetch_url "$url" "$tmp/archive.tar.gz" || die "download failed: $url"
-  verify_sha256 "$tmp/archive.tar.gz" "$sha256"
-  tar -xzf "$tmp/archive.tar.gz" -C "$tmp" --strip-components="$strip" "$member" ||
+  fetch_url "$url" "$tmp/archive" || die "download failed: $url"
+  verify_sha256 "$tmp/archive" "$sha256"
+  tar -xaf "$tmp/archive" -C "$tmp" --strip-components="$strip" "$member" ||
     die "extract failed: $member from $url"
   install -m 0755 "$tmp/$(basename "$member")" "$HOME/.local/bin/$dest" ||
     die "install failed: $dest"
