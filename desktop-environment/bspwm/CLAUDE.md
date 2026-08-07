@@ -87,11 +87,14 @@ adi1090x "shades" theme. Single `[bar/main]` definition, customized per-monitor 
 
 The tray is the `internal/tray` module, which needs polybar >= 3.7.0 — 22.04
 packages 3.5.7, where it silently does nothing, so `desktop-environment/
-provision.sh` builds a pinned 3.7.2 from source into `~/.local`. Exactly one
-bar per profile may list `tray` in its modules; two bars listing it race for
-tray clients. The tray is destroyed and rebuilt on every polybar restart, and
-blueman-applet only registers its icon at startup, which is why apply-auto.sh
-restarts it afterwards (nm-applet re-registers on its own).
+provision.sh` builds a pinned 3.7.2 from source into `~/.local`. Profiles do
+not name `tray` in their modules: two bars listing it race for tray clients,
+so `_reconcile_polybar` appends it to the right block of the bar on the
+`primary` output and strips it from every other bar. A profile with no
+`primary: true` display therefore gets no tray at all. The tray is destroyed
+and rebuilt on every polybar restart, and blueman-applet only registers its
+icon at startup, which is why apply-auto.sh restarts it afterwards (nm-applet
+re-registers on its own).
 
 `scripts/network-env.sh`, sourced by bspwmrc and apply-auto.sh, exports
 `NETWORK_INTERFACE` (whichever interface holds the default route) and
