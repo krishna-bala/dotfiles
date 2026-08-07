@@ -72,7 +72,7 @@ Profiles use logical aliases (laptop, main, vertical) resolved to actual outputs
 
 ### Shell Scripts (scripts/)
 
-- `apply-auto.sh` — re-detect topology, apply best profile via reconciliation (super+alt+r, super+shift+p)
+- `apply-auto.sh` — re-detect topology, apply best profile via reconciliation (super+alt+r, super+alt+shift+p)
 - `smart_focus.sh` — focus node in direction, fall through to monitor at edge
 - `smart_send.sh` — swap with neighbor node, or move to adjacent monitor
 - `smart_resize.sh` — expand toward direction if neighbor exists, else contract
@@ -85,11 +85,26 @@ Profiles use logical aliases (laptop, main, vertical) resolved to actual outputs
 
 adi1090x "shades" theme. Single `[bar/main]` definition, customized per-monitor via env vars from UIService. `pin-workspaces = true` — each bar shows only its monitor's desktops.
 
+The tray is the `internal/tray` module, which needs polybar >= 3.7.0 — 22.04
+packages 3.5.7, where it silently does nothing, so `desktop-environment/
+provision.sh` builds a pinned 3.7.2 from source into `~/.local`. Exactly one
+bar per profile may list `tray` in its modules; two bars listing it race for
+tray clients. The tray is destroyed and rebuilt on every polybar restart, and
+blueman-applet only registers its icon at startup, which is why apply-auto.sh
+restarts it afterwards (nm-applet re-registers on its own).
+
+`scripts/network-env.sh`, sourced by bspwmrc and apply-auto.sh, exports
+`NETWORK_INTERFACE` (whichever interface holds the default route) and
+`NETWORK_LABEL` for the network module — the literal token `%essid%` on Wi-Fi
+so polybar keeps it live, or a wired link's NetworkManager connection name,
+since polybar renders `%essid%` as junk on a wired interface.
+
 ### sxhkd (../sxhkd/sxhkdrc)
 
 Key bindings reference `~/.config/bspwm/scripts/` (symlinked by Dotbot). Notable:
 - `super+shift+x` — interactive monitor manager
-- `super+shift+p` — re-apply current profile (restarts polybar) via apply-auto.sh
+- `super+alt+shift+p` — re-apply current profile (restarts polybar) via apply-auto.sh
+- `super+alt+p` — toggle polybar visibility via toggle_polybar.sh
 - `super+shift+F1` — emergency laptop display recovery (enables any connected eDP-* output)
 
 ## Testing

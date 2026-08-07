@@ -66,7 +66,13 @@ committed `uv.lock`; all syncs run `--locked`. The rust toolchain is pinned the 
 (verified rustup-init, pinned toolchain version), and the tree-sitter CLI
 is built from source at a pinned version with it — upstream prebuilts
 target glibc 2.39 and won't run on 22.04; cargo verifies every crate
-against the crates.io registry checksums. The exceptions are tools
+against the crates.io registry checksums. The desktop half source-builds
+two more: polybar, pinned by sha256 over the release tarball upstream
+uploads (22.04's 3.5.7 predates the `internal/tray` module the bars use),
+and picom, the one artifact pinned by git commit rather than hash (22.04
+packages v9) — upstream uploads nothing, and hashing GitHub's generated tag
+archive pins bytes GitHub can regenerate, so the commit id serves as the
+content hash and a re-pointed tag aborts the build. The exceptions are tools
 taken from distro apt repos (fd, ripgrep, plus the X11/WM packages) and
 node, which tracks the current LTS — these follow whatever the package
 source provides. protonvpn-app is deliberately unprovisioned (Proton's own

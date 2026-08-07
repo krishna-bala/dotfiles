@@ -177,13 +177,13 @@ shift + XF86MonBrightnessDown
     brightnessctl set 10%-
 
 Print
-    scrot ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_full.png' -e 'xclip -selection clipboard -t image/png -i $f'
+    mkdir -p ~/Pictures/Screenshots && scrot -s ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_region.png' -e 'xclip -selection clipboard -t image/png -i "$f"'
 
 super + Print
-    scrot -s ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_region.png' -e 'xclip -selection clipboard -t image/png -i $f'
+    mkdir -p ~/Pictures/Screenshots && scrot ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_full.png' -e 'xclip -selection clipboard -t image/png -i "$f"'
 
 super + shift + Print
-    scrot -u ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_window.png' -e 'xclip -selection clipboard -t image/png -i $f'
+    mkdir -p ~/Pictures/Screenshots && scrot -m ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_all.png' -e 'xclip -selection clipboard -t image/png -i "$f"'
 
 # terminal emulator
 super + Return
@@ -206,12 +206,20 @@ super + BackSpace
 
 
 # Restart polybar (re-apply current profile via the reconciliation pipeline)
-super + shift + p
+super + alt + shift + p
   ~/.config/bspwm/scripts/apply-auto.sh
 
+# Launch screen recorder
+super + shift + p
+  simplescreenrecorder
+
 # toggle polybar visibility
-super + p
+super + alt + p
   ~/.config/bspwm/scripts/toggle_polybar.sh
+
+# Full-screen screenshot
+super + p
+  mkdir -p ~/Pictures/Screenshots && scrot ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_full.png' -e 'xclip -selection clipboard -t image/png -i "$f"'
 
 # lock screen
 super + alt + ctrl + l

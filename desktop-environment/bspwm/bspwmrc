@@ -43,6 +43,12 @@ if ! cd "$BSPWM_DIR"; then
   exit 1
 fi
 
+# Point polybar's network module at the interface carrying the default route
+# shellcheck source=scripts/network-env.sh
+. "$BSPWM_DIR/scripts/network-env.sh"
+network_env
+log "NETWORK_INTERFACE=$NETWORK_INTERFACE NETWORK_LABEL=$NETWORK_LABEL"
+
 # 1. Wait for X/display driver to be ready
 log "Waiting for X..."
 x_ready=false
@@ -96,7 +102,7 @@ fi
 
 # 3. BSPWM settings (profiles override these, but set defaults)
 log "Configuring bspwm..."
-bspc config border_width 7
+bspc config border_width 10
 bspc config focused_border_color "#629dc8"
 bspc config normal_border_color "#1f2339"
 bspc config window_gap 15

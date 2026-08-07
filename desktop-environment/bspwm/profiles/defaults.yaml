@@ -8,7 +8,7 @@
 
 window_manager:
   settings:
-    border_width: 7
+    border_width: 10
     window_gap: 15
     focused_border_color: "#629dc8"
     normal_border_color: "#1f2339"

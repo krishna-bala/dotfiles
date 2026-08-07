@@ -23,6 +23,12 @@ cd "$PROJECT_ROOT" || {
     exit 1
 }
 
+# Keep polybar's network module on the interface carrying the default route;
+# docking can move it, and the bars are relaunched below either way.
+# shellcheck source=network-env.sh
+. "$SCRIPT_DIR/network-env.sh"
+network_env
+
 {
     echo "=== apply-auto run at $(date) ==="
     "$HOME/.local/bin/uv" run python monitor-manager.py apply-all --force
@@ -32,3 +38,10 @@ if [ $? -ne 0 ]; then
     notify-send -u critical "monitor-manager" "apply-auto failed — see $LOG"
     exit 1
 fi
+
+# Re-register Blueman with Polybar after the tray is recreated.
+if pgrep -x blueman-applet >/dev/null; then
+    pkill -x blueman-applet
+    sleep 1
+fi
+setsid -f blueman-applet
