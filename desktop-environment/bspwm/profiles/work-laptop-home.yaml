@@ -1,48 +1,45 @@
-# Test fixture: mirrors profiles/personal-home.yaml in shape, but every EDID
-# is synthetic (tests that use this profile pass alias_to_output explicitly,
-# so the external edids are opaque sentinels).
-name: personal-home
-description: Personal laptop with dual external monitors at home (laptop display disabled)
+name: work-laptop-home
+description: New work laptop with one vertical and one landscape monitor (laptop display disabled)
 
 # Detection rules - how to identify this configuration
 detection:
   # Laptop display (present but disabled)
   laptop:
-    output: eDP-1
-    edid: "7f43020e9adaddcd" # hash of the synthetic xrandr-fixture EDID
+    output: eDP-1-1
+    edid: fce90735ac007b29
     alias: laptop
 
-  # External monitors (output names are informational; matching is EDID-based)
+  # External monitors (matching is EDID-based; output names are informational)
   monitors:
     - output: DP-2
-      edid: "0000000000000001" # synthetic sentinel
+      edid: 9fa855ab75aa6ab9
       alias: vertical
 
-    - output: DP-3
-      edid: "0000000000000002" # synthetic sentinel
+    - output: DP-0
+      edid: 4de818eda99fcaa2
       alias: main
 
 # Physical display configuration (xrandr)
 display:
-  # Left vertical 4K monitor (rotated left)
+  # Left vertical 4K monitor
   vertical:
     enabled: true
     resolution: "3840x2160"
     position: "0x0"
     rotation: left
-    scale: "0.6x0.6"
+    scale: "0.75x0.75"
     primary: false
 
   # Right/main 2K monitor
   main:
     enabled: true
     resolution: "2560x1440"
-    position: "1296x432"
+    position: "1620x540"
     rotation: normal
-    scale: "1x1"
+    scale: "1.25x1.25"
     primary: true
 
-  # Laptop display - disabled for home setup
+  # Laptop display - disabled for the home layout
   laptop:
     enabled: false
 

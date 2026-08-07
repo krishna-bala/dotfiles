@@ -40,4 +40,4 @@ ui:
       modules:
         left: launcher workspaces
         center: date
-        right: network battery backlight alsa tray time
+        right: network battery backlight alsa time

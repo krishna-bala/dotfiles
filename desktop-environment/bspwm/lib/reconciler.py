@@ -333,9 +333,15 @@ class Reconciler:
         """Always restart polybar on profile change. Matches existing behaviour
         and avoids stale per-bar state when monitor topology shifts. Env vars
         match the polybar config's expectations: MONITOR + FONT_0/FONT_1 nerd-
-        font strings + MODULES_LEFT/CENTER/RIGHT."""
+        font strings + MODULES_LEFT/CENTER/RIGHT.
+
+        The `tray` module is placed here rather than named by profiles: the
+        tray is a single X selection owner, so two bars listing it race for
+        tray clients. The primary output's bar owns it, every other bar goes
+        without."""
         if b.state.polybar_pids:
             b.emit(PolybarKillAll())
+        primary_outputs = {o.name for o in desired.outputs if o.primary}
         for bar in desired.bars:
             env: Tuple[Tuple[str, str], ...] = (
                 ("MONITOR", bar.output),
@@ -349,11 +355,24 @@ class Reconciler:
                 ),
                 ("MODULES_LEFT", bar.modules_left),
                 ("MODULES_CENTER", bar.modules_center),
-                ("MODULES_RIGHT", bar.modules_right),
+                (
+                    "MODULES_RIGHT",
+                    _place_tray(bar.modules_right, bar.output in primary_outputs),
+                ),
             )
             b.emit(
                 PolybarLaunch(output=bar.output, bar_definition="main", env=env)
             )
+
+
+def _place_tray(modules_right: str, owns_tray: bool) -> str:
+    """Append `tray` to the right block, or drop it if this bar isn't the
+    owner. A profile that still names `tray` explicitly gets it normalised to
+    the far right rather than duplicated."""
+    modules = [m for m in modules_right.split() if m != "tray"]
+    if owns_tray:
+        modules.append("tray")
+    return " ".join(modules)
 
 
 __all__ = ["Reconciler"]

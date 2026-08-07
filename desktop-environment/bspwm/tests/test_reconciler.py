@@ -431,6 +431,18 @@ class TestReconcileFramebuffer(unittest.TestCase):
         # The layout op leads the plan, before any wait/bspc op
         self.assertIs(plan.ops[0], layout)
 
+    def test_only_the_primary_monitors_bar_carries_the_tray(self):
+        # Two bars listing `tray` would race for tray clients, so the module
+        # is placed on the primary output's bar (DP-3) and nowhere else.
+        plan = Reconciler().plan(HardwareState(), self._personal_home())
+        launches = [op for op in plan.ops if isinstance(op, PolybarLaunch)]
+        modules_right = {op.output: dict(op.env)["MODULES_RIGHT"] for op in launches}
+
+        self.assertEqual(
+            modules_right,
+            {"DP-3": "network battery alsa tray", "DP-2": "time"},
+        )
+
     def test_undock_emits_single_layout_op_with_shrunk_fb(self):
         # Docked reality (wide layout), going to laptop-only personal-solo:
         # one invocation turns DP-3 off, applies eDP-1, and shrinks --fb to
