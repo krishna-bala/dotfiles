@@ -46,13 +46,48 @@ installed_version() {
 }
 
 # usage: at_pinned_version <cmd> <pinned-version> [version-arg]
-# True only when the installed version is exactly the pin. Anything else -
-# missing, older, newer, unparseable - fails, and the caller reinstalls the
-# pinned artifact so every machine converges to the same binary.
+# True only when the installed version is exactly the pin. This is the
+# narrow question; pin_satisfied below asks the policy question.
 at_pinned_version() {
   local cur pin="${2#v}"
   cur="$(installed_version "$1" "${3:---version}")"
   [ "$cur" = "$pin" ]
+}
+
+# usage: if ! pin_satisfied <cmd> <pinned-version> [version-arg]; then <install>
+# True when the installed version is good enough to leave alone, and reports
+# what it found. The pin is a floor, not an equality: a newer copy - one
+# installed by hand between provisioning runs - is kept and noted rather than
+# rolled back, since re-provisioning should not undo a deliberate update. The
+# note is the cue to raise the floor to that version once it has proven itself.
+# Missing, older, or unparseable is false, and the caller installs the pin.
+#
+# FORCE_PINS=1 restores exact-pin behaviour for the whole run, reinstalling
+# anything that is not precisely the pin. That is the way to walk a pin
+# backwards - a yanked release, a regression - where a floor would otherwise
+# leave the newer copy in place.
+pin_satisfied() {
+  local cmd="$1" pin="${2#v}" flag="${3:---version}" cur
+  cur="$(installed_version "$cmd" "$flag")"
+
+  if [ "${FORCE_PINS:-0}" = "1" ]; then
+    at_pinned_version "$cmd" "$pin" "$flag" || return 1
+    skip "$cmd $cur already at pin (FORCE_PINS)"
+    return 0
+  fi
+
+  [ -n "$cur" ] || return 1
+  if [ "$cur" = "$pin" ]; then
+    skip "$cmd $cur already at pin"
+    return 0
+  fi
+  # sort -V orders by version, so the pin sorting first means cur is newer
+  if [ "$(printf '%s\n%s\n' "$pin" "$cur" | sort -V | head -n1)" = "$pin" ]; then
+    printf '    [note] %s %s is newer than the pin (%s); keeping it\n' \
+      "$cmd" "$cur" "$2"
+    return 0
+  fi
+  return 1
 }
 
 # usage: verify_sha256 <file> <expected-sha256>
@@ -198,9 +233,7 @@ UV_SHA256="5de211d9278af365497d387e25316907b3b4a9f25b4476dd6dbf238d6f85cff3"
 
 install_uv() {
   log "uv $UV_VERSION"
-  if at_pinned_version uv "$UV_VERSION"; then
-    skip "uv $(installed_version uv) already at pin"
-  else
+  if ! pin_satisfied uv "$UV_VERSION"; then
     install_release_binary \
       "https://github.com/astral-sh/uv/releases/download/$UV_VERSION/uv-x86_64-unknown-linux-gnu.tar.gz" \
       "$UV_SHA256" "uv-x86_64-unknown-linux-gnu/uv" uv 1

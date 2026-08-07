@@ -3,11 +3,12 @@
 # provision-shell.sh - idempotent provisioning for the shell/terminal/dev
 # tools this repo's configs assume are present.
 #
-# Every downloaded tool is pinned to an exact version and verified against a
-# recorded sha256 (helpers in provision-lib.sh). A tool already at its pin is
-# skipped, so re-running is safe; any other outcome - download failure, hash
-# mismatch, failed install - aborts loudly with a nonzero exit. Run ./install
-# afterwards to symlink the dotfiles themselves.
+# Every download is an exact version verified against a recorded sha256
+# (helpers in provision-lib.sh). The pin is a floor: a tool at or above it is
+# left alone, so re-running is safe and a version installed by hand survives.
+# Anything else - download failure, hash mismatch, failed install - aborts
+# loudly with a nonzero exit. Run ./install afterwards to symlink the dotfiles
+# themselves.
 
 set -euo pipefail
 
@@ -21,10 +22,13 @@ init_provision_log "$SCRIPT_DIR/provision.log"
 mkdir -p "$HOME/.local/bin" "$HOME/.local/share"
 
 # ----------------------------------------------------------------------------
-# Pinned versions + sha256s of the exact artifacts downloaded below. Bumping
-# a pin is a deliberate, reviewed change: update the version AND its sha256
-# (from the upstream release's published checksums), review the upstream
-# diff, then re-run. (supply chain policy: no fetch-latest, see CLAUDE.md)
+# Pinned versions + sha256s of the exact artifacts downloaded below. Each pin
+# is the minimum this repo's configs are known to work with, and what a fresh
+# machine gets; running something newer is fine and provisioning says so
+# instead of rolling it back. Raising a pin is a deliberate, reviewed change:
+# update the version AND its sha256 (from the upstream release's published
+# checksums), review the upstream diff, then re-run. Nothing here ever
+# resolves "latest" at runtime (see CLAUDE.md).
 # UV_VERSION/UV_SHA256 live in provision-lib.sh, shared with the desktop half.
 # ----------------------------------------------------------------------------
 NVM_VERSION="v0.40.3"
@@ -121,10 +125,9 @@ install_uv
 # ----------------------------------------------------------------------------
 # glab (GitLab CLI). Installed from upstream's .deb rather than the tarball so
 # it lands in /usr/bin - the same place a hand-run `dpkg -i` from the releases
-# page puts it. With one copy on PATH, a manual install actually replaces the
-# pinned one instead of being silently shadowed by ~/.local/bin/glab. Note the
-# pin still wins on the next run: this makes manual updates take effect, not
-# survive re-provisioning.
+# page puts it. With one copy on PATH, a manual update actually replaces the
+# provisioned one instead of being silently shadowed by ~/.local/bin/glab, and
+# because the pin is a floor, the newer copy then survives re-provisioning.
 # ----------------------------------------------------------------------------
 log "glab $GLAB_VERSION"
 # Migration off the old tarball layout: ~/.local/bin precedes /usr/bin on PATH,
@@ -134,9 +137,7 @@ if [ -e "$HOME/.local/bin/glab" ]; then
   rm -f "$HOME/.local/bin/glab"
   printf '    [note] removed ~/.local/bin/glab left by the old tarball install\n'
 fi
-if at_pinned_version glab "$GLAB_VERSION"; then
-  skip "glab $(installed_version glab) already at pin"
-else
+if ! pin_satisfied glab "$GLAB_VERSION"; then
   install_release_deb \
     "https://gitlab.com/gitlab-org/cli/-/releases/$GLAB_VERSION/downloads/glab_${GLAB_VERSION#v}_linux_amd64.deb" \
     "$GLAB_SHA256" glab
@@ -159,39 +160,31 @@ if have rg; then skip "ripgrep already installed"; else
 fi
 
 # ----------------------------------------------------------------------------
-# Release-tarball tools: lsd, lazygit, starship, fzf (exact pin + sha256)
+# Release-tarball tools: lsd, lazygit, starship, fzf (pinned floor + sha256)
 # ----------------------------------------------------------------------------
 log "lsd $LSD_VERSION"
-if at_pinned_version lsd "$LSD_VERSION"; then
-  skip "lsd $(installed_version lsd) already at pin"
-else
+if ! pin_satisfied lsd "$LSD_VERSION"; then
   install_release_binary \
     "https://github.com/lsd-rs/lsd/releases/download/$LSD_VERSION/lsd-$LSD_VERSION-x86_64-unknown-linux-gnu.tar.gz" \
     "$LSD_SHA256" "lsd-$LSD_VERSION-x86_64-unknown-linux-gnu/lsd" lsd 1
 fi
 
 log "lazygit $LAZYGIT_VERSION"
-if at_pinned_version lazygit "$LAZYGIT_VERSION"; then
-  skip "lazygit $(installed_version lazygit) already at pin"
-else
+if ! pin_satisfied lazygit "$LAZYGIT_VERSION"; then
   install_release_binary \
     "https://github.com/jesseduffield/lazygit/releases/download/$LAZYGIT_VERSION/lazygit_${LAZYGIT_VERSION#v}_Linux_x86_64.tar.gz" \
     "$LAZYGIT_SHA256" "lazygit" lazygit
 fi
 
 log "starship $STARSHIP_VERSION"
-if at_pinned_version starship "$STARSHIP_VERSION"; then
-  skip "starship $(installed_version starship) already at pin"
-else
+if ! pin_satisfied starship "$STARSHIP_VERSION"; then
   install_release_binary \
     "https://github.com/starship/starship/releases/download/$STARSHIP_VERSION/starship-x86_64-unknown-linux-gnu.tar.gz" \
     "$STARSHIP_SHA256" "starship" starship
 fi
 
 log "fzf $FZF_VERSION"
-if at_pinned_version fzf "$FZF_VERSION"; then
-  skip "fzf $(installed_version fzf) already at pin"
-else
+if ! pin_satisfied fzf "$FZF_VERSION"; then
   install_release_binary \
     "https://github.com/junegunn/fzf/releases/download/$FZF_VERSION/fzf-${FZF_VERSION#v}-linux_amd64.tar.gz" \
     "$FZF_SHA256" "fzf" fzf
@@ -204,9 +197,7 @@ fi
 # bindings and monitor-switch.sh hard-depend on the binary.
 # ----------------------------------------------------------------------------
 log "kitty $KITTY_VERSION"
-if at_pinned_version kitty "$KITTY_VERSION"; then
-  skip "kitty $(installed_version kitty) already at pin"
-else
+if ! pin_satisfied kitty "$KITTY_VERSION"; then
   install_release_bundle \
     "https://github.com/kovidgoyal/kitty/releases/download/v$KITTY_VERSION/kitty-$KITTY_VERSION-x86_64.txz" \
     "$KITTY_SHA256" kitty.app 0 kitty kitten
@@ -235,9 +226,7 @@ install_nerd_font JetBrainsMono "$NERD_FONT_JETBRAINSMONO_SHA256"
 # 22.04's apt neovim (0.6) is far too old for a current config.
 # ----------------------------------------------------------------------------
 log "neovim $NVIM_VERSION"
-if at_pinned_version nvim "$NVIM_VERSION"; then
-  skip "nvim $(installed_version nvim) already at pin"
-else
+if ! pin_satisfied nvim "$NVIM_VERSION"; then
   install_release_bundle \
     "https://github.com/neovim/neovim/releases/download/$NVIM_VERSION/nvim-linux-x86_64.tar.gz" \
     "$NVIM_SHA256" nvim.app 1 nvim
@@ -283,9 +272,7 @@ fi
 # committed Cargo.lock. Installs to ~/.cargo/bin (on PATH via ~/.cargo/env).
 # ----------------------------------------------------------------------------
 log "tree-sitter CLI $TREE_SITTER_VERSION (source build)"
-if at_pinned_version tree-sitter "$TREE_SITTER_VERSION"; then
-  skip "tree-sitter $(installed_version tree-sitter) already at pin"
-else
+if ! pin_satisfied tree-sitter "$TREE_SITTER_VERSION"; then
   cargo "+$RUST_TOOLCHAIN" install tree-sitter-cli \
     --version "$TREE_SITTER_VERSION" --locked --force ||
     die "tree-sitter-cli $TREE_SITTER_VERSION build failed"
@@ -301,9 +288,7 @@ fi
 # `go install` land in ~/go/bin, which bashrc adds to PATH.
 # ----------------------------------------------------------------------------
 log "go $GO_VERSION"
-if at_pinned_version go "$GO_VERSION" version; then
-  skip "go $(installed_version go version) already at pin"
-else
+if ! pin_satisfied go "$GO_VERSION" version; then
   install_release_bundle \
     "https://dl.google.com/go/go$GO_VERSION.linux-amd64.tar.gz" \
     "$GO_SHA256" go 1 go gofmt
