@@ -52,15 +52,27 @@ with this file (guidance for editing this repo).
 
 Every tool fetched from an upstream release — nvm, uv, glab, lazygit,
 starship, fzf, lsd, kitty, neovim, go, and the Nerd Fonts (JetBrainsMono,
-Iosevka, FantasqueSansMono) — is pinned to an exact version (no
-fetch-latest) and verified against a recorded sha256 before installing
-(helpers live in `provision-lib.sh`). An installed version that differs
-from its pin in either direction is reinstalled at the pin, so machines
-converge on identical binaries. Bumping a pin is a deliberate, reviewed
-change: update the version variable and its sha256 (from the upstream
-release's published checksums where they exist; kitty and neovim publish
-none, so their hashes are computed from the reviewed download), review the
-upstream diff, then re-run the relevant `provision*.sh`. The
+Iosevka, FantasqueSansMono) — names an exact version (no fetch-latest) and
+is verified against a recorded sha256 before installing (helpers live in
+`provision-lib.sh`).
+
+A pin is a floor, not an equality. It is the version a fresh machine gets
+and the minimum these configs are known to work with; an installed copy at
+or above it is left alone, and one that is newer — updated by hand between
+runs — is reported and kept rather than rolled back. Re-provisioning is not
+supposed to undo a deliberate update, and that note is the cue to raise the
+floor once the newer version has proven itself. Older, missing, or
+unparseable installs the pin. `FORCE_PINS=1 ./provision-shell.sh` restores
+exact-pin behaviour for a run, which is how a pin gets walked backwards
+after a bad release. The trade is that machines no longer converge on
+identical binaries; the guarantee kept is that nothing is ever fetched
+unpinned or unverified.
+
+Raising a pin is a deliberate, reviewed change: update the version variable
+and its sha256 (from the upstream release's published checksums where they
+exist; kitty and neovim publish none, so their hashes are computed from the
+reviewed download), review the upstream diff, then re-run the relevant
+`provision*.sh`. The
 monitor-manager's Python dependencies are pinned the same way via the
 committed `uv.lock`; all syncs run `--locked`. The rust toolchain is pinned the same way
 (verified rustup-init, pinned toolchain version), and the tree-sitter CLI

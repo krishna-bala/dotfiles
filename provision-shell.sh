@@ -3,11 +3,12 @@
 # provision-shell.sh - idempotent provisioning for the shell/terminal/dev
 # tools this repo's configs assume are present.
 #
-# Every downloaded tool is pinned to an exact version and verified against a
-# recorded sha256 (helpers in provision-lib.sh). A tool already at its pin is
-# skipped, so re-running is safe; any other outcome - download failure, hash
-# mismatch, failed install - aborts loudly with a nonzero exit. Run ./install
-# afterwards to symlink the dotfiles themselves.
+# Every download is an exact version verified against a recorded sha256
+# (helpers in provision-lib.sh). The pin is a floor: a tool at or above it is
+# left alone, so re-running is safe and a version installed by hand survives.
+# Anything else - download failure, hash mismatch, failed install - aborts
+# loudly with a nonzero exit. Run ./install afterwards to symlink the dotfiles
+# themselves.
 
 set -euo pipefail
 
@@ -21,16 +22,19 @@ init_provision_log "$SCRIPT_DIR/provision.log"
 mkdir -p "$HOME/.local/bin" "$HOME/.local/share"
 
 # ----------------------------------------------------------------------------
-# Pinned versions + sha256s of the exact artifacts downloaded below. Bumping
-# a pin is a deliberate, reviewed change: update the version AND its sha256
-# (from the upstream release's published checksums), review the upstream
-# diff, then re-run. (supply chain policy: no fetch-latest, see CLAUDE.md)
+# Pinned versions + sha256s of the exact artifacts downloaded below. Each pin
+# is the minimum this repo's configs are known to work with, and what a fresh
+# machine gets; running something newer is fine and provisioning says so
+# instead of rolling it back. Raising a pin is a deliberate, reviewed change:
+# update the version AND its sha256 (from the upstream release's published
+# checksums), review the upstream diff, then re-run. Nothing here ever
+# resolves "latest" at runtime (see CLAUDE.md).
 # UV_VERSION/UV_SHA256 live in provision-lib.sh, shared with the desktop half.
 # ----------------------------------------------------------------------------
 NVM_VERSION="v0.40.3"
 NVM_INSTALL_SHA256="2d8359a64a3cb07c02389ad88ceecd43f2fa469c06104f92f98df5b6f315275f"
-GLAB_VERSION="v1.109.0"
-GLAB_SHA256="827d2bb5dfd96758d423e6e5559f6265bce7a18558d11436145484c62aff1965"
+GLAB_VERSION="v1.112.0"
+GLAB_SHA256="71eb77a13dd57f3add103e979b20dbd9f4730bcaf9501ae2e8ac14cb4585c707"
 LAZYGIT_VERSION="v0.62.2"
 LAZYGIT_SHA256="8b9a4c2d0969cbea92b45c956dd2a44e1ba76900c9df49f1c60984045ce77984"
 STARSHIP_VERSION="v1.25.1"
@@ -121,10 +125,9 @@ install_uv
 # ----------------------------------------------------------------------------
 # glab (GitLab CLI). Installed from upstream's .deb rather than the tarball so
 # it lands in /usr/bin - the same place a hand-run `dpkg -i` from the releases
-# page puts it. With one copy on PATH, a manual install actually replaces the
-# pinned one instead of being silently shadowed by ~/.local/bin/glab. Note the
-# pin still wins on the next run: this makes manual updates take effect, not
-# survive re-provisioning.
+# page puts it. With one copy on PATH, a manual update actually replaces the
+# provisioned one instead of being silently shadowed by ~/.local/bin/glab, and
+# because the pin is a floor, the newer copy then survives re-provisioning.
 # ----------------------------------------------------------------------------
 log "glab $GLAB_VERSION"
 # Migration off the old tarball layout: ~/.local/bin precedes /usr/bin on PATH,
@@ -134,9 +137,7 @@ if [ -e "$HOME/.local/bin/glab" ]; then
   rm -f "$HOME/.local/bin/glab"
   printf '    [note] removed ~/.local/bin/glab left by the old tarball install\n'
 fi
-if at_pinned_version glab "$GLAB_VERSION"; then
-  skip "glab $(installed_version glab) already at pin"
-else
+if ! pin_satisfied glab "$GLAB_VERSION"; then
   install_release_deb \
     "https://gitlab.com/gitlab-org/cli/-/releases/$GLAB_VERSION/downloads/glab_${GLAB_VERSION#v}_linux_amd64.deb" \
     "$GLAB_SHA256" glab
@@ -159,39 +160,31 @@ if have rg; then skip "ripgrep already installed"; else
 fi
 
 # ----------------------------------------------------------------------------
-# Release-tarball tools: lsd, lazygit, starship, fzf (exact pin + sha256)
+# Release-tarball tools: lsd, lazygit, starship, fzf (pinned floor + sha256)
 # ----------------------------------------------------------------------------
 log "lsd $LSD_VERSION"
-if at_pinned_version lsd "$LSD_VERSION"; then
-  skip "lsd $(installed_version lsd) already at pin"
-else
+if ! pin_satisfied lsd "$LSD_VERSION"; then
   install_release_binary \
     "https://github.com/lsd-rs/lsd/releases/download/$LSD_VERSION/lsd-$LSD_VERSION-x86_64-unknown-linux-gnu.tar.gz" \
     "$LSD_SHA256" "lsd-$LSD_VERSION-x86_64-unknown-linux-gnu/lsd" lsd 1
 fi
 
 log "lazygit $LAZYGIT_VERSION"
-if at_pinned_version lazygit "$LAZYGIT_VERSION"; then
-  skip "lazygit $(installed_version lazygit) already at pin"
-else
+if ! pin_satisfied lazygit "$LAZYGIT_VERSION"; then
   install_release_binary \
     "https://github.com/jesseduffield/lazygit/releases/download/$LAZYGIT_VERSION/lazygit_${LAZYGIT_VERSION#v}_Linux_x86_64.tar.gz" \
     "$LAZYGIT_SHA256" "lazygit" lazygit
 fi
 
 log "starship $STARSHIP_VERSION"
-if at_pinned_version starship "$STARSHIP_VERSION"; then
-  skip "starship $(installed_version starship) already at pin"
-else
+if ! pin_satisfied starship "$STARSHIP_VERSION"; then
   install_release_binary \
     "https://github.com/starship/starship/releases/download/$STARSHIP_VERSION/starship-x86_64-unknown-linux-gnu.tar.gz" \
     "$STARSHIP_SHA256" "starship" starship
 fi
 
 log "fzf $FZF_VERSION"
-if at_pinned_version fzf "$FZF_VERSION"; then
-  skip "fzf $(installed_version fzf) already at pin"
-else
+if ! pin_satisfied fzf "$FZF_VERSION"; then
   install_release_binary \
     "https://github.com/junegunn/fzf/releases/download/$FZF_VERSION/fzf-${FZF_VERSION#v}-linux_amd64.tar.gz" \
     "$FZF_SHA256" "fzf" fzf
@@ -204,9 +197,7 @@ fi
 # bindings and monitor-switch.sh hard-depend on the binary.
 # ----------------------------------------------------------------------------
 log "kitty $KITTY_VERSION"
-if at_pinned_version kitty "$KITTY_VERSION"; then
-  skip "kitty $(installed_version kitty) already at pin"
-else
+if ! pin_satisfied kitty "$KITTY_VERSION"; then
   install_release_bundle \
     "https://github.com/kovidgoyal/kitty/releases/download/v$KITTY_VERSION/kitty-$KITTY_VERSION-x86_64.txz" \
     "$KITTY_SHA256" kitty.app 0 kitty kitten
@@ -235,9 +226,7 @@ install_nerd_font JetBrainsMono "$NERD_FONT_JETBRAINSMONO_SHA256"
 # 22.04's apt neovim (0.6) is far too old for a current config.
 # ----------------------------------------------------------------------------
 log "neovim $NVIM_VERSION"
-if at_pinned_version nvim "$NVIM_VERSION"; then
-  skip "nvim $(installed_version nvim) already at pin"
-else
+if ! pin_satisfied nvim "$NVIM_VERSION"; then
   install_release_bundle \
     "https://github.com/neovim/neovim/releases/download/$NVIM_VERSION/nvim-linux-x86_64.tar.gz" \
     "$NVIM_SHA256" nvim.app 1 nvim
@@ -283,9 +272,7 @@ fi
 # committed Cargo.lock. Installs to ~/.cargo/bin (on PATH via ~/.cargo/env).
 # ----------------------------------------------------------------------------
 log "tree-sitter CLI $TREE_SITTER_VERSION (source build)"
-if at_pinned_version tree-sitter "$TREE_SITTER_VERSION"; then
-  skip "tree-sitter $(installed_version tree-sitter) already at pin"
-else
+if ! pin_satisfied tree-sitter "$TREE_SITTER_VERSION"; then
   cargo "+$RUST_TOOLCHAIN" install tree-sitter-cli \
     --version "$TREE_SITTER_VERSION" --locked --force ||
     die "tree-sitter-cli $TREE_SITTER_VERSION build failed"
@@ -301,26 +288,47 @@ fi
 # `go install` land in ~/go/bin, which bashrc adds to PATH.
 # ----------------------------------------------------------------------------
 log "go $GO_VERSION"
-if at_pinned_version go "$GO_VERSION" version; then
-  skip "go $(installed_version go version) already at pin"
-else
+if ! pin_satisfied go "$GO_VERSION" version; then
   install_release_bundle \
     "https://dl.google.com/go/go$GO_VERSION.linux-amd64.tar.gz" \
     "$GO_SHA256" go 1 go gofmt
 fi
 
 # ----------------------------------------------------------------------------
-# Stale duplicate binaries: tools this script manages in ~/.local/bin can also
-# exist elsewhere on PATH (old manual installs in /usr/local/bin, cargo, apt).
-# Flag every duplicate and say how to remove it. A duplicate that comes first
-# on PATH is worse than clutter: it silently wins over the pinned copy.
+# Stale duplicate binaries: a tool this script manages can also exist elsewhere
+# on PATH (old manual installs in /usr/local/bin, cargo, apt, or an earlier
+# layout of this script). Flag every duplicate and say how to remove it. A
+# duplicate that comes first on PATH is worse than clutter: it silently wins
+# over the pinned copy, so `glab --version` and its update notice report the
+# stale one and a re-install of the real thing looks like it did nothing.
+#
+# Each entry pairs a tool with the path its pinned copy lands at, since that
+# is not always ~/.local/bin: glab is installed from upstream's .deb and so
+# lives in /usr/bin.
 # ----------------------------------------------------------------------------
 log "Checking for stale duplicate binaries"
 stale_found=0
-for tool in uv lazygit starship fzf lsd kitty nvim go gofmt; do
-  [ -x "$HOME/.local/bin/$tool" ] || continue
+for entry in \
+  "uv:$HOME/.local/bin/uv" \
+  "lazygit:$HOME/.local/bin/lazygit" \
+  "starship:$HOME/.local/bin/starship" \
+  "fzf:$HOME/.local/bin/fzf" \
+  "lsd:$HOME/.local/bin/lsd" \
+  "kitty:$HOME/.local/bin/kitty" \
+  "nvim:$HOME/.local/bin/nvim" \
+  "go:$HOME/.local/bin/go" \
+  "gofmt:$HOME/.local/bin/gofmt" \
+  "glab:/usr/bin/glab"; do
+  tool="${entry%%:*}"
+  pinned="${entry#*:}"
+  [ -x "$pinned" ] || continue
+  # On a merged-usr system /bin and /sbin are symlinks into /usr, so one
+  # binary is reachable under two paths and would otherwise be reported as
+  # a duplicate of itself. Compare the resolved file, not the spelling.
+  pinned_real="$(readlink -f "$pinned")"
+  first_real="$(readlink -f "$(command -v "$tool")" 2>/dev/null)"
   while IFS= read -r path; do
-    [ "$path" = "$HOME/.local/bin/$tool" ] && continue
+    [ "$(readlink -f "$path")" = "$pinned_real" ] && continue
     stale_found=1
     # dpkg-owned copies (e.g. an old apt lsd/kitty) must go through apt,
     # since deleting the file by hand leaves dpkg in an inconsistent state
@@ -329,12 +337,12 @@ for tool in uv lazygit starship fzf lsd kitty nvim go gofmt; do
     if pkg="$(dpkg -S "$path" 2>/dev/null | head -n1 | cut -d: -f1)" && [ -n "$pkg" ]; then
       rm_hint="sudo apt-get remove $pkg"
     fi
-    if [ "$(command -v "$tool")" = "$HOME/.local/bin/$tool" ]; then
-      printf '    [note] stale %s at %s (shadowed; clean up with: %s)\n' \
-        "$tool" "$path" "$rm_hint"
+    if [ "$first_real" = "$pinned_real" ]; then
+      printf '    [note] stale %s at %s (shadowed by %s; clean up with: %s)\n' \
+        "$tool" "$path" "$pinned" "$rm_hint"
     else
-      printf '    [WARN] %s on PATH resolves to %s, which shadows the pinned ~/.local/bin/%s; remove it with: %s\n' \
-        "$tool" "$path" "$tool" "$rm_hint"
+      printf '    [WARN] %s on PATH resolves to %s, which shadows the pinned %s; remove it with: %s\n' \
+        "$tool" "$path" "$pinned" "$rm_hint"
     fi
   done < <(type -aP "$tool" 2>/dev/null | awk '!seen[$0]++')
 done
