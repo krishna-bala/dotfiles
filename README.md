@@ -16,8 +16,9 @@ each gets its own top-level directory:
   nord-tmux, tmux-sensible)
 - `kitty/` — config, themes, `launch.sh`, `zenmode.py`
 - `starship/` — `starship.toml` (prompt theming)
-- `claude/` — files this repo deploys to `~/.claude/` (`CLAUDE.md`,
-  `status-line.sh`)
+- `agents-config/` — harness-agnostic agent instructions and content
+  deployed through Claude-compatible paths
+- `claude/` — Claude-specific integration, including the status-line script
 
 Desktop:
 
@@ -93,7 +94,6 @@ forking this repo:
   env vars)
 - `bash/bash_aliases` sources `~/.bash_aliases.local` if it exists (e.g.
   work-specific shell functions)
-- `claude/CLAUDE.md` imports `~/.claude/CLAUDE.local.md` if it exists
 - `git/gitconfig` includes `~/.gitconfig.local` if it exists (identity,
   credential helpers)
 

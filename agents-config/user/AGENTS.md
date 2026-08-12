@@ -43,5 +43,3 @@ When writing text that will be reviewed by other humans (MR/PR descriptions, cod
 - `claude -p` refuses to run inside a Claude Code session (detects the `CLAUDECODE` env var)
 - Workaround: `env -u CLAUDECODE claude -p "..." --model sonnet`
 - Safe for `-p` (print/non-interactive mode) since it's stateless
-
-@~/.claude/CLAUDE.local.md

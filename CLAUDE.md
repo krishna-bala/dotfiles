@@ -8,15 +8,17 @@ Personal dotfiles: a shell/terminal/dev foundation plus a bspwm-based X11
 desktop, installed via Dotbot from the repo root. The desktop half is
 optional: `--no-desktop` on `./install` and `./provision.sh` skips it.
 
-Do not confuse `claude/CLAUDE.md` (the file this repo symlinks to
-`~/.claude/CLAUDE.md` on install — guidance for using Claude Code itself)
+Do not confuse `agents-config/user/AGENTS.md` (the file this repo symlinks to
+`~/.claude/CLAUDE.md` on install — user-level agent guidance)
 with this file (guidance for editing this repo).
 
 ## Layout
 
-- `bash/`, `git/`, `tmux/`, `kitty/`, `starship/`, `claude/` — the shell/
-  terminal/dev foundation. Each is independent of the others, so they get
-  their own top-level directory rather than nesting under one umbrella.
+- `bash/`, `git/`, `tmux/`, `kitty/`, `starship/` — the shell/terminal/dev
+  foundation. Each is independent of the others, so they get their own
+  top-level directory rather than nesting under one umbrella.
+- `agents-config/` — harness-agnostic agent instructions and content.
+- `claude/` — Claude-specific integration such as the user status-line script.
 - `desktop-environment/` — the bspwm + sxhkd + polybar X11 stack, plus
   picom and dunst. These stay grouped under one directory because they're
   developed and tested together (sxhkd's hotkeys and polybar's toggle
@@ -97,10 +99,10 @@ Use scoped commits (`<scope>: <description>`, e.g. `kitty: ...`, `bspwm:
 
 ## Machine-local overlay seams
 
-`bash/bashrc`, `bash/bash_aliases`, `git/gitconfig`, and `claude/CLAUDE.md`
-each reference an untracked `~/*.local` sidecar behind an existence guard,
-so a private overlay repo can inject machine-specific config without
-modifying these files. Never add a `*.local` file to this repo; it stays
-public and self-contained. The same split applies to config that isn't a
-sidecar: work-machine bspwm profiles live in the overlay, not in
+`bash/bashrc`, `bash/bash_aliases`, and `git/gitconfig` each reference an
+untracked `~/*.local` sidecar behind an existence guard, so a private overlay
+repo can inject machine-specific config without modifying these files. Never
+add a `*.local` file to this repo; it stays public and self-contained. The same
+split applies to config that isn't a sidecar: work-machine bspwm profiles live
+in the overlay, not in
 `desktop-environment/bspwm/profiles/`.
