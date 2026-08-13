@@ -28,7 +28,11 @@ session_log() {
   fi
 }
 
-trap 'rc=$?; log "bspwmrc config finished with status $rc"' EXIT
+on_exit() {
+  local rc=$?
+  log "bspwmrc config finished with status $rc"
+}
+trap on_exit EXIT
 
 # Rotate logs larger than 256KB, keeping one .1 backup
 rotate_if_large() {
