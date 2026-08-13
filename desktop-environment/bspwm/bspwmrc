@@ -15,11 +15,24 @@ BSPWM_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}"
 LOG_FILE="$STATE_DIR/bspwm/bspwm.log"
 SXHKD_LOG="$STATE_DIR/sxhkd/sxhkd.log"
+SESSION_LOGGER="$HOME/.local/bin/desktop-session-log"
 mkdir -p "$STATE_DIR/bspwm" "$STATE_DIR/sxhkd"
 
 log() {
   echo "[$(date +%s.%N)] $1" >>"$LOG_FILE"
 }
+
+session_log() {
+  if [ -x "$SESSION_LOGGER" ]; then
+    "$SESSION_LOGGER" "$@" || true
+  fi
+}
+
+on_exit() {
+  local rc=$?
+  log "bspwmrc config finished with status $rc"
+}
+trap on_exit EXIT
 
 # Rotate logs larger than 256KB, keeping one .1 backup
 rotate_if_large() {
@@ -31,6 +44,7 @@ rotate_if_large "$SXHKD_LOG"
 
 # Append so a failing run's diagnostics survive a subsequent restart
 echo "=== bspwmrc started at $(date) ===" >>"$LOG_FILE"
+session_log --startup bspwm
 
 # Make the X session env available to systemd user units (swapescape.service
 # runs setxkbmap and needs DISPLAY/XAUTHORITY)
@@ -47,7 +61,7 @@ fi
 # shellcheck source=scripts/network-env.sh
 . "$BSPWM_DIR/scripts/network-env.sh"
 network_env
-log "NETWORK_INTERFACE=$NETWORK_INTERFACE NETWORK_LABEL=$NETWORK_LABEL"
+log "NETWORK_INTERFACE=$NETWORK_INTERFACE NETWORK_LABEL=${NETWORK_LABEL-<unset: wireless>}"
 
 # 1. Wait for X/display driver to be ready
 log "Waiting for X..."
@@ -66,6 +80,10 @@ if [ "$x_ready" = false ]; then
   xrandr --auto
   notify-send -u critical "Monitor Manager" "X not ready - emergency fallback"
 fi
+
+# Do not leave unmapped monitor windows behind after a display is disabled.
+# Stale bspwm monitor windows can sit above Polybar and swallow its clicks.
+bspc config remove_disabled_monitors true
 
 # 2a. Disable phantom outputs (disconnected but still active in xrandr).
 # Happens after unplugging externals — xrandr keeps stale modes/positions,
@@ -140,11 +158,16 @@ sleep 0.2
 echo "=== sxhkd watchdog started at $(date) ===" >>"$SXHKD_LOG"
 (
     exec -a sxhkd-watchdog bash -c '
-        while true; do
+        while bspc wm -d >/dev/null 2>&1; do
             sxhkd 2>>"'"$SXHKD_LOG"'"
-            echo "=== sxhkd exited at $(date), restarting in 1s ===" >>"'"$SXHKD_LOG"'"
-            sleep 1
+            if bspc wm -d >/dev/null 2>&1; then
+                echo "=== sxhkd exited at $(date), restarting in 1s ===" >>"'"$SXHKD_LOG"'"
+                sleep 1
+            else
+                break
+            fi
         done
+        echo "=== sxhkd watchdog exiting at $(date): bspwm is unavailable ===" >>"'"$SXHKD_LOG"'"
     '
 ) &
 disown

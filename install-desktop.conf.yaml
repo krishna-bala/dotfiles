@@ -4,14 +4,12 @@
 # after install.conf.yaml unless invoked with --no-desktop, so shell-only
 # machines (e.g. remote boxes) skip everything in this file.
 #
-# Every link is forced, same as install.conf.yaml: this repo is the single
-# source of truth for these paths, so install always converges to the same
-# state -- a pre-existing regular file at any target is replaced, never left
-# to shadow the repo copy.
+# Links are relinked and existing regular paths are backed up so install
+# converges without deleting a pre-existing file or directory.
 - defaults:
     link:
       relink: true
-      force: true
+      backup: true
       create: true
 
 - link:
@@ -25,6 +23,10 @@
     ~/.local/bin/wacominit: bin/wacominit
     ~/.local/bin/lockscreen: bin/lockscreen
     ~/.local/bin/clipimg: bin/clipimg
+    ~/.local/bin/desktop-session-log: bin/desktop-session-log
+    ~/.config/autostart/dotfiles-session-log.desktop:
+      create: true
+      path: desktop-environment/session/dotfiles-session-log.desktop
 
 - shell:
     # redshift.conf is seeded by copy, never symlinked: each machine tunes

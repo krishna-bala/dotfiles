@@ -2,13 +2,12 @@
 # config, and additionally install-desktop.conf.yaml (the bspwm/X11 stack)
 # unless invoked with --no-desktop.
 #
-# Every link is forced: this repo is the single source of truth for these
-# paths, so install always converges to the same state -- a pre-existing
-# regular file at any target is replaced, never left to shadow the repo copy.
+# Links are relinked and existing regular paths are backed up so install
+# converges without deleting a pre-existing file or directory.
 - defaults:
     link:
       relink: true
-      force: true
+      backup: true
       create: true
 
 - link:
@@ -25,11 +24,8 @@
     ~/.tmux: tmux
     ~/.tmux.conf: tmux/tmux.conf
     ~/.config/kitty: kitty
-    ~/.claude/CLAUDE.md: claude/CLAUDE.md
-    ~/.claude/scripts/status-line.sh: claude/status-line.sh
+    ~/.claude/CLAUDE.md: agents-config/user/AGENTS.md
+    ~/.claude/scripts/status-line.sh: claude/user/scripts/status-line.sh
 
 - shell:
-    - [
-        git submodule update --init --recursive,
-        Installing/updating submodules,
-      ]
+    - [git submodule update --init --recursive, Installing/updating submodules]

@@ -540,6 +540,52 @@ class TestProfileMatching(unittest.TestCase):
         self.assertEqual(matches[0][0], "laptop-only")
         self.assertEqual(matches[0][1], 100.0)  # Score: laptop match
 
+    def test_enabled_laptop_profile_skips_inactive_laptop_output(self):
+        """Test that an enabled laptop display does not match after lid close."""
+        detected = [
+            Monitor(
+                output="eDP-1",
+                edid="laptop_edid_abc",
+                manufacturer="LGD",
+                model="Generic",
+                resolution="unknown",
+                connected=True,
+            )
+        ]
+
+        service = ProfileService(self.profiles_dir, lid_state_reader=lambda: True)
+        matches = service.match_profiles(detected)
+
+        self.assertNotIn("laptop-only", [m[0] for m in matches])
+
+    def test_disabled_laptop_profile_accepts_inactive_laptop_output(self):
+        """Test that a profile disabling the laptop can match after lid close."""
+        detected = [
+            Monitor(
+                output="eDP-1",
+                edid="laptop_edid_abc",
+                manufacturer="LGD",
+                model="Generic",
+                resolution="unknown",
+                connected=True,
+            ),
+            Monitor(
+                output="DP-1",
+                edid="external_monitor_edid_123",
+                manufacturer="Dell",
+                model="Generic",
+                resolution="2560x1440",
+                connected=True,
+            ),
+        ]
+
+        service = ProfileService(self.profiles_dir, lid_state_reader=lambda: True)
+        matches = service.match_profiles(detected)
+
+        dual_match = next((m for m in matches if m[0] == "dual-monitor"), None)
+        self.assertIsNotNone(dual_match)
+        self.assertEqual(dual_match[1], 200.0)
+
     def test_match_dual_monitor(self):
         """Test matching with laptop + one external monitor."""
         detected = [

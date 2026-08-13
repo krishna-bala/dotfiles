@@ -24,7 +24,10 @@ Ordered startup — each step depends on the previous:
 4. **Launch background apps** — picom, nitrogen, redshift, nm-applet, blueman, protonvpn (all pgrep-guarded)
 5. **Start sxhkd LAST** — `pkill` + 200ms wait + launch. Must be last so X key grabs succeed after monitor setup
 
-Logs: `$XDG_STATE_HOME/bspwm/bspwm.log`, `$XDG_STATE_HOME/sxhkd/sxhkd.log`
+Logs: `$XDG_STATE_HOME/bspwm/bspwm.log`, `$XDG_STATE_HOME/sxhkd/sxhkd.log`,
+and `$XDG_STATE_HOME/desktop-session/boot-<boot-id>.log`. The latter captures
+filtered GNOME/Mutter, bspwm, Xorg, GDM, NVIDIA, monitor, and failed-unit
+events for both GNOME autostart and bspwm startup.
 
 ### Monitor Manager (Python)
 
@@ -68,7 +71,12 @@ ui:            # polybar bars per monitor (orientation, font_size, modules)
 
 Profiles use logical aliases (laptop, main, vertical) resolved to actual outputs at runtime.
 
-**Current profiles:** personal-solo (eDP-1), personal-home. Work-machine profiles are not tracked here; they live in the private overlay repo alongside the rest of the machine-local config.
+**Current profiles:** personal-solo (eDP-1), personal-home,
+work-laptop-home, work-laptop-woodinville (laptop fallback enabled), and
+work-laptop-woodinville-clamshell (external monitors only). Profile matching
+uses the ACPI lid state when available and skips an enabled-laptop profile
+while the lid is closed. It also falls back to requiring an active Xrandr mode
+when the lid state is unavailable.
 
 ### Shell Scripts (scripts/)
 
@@ -97,10 +105,12 @@ icon at startup, which is why apply-auto.sh restarts it afterwards (nm-applet
 re-registers on its own).
 
 `scripts/network-env.sh`, sourced by bspwmrc and apply-auto.sh, exports
-`NETWORK_INTERFACE` (whichever interface holds the default route) and
-`NETWORK_LABEL` for the network module — the literal token `%essid%` on Wi-Fi
-so polybar keeps it live, or a wired link's NetworkManager connection name,
-since polybar renders `%essid%` as junk on a wired interface.
+`NETWORK_INTERFACE` (whichever interface holds the default route), and on a
+wired link `NETWORK_LABEL` (its NetworkManager connection name). Both are
+read by the network module's `../polybar/shades/scripts/network-label.sh`,
+a custom/script module rather than polybar's `internal/network`. Wi-Fi leaves
+`NETWORK_LABEL` unset: the script resolves the live SSID and signal strength
+itself, so roaming needs no bar restart.
 
 ### sxhkd (../sxhkd/sxhkdrc)
 

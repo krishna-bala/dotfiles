@@ -4,7 +4,7 @@ import logging
 import yaml
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Dict, Optional, Tuple, Any
+from typing import Callable, List, Dict, Optional, Tuple, Any
 
 from .exceptions import ProfileNotFoundError, ProfileValidationError
 
@@ -114,14 +114,43 @@ class ProfileService:
     # only specify what differs. Not a profile itself.
     DEFAULTS_FILE = "defaults.yaml"
 
-    def __init__(self, profiles_dir: Optional[Path] = None):
+    def __init__(
+        self,
+        profiles_dir: Optional[Path] = None,
+        lid_state_reader: Optional[Callable[[], Optional[bool]]] = None,
+    ):
         """Initialize profile service.
 
         Args:
             profiles_dir: Directory containing YAML profiles (default: the repo's bspwm/profiles)
+            lid_state_reader: Optional callback returning True when the laptop
+                lid is closed, False when open, or None when unavailable.
         """
         self.profiles_dir = Path(profiles_dir or self.DEFAULT_PROFILES_DIR)
         self._defaults: Optional[dict] = None
+        self._lid_state_reader = lid_state_reader or (
+            self._read_lid_state if profiles_dir is None else lambda: None
+        )
+
+    @staticmethod
+    def _read_lid_state() -> Optional[bool]:
+        """Read the ACPI lid state when the kernel exposes one."""
+        lid_dir = Path("/proc/acpi/button/lid")
+        if not lid_dir.exists():
+            return None
+
+        saw_state = False
+        for state_path in sorted(lid_dir.glob("*/state")):
+            try:
+                state = state_path.read_text().strip().lower()
+            except OSError:
+                continue
+            if "closed" in state:
+                return True
+            if "open" in state:
+                saw_state = True
+
+        return False if saw_state else None
 
     def _load_defaults(self) -> dict:
         """Load profiles/defaults.yaml once; missing file means no defaults."""
@@ -371,12 +400,14 @@ class ProfileService:
         """
         # Extract EDIDs from detected monitors
         detected_edids = {m.edid for m in detected_monitors if m.connected and m.edid}
+        lid_closed = self._lid_state_reader()
 
-        # Build laptop EDID set from eDP-* outputs
-        laptop_edids = {
-            m.edid for m in detected_monitors
-            if m.connected and m.edid and m.output.startswith("eDP-")
-        }
+        # Build laptop monitor sets from eDP-* outputs. An output can remain
+        # EDID-connected after the lid closes, while having no active mode.
+        laptop_monitors = [
+            m for m in detected_monitors if m.connected and m.edid and m.output.startswith("eDP-")
+        ]
+        laptop_edids = {m.edid for m in laptop_monitors}
 
         matched_profiles = []
 
@@ -403,9 +434,25 @@ class ProfileService:
             matched_laptop_edid = None
 
             if laptop_required:
+                laptop_display = profile.displays.get(profile.laptop.alias)
+                laptop_requires_active_output = laptop_display is not None and laptop_display.enabled
                 if profile.laptop.edid:
                     # Profile specifies laptop EDID - match by EDID
                     if profile.laptop.edid in laptop_edids:
+                        if laptop_requires_active_output and lid_closed is True:
+                            logger.debug(
+                                f"Profile {profile_name}: laptop lid is closed"
+                            )
+                            continue  # Enabled laptop display cannot be used closed
+                        if laptop_requires_active_output and not any(
+                            m.edid == profile.laptop.edid and m.resolution != "unknown"
+                            for m in laptop_monitors
+                        ):
+                            logger.debug(
+                                f"Profile {profile_name}: laptop EDID detected but "
+                                "laptop output is inactive"
+                            )
+                            continue  # Enabled laptop display is not active
                         laptop_matched = True
                         matched_laptop_edid = profile.laptop.edid
                     else:
