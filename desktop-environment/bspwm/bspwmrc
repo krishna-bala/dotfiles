@@ -57,7 +57,7 @@ fi
 # shellcheck source=scripts/network-env.sh
 . "$BSPWM_DIR/scripts/network-env.sh"
 network_env
-log "NETWORK_INTERFACE=$NETWORK_INTERFACE NETWORK_LABEL=$NETWORK_LABEL"
+log "NETWORK_INTERFACE=$NETWORK_INTERFACE NETWORK_LABEL=${NETWORK_LABEL-<unset: wireless>}"
 
 # 1. Wait for X/display driver to be ready
 log "Waiting for X..."
