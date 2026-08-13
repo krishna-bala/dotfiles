@@ -23,6 +23,10 @@
     ~/.local/bin/wacominit: bin/wacominit
     ~/.local/bin/lockscreen: bin/lockscreen
     ~/.local/bin/clipimg: bin/clipimg
+    ~/.local/bin/desktop-session-log: bin/desktop-session-log
+    ~/.config/autostart/dotfiles-session-log.desktop:
+      create: true
+      path: desktop-environment/session/dotfiles-session-log.desktop
 
 - shell:
     # redshift.conf is seeded by copy, never symlinked: each machine tunes

@@ -5,11 +5,9 @@
 #
 # NETWORK_INTERFACE - the interface carrying the default route, falling back to
 #   the built-in wifi when nothing is up yet. modules.ini reads it directly.
-# NETWORK_LABEL - substituted into label-connected before polybar parses format
-#   tokens, so a token survives as a token. Wi-Fi gets the literal "%essid%",
-#   which polybar then keeps up to date as the machine roams between networks.
-#   A wired link has no ESSID - polybar renders %essid% as junk on one - so its
-#   NetworkManager connection name is resolved here and passed as plain text.
+# NETWORK_LABEL - the NetworkManager connection name used by the Polybar
+#   network-label custom module for wired links. Wireless links resolve their
+#   current SSID directly so roaming updates without restarting Polybar.
 
 network_env() {
   local iface label

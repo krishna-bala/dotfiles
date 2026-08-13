@@ -1,0 +1,81 @@
+name: work-laptop-woodinville
+description: Work laptop with two landscape 1080p monitors at Woodinville (laptop fallback enabled)
+
+# Detection rules - how to identify this configuration
+detection:
+  laptop:
+    output: eDP-1-1
+    edid: fce90735ac007b29
+    alias: laptop
+
+  monitors:
+    # Left external monitor
+    - output: DP-2.2
+      edid: f4baae2572c9d4f8
+      alias: secondary
+
+    # Right external monitor (the current primary output)
+    - output: DP-2.1
+      edid: 51017c7b74d014dd
+      alias: main
+
+# Physical display configuration (xrandr)
+display:
+  secondary:
+    enabled: true
+    resolution: "1920x1080"
+    position: "0x0"
+    rotation: normal
+    scale: "1.25x1.25"
+    primary: false
+
+  main:
+    enabled: true
+    resolution: "1920x1080"
+    position: "2400x0"
+    rotation: normal
+    scale: "1.25x1.25"
+    primary: true
+
+  # Keep the laptop panel enabled as a visible recovery path while testing
+  # the external outputs.
+  laptop:
+    enabled: true
+    resolution: "3840x2400"
+    position: "0x1350"
+    rotation: normal
+    scale: "1x1"
+    primary: false
+
+# Window manager configuration (BSPWM)
+window_manager:
+  monitor_order: [main, secondary, laptop]
+
+  workspaces:
+    main: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    secondary: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    laptop: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+
+# UI configuration (polybar)
+ui:
+  bars:
+    - monitor: main
+      orientation: landscape
+      modules:
+        left: launcher workspaces
+        center: date time
+        right: network battery alsa
+
+    - monitor: secondary
+      orientation: landscape
+      modules:
+        left: launcher workspaces
+        center: date
+        right: time
+
+    - monitor: laptop
+      orientation: landscape
+      modules:
+        left: launcher workspaces
+        center: date
+        right: network battery backlight alsa time

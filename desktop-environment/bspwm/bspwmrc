@@ -15,11 +15,20 @@ BSPWM_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}"
 LOG_FILE="$STATE_DIR/bspwm/bspwm.log"
 SXHKD_LOG="$STATE_DIR/sxhkd/sxhkd.log"
+SESSION_LOGGER="$HOME/.local/bin/desktop-session-log"
 mkdir -p "$STATE_DIR/bspwm" "$STATE_DIR/sxhkd"
 
 log() {
   echo "[$(date +%s.%N)] $1" >>"$LOG_FILE"
 }
+
+session_log() {
+  if [ -x "$SESSION_LOGGER" ]; then
+    "$SESSION_LOGGER" "$@" || true
+  fi
+}
+
+trap 'rc=$?; log "bspwmrc exiting with status $rc"; session_log --exit bspwm "$rc"' EXIT
 
 # Rotate logs larger than 256KB, keeping one .1 backup
 rotate_if_large() {
@@ -31,6 +40,7 @@ rotate_if_large "$SXHKD_LOG"
 
 # Append so a failing run's diagnostics survive a subsequent restart
 echo "=== bspwmrc started at $(date) ===" >>"$LOG_FILE"
+session_log --startup bspwm
 
 # Make the X session env available to systemd user units (swapescape.service
 # runs setxkbmap and needs DISPLAY/XAUTHORITY)
@@ -140,11 +150,16 @@ sleep 0.2
 echo "=== sxhkd watchdog started at $(date) ===" >>"$SXHKD_LOG"
 (
     exec -a sxhkd-watchdog bash -c '
-        while true; do
+        while bspc wm -d >/dev/null 2>&1; do
             sxhkd 2>>"'"$SXHKD_LOG"'"
-            echo "=== sxhkd exited at $(date), restarting in 1s ===" >>"'"$SXHKD_LOG"'"
-            sleep 1
+            if bspc wm -d >/dev/null 2>&1; then
+                echo "=== sxhkd exited at $(date), restarting in 1s ===" >>"'"$SXHKD_LOG"'"
+                sleep 1
+            else
+                break
+            fi
         done
+        echo "=== sxhkd watchdog exiting at $(date): bspwm is unavailable ===" >>"'"$SXHKD_LOG"'"
     '
 ) &
 disown

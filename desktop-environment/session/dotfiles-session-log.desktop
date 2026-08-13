@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Dotfiles desktop-session logger
+Comment=Capture GNOME graphical-session startup diagnostics
+Exec=/bin/sh -c "exec ~/.local/bin/desktop-session-log --startup gnome"
+OnlyShowIn=GNOME;
+X-GNOME-Autostart-enabled=true
+NoDisplay=true

@@ -1,0 +1,145 @@
+#!/usr/bin/env bash
+# Capture safe, local diagnostics for graphical-session startup.
+#
+# GNOME runs this from XDG autostart. bspwmrc calls it directly because bspwm
+# has no equivalent autostart phase. Logs stay under XDG_STATE_HOME and are
+# never part of the repository.
+set -u
+
+umask 077
+
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}"
+LOG_DIR="$STATE_DIR/desktop-session"
+mkdir -p "$LOG_DIR" || exit 1
+
+BOOT_ID=unknown
+if [[ -r /proc/sys/kernel/random/boot_id ]]; then
+    read -r BOOT_ID < /proc/sys/kernel/random/boot_id || BOOT_ID=unknown
+fi
+BOOT_ID="${BOOT_ID//-/}"
+BOOT_LOG="$LOG_DIR/boot-${BOOT_ID}.log"
+TIMESTAMP="$(date -u +%Y%m%dT%H%M%SZ)"
+
+section() {
+    printf '\n===== %s =====\n' "$1"
+}
+
+capture_context() {
+    local session="$1"
+
+    section "session metadata"
+    printf 'timestamp_utc=%s\n' "$TIMESTAMP"
+    printf 'session=%s\n' "$session"
+    printf 'uid=%s user=%s\n' "$(id -u)" "$(id -un)"
+    printf 'pid=%s ppid=%s\n' "$$" "$PPID"
+    printf 'boot_id=%s\n' "$BOOT_ID"
+    printf 'kernel=%s\n' "$(uname -srmo)"
+    printf 'DISPLAY=%q\n' "${DISPLAY-}"
+    printf 'XAUTHORITY=%q\n' "${XAUTHORITY-}"
+    printf 'XDG_SESSION_TYPE=%q\n' "${XDG_SESSION_TYPE-}"
+    printf 'XDG_SESSION_DESKTOP=%q\n' "${XDG_SESSION_DESKTOP-}"
+    printf 'XDG_CURRENT_DESKTOP=%q\n' "${XDG_CURRENT_DESKTOP-}"
+    printf 'DESKTOP_SESSION=%q\n' "${DESKTOP_SESSION-}"
+    printf 'XDG_SESSION_ID=%q\n' "${XDG_SESSION_ID-}"
+
+    section "active window manager"
+    if command -v xprop >/dev/null 2>&1; then
+        xprop -root _NET_SUPPORTING_WM_CHECK _NET_WM_NAME 2>&1 || true
+    else
+        printf 'xprop is unavailable\n'
+    fi
+    if command -v bspc >/dev/null 2>&1; then
+        bspc wm -d 2>&1 || true
+        bspc query -M --names 2>&1 || true
+    fi
+
+    section "monitor topology"
+    if command -v xrandr >/dev/null 2>&1; then
+        xrandr --query 2>&1 || true
+    else
+        printf 'xrandr is unavailable\n'
+    fi
+
+    section "relevant processes"
+    ps -eo pid=,ppid=,stat=,comm=,args= 2>&1 |
+        awk '$4 ~ /^(Xorg|bspwm|sxhkd|gnome-session|gnome-shell|mutter|gdm|polybar|picom)$/'
+
+    section "failed user units"
+    if command -v systemctl >/dev/null 2>&1; then
+        systemctl --user --no-pager --failed 2>&1 || true
+    else
+        printf 'systemctl is unavailable\n'
+    fi
+
+    section "login session status"
+    if command -v loginctl >/dev/null 2>&1 && [[ -n "${XDG_SESSION_ID-}" ]]; then
+        loginctl session-status "$XDG_SESSION_ID" --no-pager 2>&1 || true
+    else
+        printf 'loginctl session id is unavailable\n'
+    fi
+
+    section "user journal: graphical-session events"
+    if command -v journalctl >/dev/null 2>&1; then
+        journalctl --user -b -n 300 --no-pager -o short-precise 2>&1 |
+            rg -i 'gnome-session|gnome-shell|mutter|bspwm|sxhkd|xorg|gdm|nvidia|polybar|picom|monitor|failed|error|fatal|permission' ||
+            true
+    else
+        printf 'journalctl is unavailable\n'
+    fi
+
+    section "system journal: display-manager events"
+    if command -v journalctl >/dev/null 2>&1; then
+        journalctl -b -n 300 --no-pager -o short-precise 2>&1 |
+            rg -i 'gdm|gdm-x-session|Xorg|gnome-shell|mutter|bspwm|sxhkd|nvidia|failed|error|fatal|permission' ||
+            true
+    else
+        printf 'journalctl is unavailable\n'
+    fi
+}
+
+startup_log() {
+    local session="$1"
+    exec >>"$BOOT_LOG" 2>&1
+    ln -sfn -- "$(basename "$BOOT_LOG")" "$LOG_DIR/latest-startup.log"
+    printf '=== desktop session startup: %s ===\n' "$session"
+    capture_context "$session"
+}
+
+exit_log() {
+    local session="$1"
+    local status="$2"
+    exec >>"$BOOT_LOG" 2>&1
+    printf '\n=== desktop session exit: %s status=%s ===\n' "$session" "$status"
+    printf 'timestamp_utc=%s\n' "$(date -u +%Y%m%dT%H%M%SZ)"
+    if command -v bspc >/dev/null 2>&1; then
+        bspc wm -d 2>&1 || true
+    fi
+}
+
+diagnostic_log() {
+    local session="${2:-manual}"
+    local log_file="$LOG_DIR/diagnostic-${TIMESTAMP}-$$.log"
+    printf 'Writing desktop-session diagnostics to %s\n' "$log_file"
+    exec >"$log_file" 2>&1
+    ln -sfn -- "$(basename "$log_file")" "$LOG_DIR/latest-diagnostic.log"
+    printf '=== manual desktop-session diagnostic: %s ===\n' "$session"
+    capture_context "$session"
+    printf '\nDiagnostic complete.\n'
+}
+
+case "${1-}" in
+    --startup)
+        startup_log "${2:-unknown}"
+        ;;
+    --exit)
+        exit_log "${2:-unknown}" "${3:-unknown}"
+        ;;
+    --diagnose)
+        diagnostic_log "$@"
+        ;;
+    *)
+        printf 'Usage: %s --startup SESSION | --exit SESSION STATUS | --diagnose [SESSION]\n' \
+            "$0" >&2
+        exit 2
+        ;;
+esac
