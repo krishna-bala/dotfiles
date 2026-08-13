@@ -28,7 +28,7 @@ session_log() {
   fi
 }
 
-trap 'rc=$?; log "bspwmrc exiting with status $rc"; session_log --exit bspwm "$rc"' EXIT
+trap 'rc=$?; log "bspwmrc config finished with status $rc"' EXIT
 
 # Rotate logs larger than 256KB, keeping one .1 backup
 rotate_if_large() {
@@ -76,6 +76,10 @@ if [ "$x_ready" = false ]; then
   xrandr --auto
   notify-send -u critical "Monitor Manager" "X not ready - emergency fallback"
 fi
+
+# Do not leave unmapped monitor windows behind after a display is disabled.
+# Stale bspwm monitor windows can sit above Polybar and swallow its clicks.
+bspc config remove_disabled_monitors true
 
 # 2a. Disable phantom outputs (disconnected but still active in xrandr).
 # Happens after unplugging externals — xrandr keeps stale modes/positions,

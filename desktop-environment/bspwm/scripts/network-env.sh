@@ -4,10 +4,10 @@
 # profile apply, since docking can move the default route to another interface.
 #
 # NETWORK_INTERFACE - the interface carrying the default route, falling back to
-#   the built-in wifi when nothing is up yet. modules.ini reads it directly.
+#   the built-in wifi when nothing is up yet. network-label.sh reads it.
 # NETWORK_LABEL - the NetworkManager connection name used by the Polybar
-#   network-label custom module for wired links. Wireless links resolve their
-#   current SSID directly so roaming updates without restarting Polybar.
+#   network-label custom module for wired links. It is unset for wireless,
+#   whose current SSID is resolved directly so roaming needs no bar restart.
 
 network_env() {
   local iface label
@@ -15,15 +15,15 @@ network_env() {
   iface="${iface:-wlp9s0}"
 
   if [ -d "/sys/class/net/$iface/wireless" ]; then
-    label='%essid%'
+    unset NETWORK_LABEL
   else
     label="$(nmcli -t -f NAME,DEVICE connection show --active 2>/dev/null |
       awk -F: -v dev="$iface" '$2 == dev { print $1; exit }')"
     # No NetworkManager, or an interface it does not manage: the interface
     # name is a poor label but an honest one.
     label="${label:-$iface}"
+    export NETWORK_LABEL="$label"
   fi
 
   export NETWORK_INTERFACE="$iface"
-  export NETWORK_LABEL="$label"
 }

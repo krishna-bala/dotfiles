@@ -105,10 +105,12 @@ icon at startup, which is why apply-auto.sh restarts it afterwards (nm-applet
 re-registers on its own).
 
 `scripts/network-env.sh`, sourced by bspwmrc and apply-auto.sh, exports
-`NETWORK_INTERFACE` (whichever interface holds the default route) and
-`NETWORK_LABEL` for the network module — the literal token `%essid%` on Wi-Fi
-so polybar keeps it live, or a wired link's NetworkManager connection name,
-since polybar renders `%essid%` as junk on a wired interface.
+`NETWORK_INTERFACE` (whichever interface holds the default route), and on a
+wired link `NETWORK_LABEL` (its NetworkManager connection name). Both are
+read by the network module's `../polybar/shades/scripts/network-label.sh`,
+a custom/script module rather than polybar's `internal/network`. Wi-Fi leaves
+`NETWORK_LABEL` unset: the script resolves the live SSID and signal strength
+itself, so roaming needs no bar restart.
 
 ### sxhkd (../sxhkd/sxhkdrc)
 
