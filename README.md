@@ -11,7 +11,9 @@ each gets its own top-level directory:
 
 - `bash/` — `bashrc`, `bash_aliases`, `profile`, `inputrc`,
   `bazel_completions.bash`
-- `git/` — `gitconfig`, `gitmessage`, `git-prompt.sh`, `lazygit.yml`
+- `git/` — `gitconfig`, `gitmessage`, `git-prompt.sh`, `lazygit.yml`,
+  `hooks/` (committer-identity guard for this repo, wired up by `./install`
+  via a repo-local `core.hooksPath`)
 - `tmux/` — `tmux.conf`, `settings.conf`, plugins via submodules (tpm,
   nord-tmux, tmux-sensible)
 - `kitty/` — config, themes, `launch.sh`, `zenmode.py`

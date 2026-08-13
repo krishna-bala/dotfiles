@@ -1,0 +1,55 @@
+#!/bin/sh
+# Backstop for commits that never passed pre-commit: rebase, cherry-pick,
+# `git commit --no-verify`, and anything committed before this hook existed.
+set -eu
+
+. "$(dirname "$0")/identity-guard.sh"
+
+zero=$(git hash-object --stdin </dev/null | tr '0-9a-f' '0')
+
+# stdin is one "<local ref> <local sha> <remote ref> <remote sha>" line per ref
+# being pushed. Collect the local tips; a zero local sha is a branch deletion,
+# which pushes no commits.
+tips=''
+while read -r _local_ref local_sha _remote_ref _remote_sha; do
+    if [ -n "$local_sha" ] && [ "$local_sha" != "$zero" ]; then
+        tips="$tips $local_sha"
+    fi
+done
+
+if [ -z "$tips" ]; then
+    exit 0
+fi
+
+# Only commits not already reachable from a remote-tracking ref: the ones this
+# push would actually add. Checking the committer rather than the author keeps
+# this quiet on replayed outside work — cherry-pick and rebase re-stamp the
+# committer as you while preserving the original author.
+offenders=''
+count=0
+for line in $(git log --format='%h=%ce' $tips --not --remotes); do
+    if ! guard_email_allowed "${line#*=}"; then
+        count=$((count + 1))
+        if [ "$count" -le 10 ]; then
+            offenders="$offenders  ${line%%=*} committed by <${line#*=}>
+"
+        fi
+    fi
+done
+
+if [ "$count" -eq 0 ]; then
+    exit 0
+fi
+
+cat >&2 <<EOF
+pre-push: $count commit(s) in this push carry an unlisted committer.
+
+$offenders$([ "$count" -gt 10 ] && printf '  ... and %s more\n' "$((count - 10))")
+Committers allowed in this repo:
+$(guard_allowed_emails | sed 's/^/  /')
+
+Rewrite them with the right identity, e.g. for the last commit:
+  git config user.email <address>
+  git commit --amend --reset-author --no-edit
+EOF
+exit 1
