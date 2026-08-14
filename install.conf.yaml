@@ -29,3 +29,7 @@
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]
+    # Repo-local only: points this clone's hooks at the tracked git/hooks
+    # (relative paths resolve against the repo root). Other repos on the
+    # machine are untouched.
+    - [git config core.hooksPath git/hooks, Enabling identity-guard hooks for this repo]

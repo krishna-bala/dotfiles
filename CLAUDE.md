@@ -107,3 +107,11 @@ split applies to config that isn't a sidecar: private work-machine bspwm
 profiles live in the overlay, while intentionally public hardware-specific
 profiles may live in
 `desktop-environment/bspwm/profiles/`.
+
+`git/hooks/` guards this repo's own history: `./install` points this clone's
+`core.hooksPath` at it (repo-local — no other repo on the machine is
+affected), and the hooks then refuse any commit or push whose committer is
+not one of the two identities this repo is developed under. The allowlist in
+`identity-guard.sh` is deliberately hard-coded and closed; never add a work
+or otherwise private address to it — this repo is public, so anything
+written there is published.
