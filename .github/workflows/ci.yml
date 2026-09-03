@@ -61,6 +61,11 @@ jobs:
             # the tmux plugin submodules exist and tpm resolves
             [ -f ~/.tmux/plugins/tpm/tpm ]
             tmux -f ~/.tmux.conf start-server \; kill-server
+            # the overlay seam: identity from ~/.gitconfig.local, included last
+            printf "[user]\n\tname = ci\n\temail = ci@example.invalid\n" > ~/.gitconfig.local
+            [ "$(git config --global user.email)" = ci@example.invalid ]
+            # and doctor agrees with all of the above
+            ~/dotfiles/doctor
           '
 
       # A converged machine must be a no-op: no downloads, no apt, only
