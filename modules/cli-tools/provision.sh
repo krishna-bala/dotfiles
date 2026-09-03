@@ -30,10 +30,11 @@ FZF_SHA256="f3252c2c366bc1700d3c85781ec8c9695998927ac127870eb049ceea2d540f8a"
 LSD_VERSION="v1.2.0" # not in 22.04's apt, so pinned like the other release tools
 LSD_SHA256="57d3b5859254adcfb8374ce98159cca97a14959997d2ae1176d2cff59556d829"
 
-# Download and archive tooling the helpers in provision-lib.sh rely on, plus
-# jq (agents/status-line.sh) and xz for .tar.xz release archives.
+# Download and archive tooling the helpers in provision-lib.sh rely on, jq
+# (agents/status-line.sh), xz for .tar.xz release archives, and python3,
+# which ./install (dotbot) and ./doctor run on - a minimal 24.04 has none.
 log "Base packages"
-pkg_ensure curl wget unzip xz-utils jq
+pkg_ensure curl wget unzip xz-utils jq python3
 
 # ----------------------------------------------------------------------------
 # apt-managed CLI tools: fd, ripgrep (distro versions, presence-checked)
