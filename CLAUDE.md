@@ -60,8 +60,7 @@ guidance) with this file (guidance for editing this repo).
   package when it is new enough and source-build otherwise (polybar,
   picom). `require_supported_platform` states the limits up front: Debian
   family, x86_64.
-- The tmux plugins (tpm, nord-tmux, tmux-sensible) and dotbot are git
-  submodules, all anonymous-HTTPS so this repo clones without credentials.
+- The tmux plugins (tpm, nord-tmux) and dotbot are git submodules, all anonymous-HTTPS so this repo clones without credentials.
 - CI installs the `server` role from scratch in Ubuntu 22.04 and 24.04
   containers and asserts a second run is a no-op (only `[skip]`/`[note]`
   lines in `provision.log`). A module step that prints anything else when

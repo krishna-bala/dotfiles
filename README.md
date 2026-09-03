@@ -54,7 +54,7 @@ dotbot/            the Dotbot submodule
 Modules:
 
 - `bash`, `git`, `tmux`, `starship` - the shell. `tmux/config/` is the
-  whole `~/.tmux` (plugins are submodules under it).
+  whole `~/.tmux` (tpm and the nord theme are submodules under it).
 - `cli-tools` - fzf, ripgrep, fd, lsd, lazygit, jq, uv, glab; and
   `bin/clipimg`, the remote-side half of kitty's clipboard kitten.
 - `nvim` - neovim plus the rust toolchain and tree-sitter CLI its config

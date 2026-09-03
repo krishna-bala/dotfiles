@@ -10,7 +10,3 @@
 	path = modules/tmux/config/plugins/nord-tmux
 	url = https://github.com/arcticicestudio/nord-tmux
 	ignore = dirty
-[submodule "tmux/plugins/tmux-sensible"]
-	path = modules/tmux/config/plugins/tmux-sensible
-	url = https://github.com/tmux-plugins/tmux-sensible
-	ignore = dirty
