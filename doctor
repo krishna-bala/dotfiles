@@ -113,7 +113,7 @@ for seam in \
   "$CONFIG_HOME/bspwm/profiles.d"; do
   if [ -e "$seam" ]; then ok "${seam/#$HOME/\~} present"; else printf '    [--]   %s absent\n' "${seam/#$HOME/\~}"; fi
 done
-if [ -f "$HOME/.gitconfig" ] && ! git config --global user.email >/dev/null 2>&1; then
+if [ -f "$HOME/.gitconfig" ] && ! git config --global --includes user.email >/dev/null 2>&1; then
   bad "git has no user.email; ~/.gitconfig.local should set [user]"
 fi
 
