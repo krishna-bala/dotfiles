@@ -1,0 +1,9 @@
+# workstation - a machine someone sits at, with or without this repo's X11
+# desktop: everything a server gets, plus the terminal emulator and the
+# language toolchains used for local development.
+@server
+kitty
+bazel
+node
+go
+typst

@@ -1,0 +1,11 @@
+# tmux - config plus the plugin checkouts (submodules under config/plugins),
+# so ~/.tmux is the whole config directory.
+- defaults:
+    link:
+      relink: true
+      backup: true
+      create: true
+
+- link:
+    ~/.tmux: config
+    ~/.tmux.conf: config/tmux.conf

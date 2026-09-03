@@ -1,0 +1,9 @@
+# bazel - shell completion for bazel, sourced by bashrc when the file exists.
+- defaults:
+    link:
+      relink: true
+      backup: true
+      create: true
+
+- link:
+    ~/.bazel_completions.bash: bazel_completions.bash

@@ -1,0 +1,12 @@
+# bash - the shell itself. Sources are relative to this directory.
+- defaults:
+    link:
+      relink: true
+      backup: true
+      create: true
+
+- link:
+    ~/.bashrc: bashrc
+    ~/.bash_aliases: bash_aliases
+    ~/.profile: profile
+    ~/.inputrc: inputrc

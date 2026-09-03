@@ -1,0 +1,12 @@
+# cli-tools - the shell's everyday tools are provisioned, not linked; the
+# one file here is clipimg, the remote-side half of kitty's clipboard
+# kitten (it runs on the machine you ssh'd into, so it belongs to every
+# role, not just desktops).
+- defaults:
+    link:
+      relink: true
+      backup: true
+      create: true
+
+- link:
+    ~/.local/bin/clipimg: bin/clipimg

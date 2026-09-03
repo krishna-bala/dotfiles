@@ -1,6 +1,11 @@
 # PRD: Desktop Environment Consolidation (bspwm / polybar / sxhkd / rofi)
 
-Status: draft for review
+Status: draft for review. Written 2026-06 against the pre-roles layout
+(`desktop-environment/`, `.venv`, `monitor-manager.py`); the file
+references below predate the move to `modules/x11/` and
+`apps/monitor-manager/`, and §1's "exactly one user" predates the
+multi-machine roles and overlay seams. WS1, WS3, and WS5 (minus rollback)
+have landed; WS4's single palette/font source has not.
 Scope: bspwm, monitor-manager, polybar, rofi, sxhkd, picom, dunst, redshift,
 and provisioning of all of the above
 Out of scope: kitty internals, tmux, nvim (separate repo), shell config

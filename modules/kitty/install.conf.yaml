@@ -1,0 +1,12 @@
+# kitty - the whole config directory is linked, so kitty.conf's relative
+# `include`s and `kitten zenmode.py` resolve inside it. A machine-local
+# ~/.config/kitty/local.conf would land in the repo, so the overlay seam is
+# ~/.config/kitty.local.conf instead (see kitty.conf).
+- defaults:
+    link:
+      relink: true
+      backup: true
+      create: true
+
+- link:
+    ~/.config/kitty: config
