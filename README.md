@@ -15,6 +15,9 @@ cd ~/.dotfiles
 
 The selection is saved to `~/.config/dotfiles/roles`, so afterwards a bare
 `./provision.sh` / `./install` re-applies it. Both are safe to re-run.
+`./doctor` checks a machine against that selection without changing
+anything: every link points into the checkout, rendered files exist, each
+pinned tool is at or above its pin, and which overlay seams are present.
 
 ## Roles
 
@@ -35,6 +38,7 @@ front instead of failing at a hotkey.
 ```
 install            links the selected modules' configs (dotbot, one pass per module)
 provision.sh       runs the selected modules' provision.sh in role order
+doctor             read-only check of links, renders, pins, and seams
 roles/             server, workstation, desktop - one module name per line
 modules/<name>/    install.conf.yaml (dotbot links, sources relative to the module)
                    provision.sh     (pinned + sha256-verified tooling; standalone-runnable)

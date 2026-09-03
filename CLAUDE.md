@@ -7,7 +7,8 @@ Guidance for working on this repository.
 Personal dotfiles installed via Dotbot, organised as modules (one tool's
 config plus its provisioning) selected by roles (`server`, `workstation`,
 `desktop`). `./install --roles <role>` and `./provision.sh --roles <role>`
-are the entry points; the selection is saved so later runs need no flags.
+are the entry points; the selection is saved so later runs need no flags,
+and `./doctor` checks a machine against it read-only.
 
 Do not confuse `modules/agents/AGENTS.md` (the file this repo symlinks to
 `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md` on install - user-level agent
@@ -65,7 +66,9 @@ guidance) with this file (guidance for editing this repo).
   containers and asserts a second run is a no-op (only `[skip]`/`[note]`
   lines in `provision.log`). A module step that prints anything else when
   already satisfied breaks that check - use `skip`/`note`, and put a
-  presence check in front of every install.
+  presence check in front of every install. `./doctor` finds a module's
+  pins by grepping its provision.sh for `pin_satisfied <cmd> "$VAR"`, so
+  keep that spelling for pinned tools.
 
 ## Supply-chain / version-pinning policy
 
