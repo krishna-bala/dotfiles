@@ -77,10 +77,13 @@ check_requires() {
 
 # usage: parse_targets "$@"
 # Fills TARGETS (roles/modules to apply) and PASSTHROUGH (unrecognised
-# arguments, for the caller to forward or reject). --roles and --modules
-# take comma-separated lists; --no-desktop is the pre-roles spelling of
-# --roles workstation and still works. With no selection on the command
-# line, the saved one is used.
+# arguments, for the caller to forward). --roles and --modules take
+# comma-separated lists; --no-desktop is the pre-roles spelling of --roles
+# workstation and still works. -h/--help calls the caller's usage() and
+# exits. With PARSE_TARGETS_STRICT=1 an unrecognised argument is an error
+# (provision.sh has nothing to forward to); it is reported before the saved
+# selection is consulted so the message is the only thing printed. With no
+# selection on the command line, the saved one is used.
 parse_targets() {
   TARGETS=()
   PASSTHROUGH=()
@@ -88,6 +91,10 @@ parse_targets() {
   while [ $# -gt 0 ]; do
     arg="$1"
     case "$arg" in
+    -h | --help)
+      usage
+      exit 0
+      ;;
     --roles=* | --modules=*)
       IFS=',' read -ra _parts <<<"${arg#*=}"
       TARGETS+=("${_parts[@]}")
@@ -102,7 +109,11 @@ parse_targets() {
       note "--no-desktop is the old name for --roles workstation"
       TARGETS+=(workstation)
       ;;
-    *) PASSTHROUGH+=("$arg") ;;
+    *)
+      [ "${PARSE_TARGETS_STRICT:-0}" = 1 ] &&
+        die "unknown argument: $arg (try --help)"
+      PASSTHROUGH+=("$arg")
+      ;;
     esac
     shift
   done
@@ -111,7 +122,7 @@ parse_targets() {
     [ "${#TARGETS[@]}" -gt 0 ] && note "using saved selection from $ROLES_FILE: ${TARGETS[*]}"
   fi
   [ "${#TARGETS[@]}" -gt 0 ] ||
-    die "no roles selected: pass --roles <role>[,<role>] (available: $(list_roles | tr '\n' ' ')) or --modules <module>[,...]"
+    die "no roles selected: pass --roles <role>[,<role>] (available: $(list_roles | paste -sd' ')) or --modules <module>[,...]"
 }
 
 save_targets() {

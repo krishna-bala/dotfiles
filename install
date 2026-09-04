@@ -25,6 +25,23 @@ PLUGIN_DIR="$REPO_ROOT/lib/dotbot-plugins"
 CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 HOST_ENV="$CONFIG_HOME/dotfiles/host.env"
 
+usage() {
+  cat <<EOF
+usage: $0 [--roles <role>[,<role>...]] [--modules <module>[,<module>...]] [dotbot options]
+
+Links the selected modules' configs into \$HOME, one dotbot pass per
+module. With no selection, the one saved by the last run ($ROLES_FILE)
+is re-applied.
+
+  --roles r[,r]      roles to link (available: $(list_roles | paste -sd' '))
+  --modules m[,m]    extra modules, or a selection with no role
+  -h, --help         show this help
+
+Any other argument is forwarded to dotbot (e.g. -v for verbose, -Q for
+quiet); run dotbot/bin/dotbot --help for those.
+EOF
+}
+
 parse_targets "$@"
 mapfile -t MODULES < <(resolve_modules "${TARGETS[@]}")
 check_requires "${MODULES[@]}"
