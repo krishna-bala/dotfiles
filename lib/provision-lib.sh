@@ -106,15 +106,17 @@ version_ge() {
 }
 
 # usage: installed_version <cmd> [version-arg]
-# Print a tool's installed version as x.y.z (PATH first, then ~/.local/bin,
-# which may not be on PATH yet during a fresh provision). Prints nothing when
-# the tool is missing or its version output is unparseable. version-arg
-# defaults to --version, for the tools that don't take it (go reports its
-# version through a `version` subcommand and errors on --version).
+# Print a tool's installed version as x.y.z (PATH first, then ~/.local/bin
+# and ~/.cargo/bin, which may not be on PATH yet during a fresh provision or
+# in a shell that has not sourced cargo's env). Prints nothing when the tool
+# is missing or its version output is unparseable. version-arg defaults to
+# --version, for the tools that don't take it (go reports its version
+# through a `version` subcommand and errors on --version).
 installed_version() {
   local bin flag="${2:---version}"
   bin="$(command -v "$1" || true)"
   [ -z "$bin" ] && [ -x "$HOME/.local/bin/$1" ] && bin="$HOME/.local/bin/$1"
+  [ -z "$bin" ] && [ -x "${CARGO_HOME:-$HOME/.cargo}/bin/$1" ] && bin="${CARGO_HOME:-$HOME/.cargo}/bin/$1"
   [ -z "$bin" ] && return 0
   "$bin" "$flag" 2>/dev/null | grep -oEm1 '[0-9]+\.[0-9]+(\.[0-9]+)?' | head -n1 || true
 }
