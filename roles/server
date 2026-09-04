@@ -1,0 +1,13 @@
+# server - a headless box reached over ssh: shell, editor, and the CLI
+# tools the shell config assumes. No terminal emulator, no fonts, no GUI
+# language toolchains; add those by picking @workstation instead.
+#
+# cli-tools goes first: it installs curl/tar/xz, which every other module's
+# downloads need.
+cli-tools
+bash
+git
+tmux
+starship
+nvim
+agents

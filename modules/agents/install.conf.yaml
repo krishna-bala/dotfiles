@@ -1,0 +1,13 @@
+# agents - harness-agnostic instructions for coding agents, linked to each
+# harness's user-level path, plus the Claude Code status line. Nothing here
+# installs an agent; that is done per machine.
+- defaults:
+    link:
+      relink: true
+      backup: true
+      create: true
+
+- link:
+    ~/.claude/CLAUDE.md: AGENTS.md
+    ~/.codex/AGENTS.md: AGENTS.md
+    ~/.claude/scripts/status-line.sh: status-line.sh

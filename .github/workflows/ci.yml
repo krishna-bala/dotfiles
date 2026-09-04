@@ -6,6 +6,133 @@ on:
   pull_request:
 
 jobs:
+  # The thing most likely to break is a fresh install, so it is tested from
+  # scratch: a clean container, a non-root sudo user (provisioning refuses
+  # root), provision + install for the server role, then the shell is
+  # exercised and both scripts are run a second time to prove they converge
+  # without doing anything.
+  install-server:
+    name: install (server) on ${{ matrix.image }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ["ubuntu:22.04", "ubuntu:24.04"]
+    container:
+      image: ${{ matrix.image }}
+    steps:
+      - name: Container prerequisites
+        run: |
+          apt-get update -qq
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq sudo git ca-certificates
+          useradd -m -s /bin/bash ci
+          echo 'ci ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/ci
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Hand the checkout to the ci user
+        run: |
+          cp -a "$GITHUB_WORKSPACE" /home/ci/dotfiles
+          chown -R ci:ci /home/ci/dotfiles
+          # the workspace is bind-mounted; git refuses to touch a checkout
+          # owned by someone else without this
+          sudo -u ci git config --global --add safe.directory '*'
+
+      - name: First provision (server role)
+        run: sudo -u ci -H bash -lc 'cd ~/dotfiles && ./provision.sh --roles server'
+
+      - name: First install (server role)
+        run: sudo -u ci -H bash -lc 'cd ~/dotfiles && ./install --roles server'
+
+      - name: The shell works
+        run: |
+          sudo -u ci -H bash -lc '
+            set -euo pipefail
+            [ "$(readlink ~/.bashrc)" = "$HOME/dotfiles/modules/bash/bashrc" ]
+            [ -x ~/.local/bin/clipimg ]
+            [ ! -e ~/.config/bspwm ] && [ ! -e ~/.config/kitty ] && [ ! -e ~/.local/kitty.app ]
+            [ "$(cat ~/.config/dotfiles/roles)" = server ]
+            # an interactive shell sources the whole chain and lands on lsd
+            bash -ic "type ll" | grep -q lsd
+            # the provisioned tools resolve on the PATH bashrc builds
+            bash -ic "starship --version && fzf --version && lsd --version && nvim --version | head -1"
+            # the tmux plugin submodules exist and tpm resolves
+            [ -f ~/.tmux/plugins/tpm/tpm ]
+            tmux -f ~/.tmux.conf start-server \; kill-server
+            # the overlay seam: identity from ~/.gitconfig.local, included last
+            printf "[user]\n\tname = ci\n\temail = ci@example.invalid\n" > ~/.gitconfig.local
+            [ "$(git config --global --includes user.email)" = ci@example.invalid ]
+            # and doctor agrees with all of the above
+            ~/dotfiles/doctor
+          '
+
+      # A converged machine must be a no-op: no downloads, no apt, only
+      # [skip]/[note] lines. The absence of any "==> ... (source build)" or
+      # install messages is checked via the log the run itself writes.
+      - name: Second run converges
+        run: |
+          sudo -u ci -H bash -lc '
+            set -euo pipefail
+            cd ~/dotfiles
+            : > provision.log
+            ./provision.sh
+            ./install
+            echo "--- second-run provision.log"
+            cat provision.log
+            # a converged run prints only section headers and [skip]/[note]
+            # lines; anything else is a step that re-ran
+            if grep -vqE "^\s*$|^==>|^\s+\[(skip|note)\]" provision.log; then
+              echo "second provisioning run did work it should have skipped:" >&2
+              grep -vE "^\s*$|^==>|^\s+\[(skip|note)\]" provision.log >&2
+              exit 1
+            fi
+          '
+
+  # The verification the whole supply-chain policy rests on: a wrong sha256
+  # must abort, and the helper must never install anything on mismatch.
+  lib-tests:
+    name: provision-lib tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: verify_sha256 refuses a mismatch
+        run: |
+          set -euo pipefail
+          . ./lib/provision-lib.sh
+          tmp="$(mktemp -d)"
+          printf 'hello\n' > "$tmp/file"
+          good="$(sha256sum "$tmp/file" | cut -d' ' -f1)"
+          verify_sha256 "$tmp/file" "$good"
+          if (verify_sha256 "$tmp/file" "0000000000000000000000000000000000000000000000000000000000000000"); then
+            echo "verify_sha256 accepted a wrong hash" >&2; exit 1
+          fi
+          # install_release_binary must not install on a mismatch either
+          mkdir -p "$HOME/.local/bin"
+          tar -czf "$tmp/archive.tgz" -C "$tmp" file
+          python3 -m http.server --directory "$tmp" 8765 >/dev/null 2>&1 &
+          sleep 1
+          if (install_release_binary "http://127.0.0.1:8765/archive.tgz" "$good" file should-not-exist); then
+            echo "install_release_binary installed despite a wrong archive hash" >&2; exit 1
+          fi
+          [ ! -e "$HOME/.local/bin/should-not-exist" ]
+      - name: role resolution
+        run: |
+          set -euo pipefail
+          REPO_ROOT="$PWD"
+          . ./lib/common.sh
+          . ./lib/roles.sh
+          # nesting, order, dedup
+          [ "$(resolve_modules desktop | tr '\n' ' ')" = "cli-tools bash git tmux starship nvim agents kitty bazel node go typst x11 " ]
+          # a module reached twice is applied once
+          [ "$(resolve_modules server workstation | wc -l)" = "$(resolve_modules workstation | wc -l)" ]
+          # requires: wacom without x11 is refused
+          if (check_requires wacom); then echo "check_requires let wacom through without x11" >&2; exit 1; fi
+          check_requires $(resolve_modules desktop wacom)
+          # unknown names are refused
+          if (resolve_modules nonsense 2>/dev/null); then echo "unknown role accepted" >&2; exit 1; fi
+
   monitor-manager-tests:
     name: monitor-manager tests
     # ubuntu-24.04 matches the newest machine this repo targets
@@ -19,22 +146,30 @@ jobs:
       - name: Install uv (via provision-lib.sh)
         run: |
           mkdir -p "$HOME/.local/bin"
-          . ./provision-lib.sh
+          . ./lib/provision-lib.sh
           install_uv
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
-      # One safety-snapshot test shells out to real xrandr, so the suite runs
-      # under a virtual X display.
+      # One safety-snapshot test shells out to real xrandr and skips without
+      # a display; run it for real under a virtual one.
       - name: Install xvfb + xrandr
         run: sudo apt-get update -qq && sudo apt-get install -y -qq xvfb x11-xserver-utils
 
       - name: Sync venv from lockfile
-        working-directory: desktop-environment/bspwm
+        working-directory: apps/monitor-manager
         run: uv sync --locked
 
       - name: Run tests
-        working-directory: desktop-environment/bspwm
+        working-directory: apps/monitor-manager
         run: xvfb-run -a uv run --no-sync pytest -q
+
+      # The same install path modules/x11/provision.sh uses
+      - name: uv tool install works
+        working-directory: apps/monitor-manager
+        run: |
+          uv export --locked --no-dev --no-hashes --no-emit-project -q -o /tmp/constraints.txt
+          uv tool install --editable -c /tmp/constraints.txt .
+          monitor-manager --help
 
   shellcheck:
     name: shellcheck

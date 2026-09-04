@@ -1,0 +1,9 @@
+# starship - prompt theming; bashrc runs `starship init` when the binary exists.
+- defaults:
+    link:
+      relink: true
+      backup: true
+      create: true
+
+- link:
+    ~/.config/starship.toml: starship.toml

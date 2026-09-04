@@ -1,0 +1,49 @@
+[core]
+	editor = nvim
+
+[log]
+  abbrevCommit = true
+
+[diff]
+  tool = nvimdiff
+
+[difftool]
+  prompt = true
+
+[difftool "nvimdiff"]
+  cmd = "nvim -d $LOCAL $REMOTE -c \":wincmd l\""
+
+[merge]
+  tool = nvimdiff
+
+[mergetool]
+	prompt = true
+  keepBackup = false
+
+[mergetool "nvimdiff"]
+  cmd = "nvim -d $LOCAL $REMOTE $MERGED -c \"wincmd l\" -c \"wincmd l\" -c \"wincmd J\""
+
+[commit]
+  template = ~/.gitmessage
+
+[push]
+	autoSetupRemote = true
+
+[rerere]
+	enabled = true
+
+[init]
+	defaultBranch = main
+[rebase]
+	updateRefs = true
+[feature]
+	manyFiles = true
+
+; Machine-specific values live in the untracked ~/.gitconfig.local: [user]
+; name and email, credential helpers, and any override of the keys above -
+; git takes the last value it reads, so this include stays at the bottom.
+;   [credential "https://<work-gitlab-host>"]
+;       helper =
+;       helper = !glab auth git-credential
+[include]
+	path = ~/.gitconfig.local

@@ -1,0 +1,30 @@
+; Rendered by ./install from ~/.config/dotfiles/host.env (REDSHIFT_*); edit
+; the host layer, not ~/.config/redshift.conf.
+[redshift]
+; Set the day and night screen temperatures
+temp-day=${REDSHIFT_TEMP_DAY}
+temp-night=${REDSHIFT_TEMP_NIGHT}
+
+; Enable/Disable a smooth transition between day and night
+fade=0
+
+; Set the screen brightness. Default is 1.0
+brightness-day=1.0
+; brightness-night=0.7
+brightness-night=1.0
+
+; It is also possible to use a different gamma correction
+; gamma=0.8:0.7:0.8
+location-provider=manual
+
+[manual]
+; Set the location manually
+lat=${REDSHIFT_LAT}
+lon=${REDSHIFT_LON}
+
+;[randr]
+; Set the screen to adjust. Use the output of `xrandr` to find your screen name
+;screen=0
+
+;[geoclue2]
+;enabled=false

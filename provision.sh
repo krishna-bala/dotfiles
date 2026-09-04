@@ -1,28 +1,40 @@
 #!/usr/bin/env bash
 #
-# provision.sh - runs both provisioning scripts in this repo: the shell/
-# terminal/dev tooling (provision-shell.sh) and the X11/WM stack
-# (desktop-environment/provision.sh). Pass --no-desktop to provision only
-# the shell half (e.g. on remote machines with no desktop). Each script is
-# independently idempotent and safe to re-run; run either one directly to
-# provision just that half.
+# provision.sh - installs the tools the selected modules' configs assume,
+# by running each module's provision.sh in role order.
+#
+#   ./provision.sh --roles desktop     # first run on a machine of that kind
+#   ./provision.sh                     # re-apply the saved selection
+#
+# Every module script is independently runnable and idempotent: pins are
+# floors (lib/provision-lib.sh), every download is sha256-verified, and any
+# failure aborts loudly. Run ./install afterwards to link the configs.
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=lib/provision-lib.sh
+. "$REPO_ROOT/lib/provision-lib.sh"
+# shellcheck source=lib/roles.sh
+. "$REPO_ROOT/lib/roles.sh"
 
-DESKTOP=true
-for arg in "$@"; do
-  case "$arg" in
-    --no-desktop) DESKTOP=false ;;
-    *)
-      echo "usage: $0 [--no-desktop]" >&2
-      exit 2
-      ;;
-  esac
+require_not_root
+parse_targets "$@"
+[ "${#PASSTHROUGH[@]}" -eq 0 ] || die "unknown argument: ${PASSTHROUGH[0]} (usage: $0 [--roles r[,r]] [--modules m[,m]])"
+mapfile -t MODULES < <(resolve_modules "${TARGETS[@]}")
+check_requires "${MODULES[@]}"
+
+init_provision_log "$REPO_ROOT/provision.log"
+require_supported_platform
+mkdir -p "$HOME/.local/bin" "$HOME/.local/share"
+
+log "Provisioning started: ${MODULES[*]}"
+for m in "${MODULES[@]}"; do
+  script="$REPO_ROOT/modules/$m/provision.sh"
+  [ -x "$script" ] || continue
+  log "module $m"
+  "$script"
 done
 
-"$SCRIPT_DIR/provision-shell.sh"
-if "$DESKTOP"; then
-  "$SCRIPT_DIR/desktop-environment/provision.sh"
-fi
+save_targets "${TARGETS[@]}"
+log "Provisioning complete. Run ./install to link the configs."

@@ -1,0 +1,138 @@
+#!/usr/bin/env bash
+#
+# doctor - checks a machine against its role selection without changing
+# anything. What to run on a machine that is acting weird.
+#
+#   ./doctor            # the saved selection
+#   ./doctor --roles desktop,wacom
+#
+# For every selected module: each link in install.conf.yaml points into
+# this checkout, each rendered file exists, and each pinned tool its
+# provision.sh names is at or above the pin. Then the overlay seams, so a
+# missing ~/.gitconfig.local on a work machine is visible here rather than
+# at the first commit. Exit status is nonzero if anything is wrong.
+
+set -euo pipefail
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=lib/provision-lib.sh
+. "$REPO_ROOT/lib/provision-lib.sh"
+# shellcheck source=lib/roles.sh
+. "$REPO_ROOT/lib/roles.sh"
+
+CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+problems=0
+ok() { printf '    [ok]   %s\n' "$*"; }
+bad() {
+  printf '    [BAD]  %s\n' "$*"
+  problems=$((problems + 1))
+}
+
+parse_targets "$@"
+mapfile -t MODULES < <(resolve_modules "${TARGETS[@]}")
+check_requires "${MODULES[@]}"
+
+log "Selection: ${TARGETS[*]} -> ${MODULES[*]}"
+[ -f "$ROLES_FILE" ] && ok "saved in $ROLES_FILE" || note "not saved; ./install has not run with this selection"
+[ -f "$CONFIG_HOME/dotfiles/host.env" ] && ok "host.env present" || bad "host.env missing (run ./install)"
+
+# Print "kind<TAB>dest<TAB>source" for every link/render entry in a module
+# manifest. dotbot vendors pyyaml, so no system module is assumed.
+manifest_entries() {
+  python3 - "$1" "$REPO_ROOT/dotbot/lib/pyyaml/lib" <<'EOF'
+import sys
+sys.path.append(sys.argv[2])
+import yaml
+for task in yaml.safe_load(open(sys.argv[1])) or []:
+    for kind in ("link", "render"):
+        for dest, spec in (task.get(kind) or {}).items():
+            src = spec["path"] if isinstance(spec, dict) else spec
+            print(f"{kind}\t{dest}\t{src}")
+EOF
+}
+
+for m in "${MODULES[@]}"; do
+  log "module $m"
+  conf="$REPO_ROOT/modules/$m/install.conf.yaml"
+  if [ -f "$conf" ]; then
+    while IFS=$'\t' read -r kind dest src; do
+      dest_path="${dest/#\~/$HOME}"
+      want="$REPO_ROOT/modules/$m/$src"
+      case "$kind" in
+      link)
+        if [ -L "$dest_path" ] && [ "$(readlink -f "$dest_path")" = "$(readlink -f "$want")" ]; then
+          ok "$dest -> modules/$m/$src"
+        elif [ -L "$dest_path" ]; then
+          bad "$dest -> $(readlink "$dest_path") (expected modules/$m/$src)"
+        elif [ -e "$dest_path" ]; then
+          bad "$dest exists but is not a link (run ./install; it backs the file up)"
+        else
+          bad "$dest missing"
+        fi
+        ;;
+      render)
+        if [ -f "$dest_path" ] && [ ! -L "$dest_path" ]; then
+          ok "$dest rendered from modules/$m/$src"
+        else
+          bad "$dest not rendered (run ./install)"
+        fi
+        ;;
+      esac
+    done < <(manifest_entries "$conf")
+  fi
+
+  # Pins: the `pin_satisfied <cmd> "$VAR"` lines in the module's
+  # provision.sh, with VAR read from the same file, so a new pin is
+  # covered without touching this script.
+  script="$REPO_ROOT/modules/$m/provision.sh"
+  [ -f "$script" ] || continue
+  while IFS=' ' read -r cmd var flag; do
+    pin="$(grep -oE "^$var=\"[^\"]+\"" "$script" "$REPO_ROOT/lib/provision-lib.sh" 2>/dev/null | head -n1 | cut -d'"' -f2)"
+    [ -n "$pin" ] || continue
+    cur="$(installed_version "$cmd" "${flag:---version}")"
+    if [ -z "$cur" ]; then
+      bad "$cmd not installed (pin ${pin#v}); run ./provision.sh"
+    elif version_ge "$cur" "${pin#v}"; then
+      ok "$cmd $cur (pin ${pin#v})"
+    else
+      bad "$cmd $cur is older than the pin ${pin#v}; run ./provision.sh"
+    fi
+  done < <(grep -oE 'pin_satisfied [A-Za-z0-9_-]+ "\$[A-Z_]+"( [a-z-]+)?' "$script" |
+    sed -E 's/pin_satisfied ([^ ]+) "\$([A-Z_]+)"( ([a-z-]+))?/\1 \2 \4/')
+done
+
+log "Overlay seams (untracked; absent is fine on a personal machine)"
+for seam in \
+  "$CONFIG_HOME/dotfiles/env.sh" \
+  "$HOME/.bashrc.local" \
+  "$HOME/.bash_aliases.local" \
+  "$HOME/.gitconfig.local" \
+  "$HOME/.tmux.conf.local" \
+  "$CONFIG_HOME/kitty.local.conf" \
+  "$CONFIG_HOME/dotfiles/local.env" \
+  "$CONFIG_HOME/bspwm/profiles.d"; do
+  if [ -e "$seam" ]; then ok "${seam/#$HOME/\~} present"; else printf '    [--]   %s absent\n' "${seam/#$HOME/\~}"; fi
+done
+if [ -f "$HOME/.gitconfig" ] && ! git config --global --includes user.email >/dev/null 2>&1; then
+  bad "git has no user.email; ~/.gitconfig.local should set [user]"
+fi
+
+log "Repo"
+if [ "$(git -C "$REPO_ROOT" config core.hooksPath 2>/dev/null)" = "modules/git/hooks" ]; then
+  ok "identity-guard hooks wired (core.hooksPath)"
+else
+  bad "core.hooksPath is not modules/git/hooks (run ./install)"
+fi
+if git -C "$REPO_ROOT" submodule status 2>/dev/null | grep -q '^-'; then
+  bad "uninitialised submodules: $(git -C "$REPO_ROOT" submodule status | awk '/^-/{print $2}' | tr '\n' ' ')"
+else
+  ok "submodules initialised"
+fi
+
+echo
+if [ "$problems" -eq 0 ]; then
+  echo "doctor: everything checks out"
+else
+  echo "doctor: $problems problem(s)"
+  exit 1
+fi

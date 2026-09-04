@@ -1,0 +1,14 @@
+# git - config, commit template, the bash prompt helper, and lazygit.
+# hooks/ is not linked anywhere: ./install points this clone's own
+# core.hooksPath at it.
+- defaults:
+    link:
+      relink: true
+      backup: true
+      create: true
+
+- link:
+    ~/.gitconfig: gitconfig
+    ~/.gitmessage: gitmessage
+    ~/.git-prompt.sh: git-prompt.sh
+    ~/.config/lazygit/config.yml: lazygit.yml

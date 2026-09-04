@@ -1,0 +1,10 @@
+# wacom - one tablet's xsetwacom mapping. Hardware-specific, so it is not in
+# any role; hosts that have the tablet add it: ./install --roles desktop,wacom
+- defaults:
+    link:
+      relink: true
+      backup: true
+      create: true
+
+- link:
+    ~/.local/bin/wacominit: wacominit

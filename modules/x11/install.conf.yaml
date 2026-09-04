@@ -1,0 +1,28 @@
+# x11 - the bspwm + sxhkd + polybar stack, picom, dunst, and the X11-only
+# leaf configs and scripts. ~/.config/bspwm is a real directory with the
+# tracked pieces linked into it, so a private overlay can drop extra monitor
+# profiles into ~/.config/bspwm/profiles.d/ without touching the repo.
+- defaults:
+    link:
+      relink: true
+      backup: true
+      create: true
+
+- link:
+    ~/.config/bspwm/bspwmrc: bspwm/bspwmrc
+    ~/.config/bspwm/scripts: bspwm/scripts
+    ~/.config/bspwm/profiles: bspwm/profiles
+    ~/.config/sxhkd: sxhkd
+    ~/.config/polybar: polybar
+    ~/.config/picom/picom.conf: picom.conf
+    ~/.config/dunst/dunstrc: dunstrc
+    ~/.config/systemd/user/swapescape.service: swapescape.service
+    ~/.local/bin/lockscreen: bin/lockscreen
+    ~/.local/bin/desktop-session-log: bin/desktop-session-log
+    ~/.config/autostart/dotfiles-session-log.desktop: session/dotfiles-session-log.desktop
+
+# Per-machine values (DPI, redshift location) come from host.env; these are
+# rendered copies, refreshed on every install, not symlinks.
+- render:
+    ~/.Xresources: Xresources.tmpl
+    ~/.config/redshift.conf: redshift.conf.tmpl

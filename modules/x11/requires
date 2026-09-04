@@ -1,0 +1,4 @@
+# sxhkdrc and monitor-switch.sh launch ~/.config/kitty/launch.sh
+kitty
+# bin/desktop-session-log greps journal output with rg
+cli-tools

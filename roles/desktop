@@ -1,0 +1,5 @@
+# desktop - a workstation running this repo's bspwm/X11 stack. Hardware
+# extras that only some desktops have (wacom) are picked per host:
+#   ./install --roles desktop,wacom
+@workstation
+x11
