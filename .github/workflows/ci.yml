@@ -132,6 +132,18 @@ jobs:
           check_requires $(resolve_modules desktop wacom)
           # unknown names are refused
           if (resolve_modules nonsense 2>/dev/null); then echo "unknown role accepted" >&2; exit 1; fi
+      - name: entry point argument handling
+        run: |
+          set -euo pipefail
+          ./provision.sh --help | grep -q '^usage: ./provision.sh'
+          ./install -h | grep -q '^usage: ./install'
+          # provision.sh has nothing to forward to, so an unknown flag is an
+          # error and the only thing printed (no saved-selection note first)
+          out="$(./provision.sh --bogus 2>&1 || true)"
+          [ "$(printf '%s\n' "$out" | wc -l)" = 1 ]
+          printf '%s\n' "$out" | grep -q 'unknown argument: --bogus'
+          # no selection anywhere is a clear error, not a crash
+          (./provision.sh 2>&1 || true) | grep -q 'no roles selected'
 
   monitor-manager-tests:
     name: monitor-manager tests

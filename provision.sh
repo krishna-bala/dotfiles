@@ -18,9 +18,24 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/roles.sh
 . "$REPO_ROOT/lib/roles.sh"
 
+usage() {
+  cat <<EOF
+usage: $0 [--roles <role>[,<role>...]] [--modules <module>[,<module>...]]
+
+Installs the tools the selected modules' configs assume, running each
+module's provision.sh in role order. With no selection, the one saved by
+the last run ($ROLES_FILE) is re-applied.
+
+  --roles r[,r]      roles to provision (available: $(list_roles | paste -sd' '))
+  --modules m[,m]    extra modules, or a selection with no role
+  -h, --help         show this help
+
+Run ./install afterwards to link the configs.
+EOF
+}
+
 require_not_root
-parse_targets "$@"
-[ "${#PASSTHROUGH[@]}" -eq 0 ] || die "unknown argument: ${PASSTHROUGH[0]} (usage: $0 [--roles r[,r]] [--modules m[,m]])"
+PARSE_TARGETS_STRICT=1 parse_targets "$@"
 mapfile -t MODULES < <(resolve_modules "${TARGETS[@]}")
 check_requires "${MODULES[@]}"
 
