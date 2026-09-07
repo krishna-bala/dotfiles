@@ -11,10 +11,3 @@
     ~/.claude/CLAUDE.md: AGENTS.md
     ~/.codex/AGENTS.md: AGENTS.md
     ~/.claude/scripts/status-line.sh: status-line.sh
-
-# Shared local skill sources; installing links does not install their tool dependencies.
-- link:
-    ~/.agents/skills/generate-notes: /home/krishna/src/claude-marketplace/pkm/skills/generate-notes
-    ~/.agents/skills/improve-notes: /home/krishna/src/claude-marketplace/pkm/skills/improve-notes
-    ~/.agents/skills/optimize: /home/krishna/src/claude-marketplace/pkm/skills/optimize
-    ~/.agents/skills/tiling-tree: /home/krishna/src/claude-marketplace/skills/tiling-tree
