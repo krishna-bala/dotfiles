@@ -1,0 +1,32 @@
+diff --git a/src/proxyicon.vala b/src/proxyicon.vala
+index 790dd92..db6baec 100644
+--- a/src/proxyicon.vala
++++ b/src/proxyicon.vala
+@@ -105,7 +105,12 @@ class ProxyIcon : Object {
+             }
+         }
+ 
+-        pixmaps = item.icon_pixmap;
++        // Some SNI clients omit IconPixmap or return a string for it.
++        // Vala's generated array getter aborts inside GLib on that value.
++        var raw_pixmaps = (item as DBusProxy).get_cached_property("IconPixmap");
++        if (raw_pixmaps != null && raw_pixmaps.is_of_type(new VariantType("a(iiay)"))) {
++            pixmaps = item.icon_pixmap;
++        }
+         set_icon_pixmap();
+     }
+ 
+@@ -170,6 +175,13 @@ class ProxyIcon : Object {
+     }
+ 
+     void set_tooltip() {
++        // ToolTip is optional in practice; never decode a missing/wrong type
++        // through Vala's generated struct getter (e.g. Proton VPN GTK4).
++        var raw_tooltip = (item as DBusProxy).get_cached_property("ToolTip");
++        if (raw_tooltip == null || !raw_tooltip.is_of_type(new VariantType("(sa(iiay)ss)"))) {
++            icon.set_tooltip_text(item.title);
++            return;
++        }
+         var tooltip = item.tool_tip;
+         string title = tooltip.title;
+         string text = tooltip.text;

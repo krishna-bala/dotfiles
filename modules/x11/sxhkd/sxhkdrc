@@ -211,7 +211,7 @@ super + alt + shift + p
 
 # Launch screen recorder
 super + shift + p
-  simplescreenrecorder
+  python3 ~/.config/bspwm/scripts/screen-recorder.py
 
 # toggle polybar visibility
 super + alt + p

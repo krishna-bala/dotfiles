@@ -63,8 +63,12 @@ session_log --startup bspwm
 systemctl --user import-environment DISPLAY XAUTHORITY 2>/dev/null
 
 log "BSPWM_DIR=$BSPWM_DIR"
-if ! cd "$BSPWM_DIR"; then
-  log "FATAL: cannot cd to BSPWM_DIR '$BSPWM_DIR' — bspwmrc aborting before monitor/polybar/picom setup"
+# Check the dir but do not cd into it: everything below addresses it via
+# $BSPWM_DIR, and the cwd here is inherited by sxhkd and so by every hotkey
+# launch (a new terminal opens in it). Staying in $HOME keeps the session
+# out of the repo, so a later move or clean of the checkout can't strand it.
+if [ ! -d "$BSPWM_DIR" ]; then
+  log "FATAL: BSPWM_DIR '$BSPWM_DIR' missing — bspwmrc aborting before monitor/polybar/picom setup"
   notify-send -u critical "bspwm" "bspwmrc: BSPWM_DIR missing: $BSPWM_DIR" 2>/dev/null
   exit 1
 fi
@@ -159,7 +163,8 @@ pgrep -f monocle-border.sh >/dev/null || setsid -f "$BSPWM_DIR/scripts/monocle-b
 pgrep -x redshift >/dev/null || setsid -f redshift -c ~/.config/redshift.conf
 pgrep -x nm-applet >/dev/null || setsid -f nm-applet
 pgrep -x blueman-applet >/dev/null || setsid -f blueman-applet
-pgrep -x protonvpn-app >/dev/null || setsid -f protonvpn-app
+# Proton only hides on close if a compatible SNI tray host exists at startup.
+"$BSPWM_DIR/scripts/start-proton-tray.sh" &
 
 # 5. Start sxhkd LAST (X fully ready after monitor setup, all transient grabs released)
 # Wrapped in a watchdog so a crash auto-restarts — losing sxhkd locks you out of all hotkeys.

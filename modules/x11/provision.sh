@@ -56,6 +56,10 @@ pkg_ensure \
   network-manager-gnome blueman xdg-utils \
   i3lock libnotify-bin fontconfig xz-utils
 
+# Polybar's tray is XEmbed; Proton GTK4 needs an SNI bridge. This helper
+# pins upstream and carries the optional-property compatibility fix.
+bash "$MODULE_DIR/provision-tray.sh"
+
 # ----------------------------------------------------------------------------
 # Picom. Distro package when it is at least the pinned major; otherwise a
 # pinned source build. Upstream uploads no release assets, and the
