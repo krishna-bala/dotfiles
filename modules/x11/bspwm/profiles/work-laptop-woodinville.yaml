@@ -64,7 +64,7 @@ ui:
       modules:
         left: launcher workspaces
         center: date time
-        right: network battery alsa
+        right: battery alsa
 
     - monitor: secondary
       orientation: landscape
@@ -78,4 +78,4 @@ ui:
       modules:
         left: launcher workspaces
         center: date
-        right: network battery backlight alsa time
+        right: battery backlight alsa time
