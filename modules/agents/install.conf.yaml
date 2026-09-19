@@ -1,6 +1,6 @@
 # agents - harness-agnostic instructions for coding agents, linked to each
-# harness's user-level path, plus the Claude Code status line. Nothing here
-# installs an agent; that is done per machine.
+# harness's user-level path, shared skills, and the Claude Code status line.
+# Nothing here installs an agent; that is done per machine.
 - defaults:
     link:
       relink: true
@@ -8,6 +8,19 @@
       create: true
 
 - link:
+    ~/.agents/AGENTS.md: AGENTS.md
     ~/.claude/CLAUDE.md: AGENTS.md
     ~/.codex/AGENTS.md: AGENTS.md
     ~/.claude/scripts/status-line.sh: status-line.sh
+
+    # Link individual skills so other installed skills remain independent.
+    ~/.agents/skills/vault: skills/vault
+    ~/.claude/skills/vault: skills/vault
+    ~/.agents/skills/generate-notes: skills/generate-notes
+    ~/.claude/skills/generate-notes: skills/generate-notes
+    ~/.agents/skills/improve-notes: skills/improve-notes
+    ~/.claude/skills/improve-notes: skills/improve-notes
+    ~/.agents/skills/optimize: skills/optimize
+    ~/.claude/skills/optimize: skills/optimize
+    ~/.agents/skills/tiling-tree: skills/tiling-tree
+    ~/.claude/skills/tiling-tree: skills/tiling-tree

@@ -61,8 +61,10 @@ Modules:
   (a separate repo) builds with.
 - `node`, `go`, `typst`, `bazel` - language toolchains and completions.
 - `kitty` - the terminal emulator and its font. Client-side: not on servers.
-- `agents` - `AGENTS.md`, linked to `~/.claude/CLAUDE.md` and
-  `~/.codex/AGENTS.md`, plus the Claude Code status-line script.
+- `agents` - shared instructions and skills exposed through `~/.agents/`,
+  with `~/.codex/AGENTS.md`, `~/.claude/CLAUDE.md`, and individual
+  `~/.claude/skills/` compatibility links, plus the Claude Code status-line
+  script. See [agent setup](modules/agents/README.md).
 - `x11` - bspwm, sxhkd, polybar (with rofi themes), picom, dunst,
   redshift, `Xresources`, the `swapescape` user unit, `lockscreen`,
   `desktop-session-log`. These stay together because sxhkd's hotkeys and
