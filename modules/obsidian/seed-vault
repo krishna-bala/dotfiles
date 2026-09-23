@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+#
+# seed-vault - lay down a new local-only Obsidian vault using the shared
+# config in config/: the folder layout, .obsidian settings (theme, hotkeys,
+# snippets, plugin settings), the vimrc, a starter AGENTS.md, templates, and
+# a git repo with no remote.
+#
+# usage: seed-vault <vault-path>
+#
+# Run by hand, once per vault; no role lists this module, so ./install and
+# ./provision.sh never touch it. Files are copied rather than linked because
+# Obsidian rewrites its JSON whenever a setting changes, and a vault's tweaks
+# should stay in that vault. An existing file is never overwritten, so a
+# re-run only fills in what is missing.
+#
+# Plugin code and the Catppuccin theme are not shipped here; install them
+# from Obsidian's community browser and they pick up the settings seeded
+# under .obsidian/plugins/.
+
+set -euo pipefail
+
+MODULE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../../lib/common.sh
+. "$MODULE_DIR/../../lib/common.sh"
+
+CONFIG="$MODULE_DIR/config"
+[ $# -eq 1 ] || die "usage: seed-vault <vault-path>"
+VAULT="$1"
+
+# usage: place <src> <dest> - copy unless dest already exists.
+place() {
+  if [ -e "$2" ]; then
+    skip "${2#"$VAULT"/} exists"
+  else
+    mkdir -p "$(dirname "$2")"
+    cp "$1" "$2"
+    note "added ${2#"$VAULT"/}"
+  fi
+}
+
+log "seeding $VAULT"
+mkdir -p "$VAULT"
+VAULT="$(cd "$VAULT" && pwd)"
+
+for d in concepts projects references/people archive templates attachments _inbox .claude/skills; do
+  mkdir -p "$VAULT/$d"
+done
+
+# Obsidian settings: everything under config/ except the vimrc (which lives
+# at the vault root) and vault/ (starter content).
+while IFS= read -r -d '' f; do
+  rel="${f#"$CONFIG"/}"
+  place "$f" "$VAULT/.obsidian/$rel"
+done < <(find "$CONFIG" -path "$CONFIG/vault" -prune -o -type f ! -name vimrc -print0)
+place "$CONFIG/vimrc" "$VAULT/.obsidian.vimrc"
+
+# Starter content. gitignore is stored without its dot so it does not apply
+# to this repo.
+while IFS= read -r -d '' f; do
+  rel="${f#"$CONFIG/vault"/}"
+  [ "$rel" = gitignore ] && rel=.gitignore
+  place "$f" "$VAULT/$rel"
+done < <(find "$CONFIG/vault" -type f -print0)
+
+if [ -d "$VAULT/.git" ]; then
+  skip "git repo exists"
+else
+  git -C "$VAULT" init -q
+  note "initialised git repo (no remote)"
+fi
+if [ -n "$(git -C "$VAULT" remote)" ]; then
+  note "this vault has a git remote; it is meant to stay local"
+fi
+
+log "Next: open $VAULT in Obsidian, turn off Restricted mode, install the
+    plugins listed in .obsidian/community-plugins.json and the Catppuccin
+    theme, then restart Obsidian."

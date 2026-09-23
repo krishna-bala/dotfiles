@@ -70,6 +70,11 @@ Modules:
   `desktop-session-log`. These stay together because sxhkd's hotkeys and
   polybar's toggle scripts reference bspwm's installed paths directly.
 - `wacom` - one tablet's `xsetwacom` mapping; per-host.
+- `obsidian` - shared Obsidian settings (theme, hotkeys, vimrc, snippets,
+  plugin settings) plus starter content for a new local-only vault. In no
+  role: run `modules/obsidian/seed-vault <vault-path>` by hand. It copies
+  rather than links and never overwrites, then `git init`s with no remote.
+  Plugin code and the theme are installed from inside Obsidian.
 
 Applications:
 

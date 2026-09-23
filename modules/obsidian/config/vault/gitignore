@@ -1,0 +1,4 @@
+.obsidian/workspace*.json
+.env*
+**/.claude/settings.local.json
+**/.claude/plans/

@@ -1,0 +1,39 @@
+/* Line spacing adjustment */
+body {
+  --line-height-normal: 1.7;  /* default is 1.5, increase for more space */
+}
+
+/* Extra spacing between list items */
+/* Reading view */
+.markdown-rendered li {
+  margin-bottom: 6px !important;
+}
+.markdown-rendered :is(ul, ol) {
+  margin-top: 8px !important;
+}
+/* Live Preview */
+.cm-line.HyperMD-list-line {
+  padding-bottom: 6px !important;
+}
+.cm-line:not(.HyperMD-list-line) + .cm-line.HyperMD-list-line {
+  padding-top: 8px !important;
+}
+
+.cm-line.HyperMD-header {
+  padding-bottom: 6px !important;
+}
+
+/* Readable line length width (only applies if setting is enabled) */
+body {
+  --file-line-width: 900px;  /* default is ~700px */
+}
+
+/* Center note content at 80% of the available pane width. */
+@media (min-width: 800px) {
+  body:not(.is-mobile) .markdown-source-view.mod-cm6 .cm-sizer,
+  body:not(.is-mobile) .markdown-preview-view .markdown-preview-sizer {
+    width: 80%;
+    max-width: 80%;
+    margin-inline: auto;
+  }
+}

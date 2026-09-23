@@ -1,0 +1,23 @@
+{
+  "dateFormatSpecs": [
+    {
+      "format": "[[MM d, yyyy (DD)]]",
+      "regex": "\\[\\[(?:January|February|March|April|May|June|July|August|September|October|November|December) (?:[1-9]|[12][0-9]|3[01]), (?:\\d{4}) \\((?:Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)\\)\\]\\]",
+      "minLength": 24,
+      "maxLength": 34
+    },
+    {
+      "format": "",
+      "regex": "",
+      "minLength": 0,
+      "maxLength": 0
+    }
+  ],
+  "defaultDate": "today",
+  "format": "mm/dd/yyyy",
+  "format2": "",
+  "language": "en",
+  "weekStart": 0,
+  "todayHighlight": true,
+  "daysOfWeekHighlighted": {}
+}
