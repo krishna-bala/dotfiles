@@ -21,7 +21,9 @@ guidance) with this file (guidance for editing this repo).
   module), `provision.sh` (standalone-runnable, sources
   `lib/provision-lib.sh`), optional `requires`. A module whose whole
   directory is linked (`tmux`, `kitty`) keeps its config under `config/` so
-  the manifest and provisioning don't land in `$HOME`.
+  the manifest and provisioning don't land in `$HOME`. A hand-run module
+  (`obsidian`) has neither file: it ships a script the owner runs directly,
+  plus a README, and no role lists it.
 - `modules/x11/` - the bspwm + sxhkd + polybar stack plus picom, dunst,
   redshift, Xresources, the systemd user unit, and the X11-only scripts.
   Grouped because sxhkd's hotkeys and polybar's toggle scripts reference

@@ -43,6 +43,8 @@ roles/             server, workstation, desktop - one module name per line
 modules/<name>/    install.conf.yaml (dotbot links, sources relative to the module)
                    provision.sh     (pinned + sha256-verified tooling; standalone-runnable)
                    requires         (optional: modules this one cannot work without)
+                   a hand-run module (obsidian) instead ships a script and
+                   README, and no role lists it
 hosts/             per-machine values (see below)
 apps/              applications that live here but are not dotfiles
 lib/               provision-lib.sh (pins, sha256, apt), roles.sh, common.sh,
@@ -70,6 +72,10 @@ Modules:
   `desktop-session-log`. These stay together because sxhkd's hotkeys and
   polybar's toggle scripts reference bspwm's installed paths directly.
 - `wacom` - one tablet's `xsetwacom` mapping; per-host.
+- `obsidian` - a starter pack for new Obsidian vaults (settings, vimrc,
+  folder layout, `AGENTS.md`, `Home.md`). A hand-run module: no role lists
+  it; run `modules/obsidian/seed-vault <vault-path>`. Seeded vaults own
+  their copy afterwards. See [the module README](modules/obsidian/README.md).
 
 Applications:
 

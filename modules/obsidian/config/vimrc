@@ -1,0 +1,178 @@
+" Obsidian Vimrc - LazyVim-style bindings
+" Requires: Vimrc Support plugin (esm)
+
+" ============================================
+" LEADER KEY
+" ============================================
+unmap <Space>
+
+" ============================================
+" ESCAPE ALTERNATIVES
+" ============================================
+imap jk <Esc>
+imap jj <Esc>
+
+" ============================================
+" FOLDING (zc/zo/za)
+" ============================================
+exmap foldmore obcommand editor:fold-more
+exmap foldless obcommand editor:fold-less
+exmap togglefold obcommand editor:toggle-fold
+exmap foldall obcommand editor:fold-all
+exmap unfoldall obcommand editor:unfold-all
+
+nnoremap zc :foldmore<CR>
+nnoremap zo :foldless<CR>
+nnoremap za :togglefold<CR>
+nnoremap zM :foldall<CR>
+nnoremap zR :unfoldall<CR>
+
+" ============================================
+" NAVIGATION - VISUAL LINES (like LazyVim)
+" ============================================
+" j/k use native movement (handles folds correctly)
+" gj/gk skips folded headers in Obsidian's CodeMirror vim mode
+
+" ============================================
+" NAVIGATION - CENTER AFTER JUMPS
+" ============================================
+nmap n nzzzv
+nmap N Nzzzv
+" Half-page scroll (workaround - native C-d may not work)
+nnoremap <C-d> 15jzz
+nnoremap <C-u> 15kzz
+nmap G Gzz
+
+" ============================================
+" YANK / PASTE IMPROVEMENTS
+" ============================================
+" Y yanks to end of line (consistent with D, C)
+nmap Y y$
+
+" ============================================
+" SEARCH
+" ============================================
+nmap <Space>h :nohl<CR>
+
+" ============================================
+" FILE OPERATIONS (<leader>f...)
+" ============================================
+exmap openSwitcher obcommand switcher:open
+exmap searchInFiles obcommand global-search:open
+
+nmap <Space>ff :openSwitcher<CR>
+nmap <Space>fg :searchInFiles<CR>
+
+" ============================================
+" QUICK SWITCHER (<leader><leader>)
+" ============================================
+" Find or create note (was Ctrl+O)
+nmap <Space><Space> :openSwitcher<CR>
+
+" ============================================
+" WINDOW/SPLIT NAVIGATION
+" ============================================
+exmap focusLeft obcommand editor:focus-left
+exmap focusRight obcommand editor:focus-right
+exmap focusTop obcommand editor:focus-top
+exmap focusBottom obcommand editor:focus-bottom
+
+nmap <C-h> :focusLeft<CR>
+nmap <C-l> :focusRight<CR>
+nmap <C-k> :focusTop<CR>
+nmap <C-j> :focusBottom<CR>
+
+" Split commands
+exmap splitVertical obcommand workspace:split-vertical
+exmap splitHorizontal obcommand workspace:split-horizontal
+exmap closePane obcommand workspace:close
+
+nmap <Space>wv :splitVertical<CR>
+nmap <Space>ws :splitHorizontal<CR>
+nmap <Space>wq :closePane<CR>
+
+" ============================================
+" SIDEBAR TOGGLES (<leader>e, <leader>b)
+" ============================================
+exmap toggleLeft obcommand app:toggle-left-sidebar
+exmap toggleRight obcommand app:toggle-right-sidebar
+
+nmap <Space>e :toggleLeft<CR>
+nmap <Space>b :toggleRight<CR>
+
+" ============================================
+" NOTES (<leader>n...)
+" ============================================
+exmap newNote obcommand file-explorer:new-file
+
+nmap <Space>nn :newNote<CR>
+
+" ============================================
+" GO TO / JUMP LIST (<leader>g... or g...)
+" ============================================
+exmap goBack obcommand app:go-back
+exmap goForward obcommand app:go-forward
+exmap followLink obcommand editor:follow-link
+
+" Jump list navigation (prev/next)
+nmap <M-Left> :goBack<CR>
+nmap <M-Right> :goForward<CR>
+
+" Follow link under cursor
+nmap gd :followLink<CR>
+nmap gf :followLink<CR>
+
+" ============================================
+" SURROUND (wiki links, quotes, etc.)
+" ============================================
+exmap surroundWiki surround [[ ]]
+exmap surroundDoubleQuotes surround " "
+exmap surroundSingleQuotes surround ' '
+exmap surroundBackticks surround ` `
+exmap surroundParens surround ( )
+exmap surroundBrackets surround [ ]
+exmap surroundBraces surround { }
+exmap surroundUnderscores surround _ _
+exmap surroundAsterisks surround * *
+exmap surroundBold surround ** **
+
+" Use in visual mode: select text, then press the key
+vmap [[ :surroundWiki<CR>
+vmap S" :surroundDoubleQuotes<CR>
+vmap S' :surroundSingleQuotes<CR>
+vmap S` :surroundBackticks<CR>
+vmap S( :surroundParens<CR>
+vmap S[ :surroundBrackets<CR>
+vmap S{ :surroundBraces<CR>
+vmap _ :surroundUnderscores<CR>
+vmap * :surroundAsterisks<CR>
+vmap ` :surroundBackticks<CR>
+" Bold: Ctrl+B, Italic: Ctrl+I
+vmap <C-b> :surroundBold<CR>
+vmap <C-i> :surroundUnderscores<CR>
+
+" ============================================
+" EDITING
+" ============================================
+exmap cycleCheckbox obcommand editor:cycle-list-checklist
+exmap toggleBold obcommand editor:toggle-bold
+exmap toggleItalic obcommand editor:toggle-italics
+
+nmap <Space>x :cycleCheckbox<CR>
+" Normal mode: toggle bold/italic on word under cursor
+nmap <C-b> :toggleBold<CR>
+nmap <C-i> :toggleItalic<CR>
+
+" ============================================
+" DATE INSERTER
+" ============================================
+exmap openDateCalendar obcommand date-inserter:open-calendar
+nmap <Space><M-h> :openDateCalendar<CR>
+imap <M-h> <Esc>:openDateCalendar<CR>
+
+" ============================================
+" MISC
+" ============================================
+exmap openSettings obcommand app:open-settings
+
+nmap <Space>, :openSettings<CR>

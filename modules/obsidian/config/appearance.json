@@ -1,0 +1,15 @@
+{
+  "accentColor": "",
+  "theme": "obsidian",
+  "cssTheme": "Catppuccin",
+  "textFontFamily": "Google Sans Flex,Inter",
+  "interfaceFontFamily": "Google Sans Flex,Inter",
+  "baseFontSize": 17,
+  "baseFontSizeAction": true,
+  "showRibbon": false,
+  "showViewHeader": true,
+  "monospaceFontFamily": "Google Sans Code,Menlo,Source Code Pro",
+  "enabledCssSnippets": [
+    "line-spacing"
+  ]
+}
