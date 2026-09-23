@@ -53,5 +53,6 @@
   "propertiesInDocument": "hidden",
   "newFileLocation": "folder",
   "newFileFolderPath": "_inbox",
-  "openBehavior": "file:Home.md"
+  "openBehavior": "file:Home.md",
+  "useTab": false
 }
