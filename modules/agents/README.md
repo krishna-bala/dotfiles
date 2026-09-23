@@ -38,7 +38,10 @@ dotbot/bin/dotbot -d "$PWD/modules/agents" -c modules/agents/install.conf.yaml -
 ## Project convention
 
 Keep shared authored context under `<project>/.agents/`. A project's root
-`AGENTS.md` and `CLAUDE.md` point to `.agents/AGENTS.md`. A distinct Claude
+`AGENTS.md` and `CLAUDE.md` point to `.agents/AGENTS.md`. Claude Code reads
+`AGENTS.md` when a directory has no `CLAUDE.md`, so a project with only a
+root `AGENTS.md` (such as a vault from `modules/obsidian`) needs no
+`CLAUDE.md`; its Claude skills still go in `.claude/skills/`. A distinct Claude
 instruction document can live at `.agents/CLAUDE.md` with its existing entry
 point retained. Nested instruction scopes use the same layout in that scope.
 Project skill sources live at `.agents/skills/<name>`; Claude gets individual
