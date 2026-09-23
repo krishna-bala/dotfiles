@@ -68,14 +68,3 @@ This installer has no required dependency on those files or on a notes vault.
 `vault` replaces the former local `homebase` user skill. Its general vault
 workflow lives here; application-specific Homebase procedures belong to that
 application's project skills. The old global `homebase` links are retired.
-
-`generate-notes`, `improve-notes`, `optimize`, and `tiling-tree` were migrated
-from `krishna-bala/claude-bala-plugins` at commit
-`ddc2c451db7542104b288db680c760c7a08a14ce`. The first three lived under
-`pkm/skills/`; `tiling-tree` lived under `skills/`. Their initial contents are
-preserved, including Claude-specific optional frontmatter and existing workflow
-references. The source repository retains their earlier Git history. The owner
-kept these four available while considering pruning or redesign.
-
-The PKM workflows still assume a separate notes vault at `~/notes`; installing
-them does not create that vault or its optional Anki integrations.
