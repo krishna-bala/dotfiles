@@ -7,11 +7,17 @@
 #
 # usage: seed-vault <vault-path>
 #
-# Run by hand, once per vault; no role lists this module, so ./install and
-# ./provision.sh never touch it. Files are copied rather than linked because
-# Obsidian rewrites its JSON whenever a setting changes, and a vault's tweaks
-# should stay in that vault. An existing file is never overwritten, so a
-# re-run only fills in what is missing.
+# Run by hand; no role lists this module, so ./install and ./provision.sh
+# never touch it. Files are copied rather than linked because Obsidian
+# rewrites its JSON whenever a setting changes, and a vault's tweaks should
+# stay in that vault.
+#
+# Settings (.obsidian/ files from the pack and .obsidian.vimrc) are reset to
+# the pack's: an existing file that differs is backed up under
+# $XDG_STATE_HOME/seed-vault/ and replaced. Settings the pack does not ship
+# (workspace, other plugins) are left alone. Starter content (AGENTS.md,
+# Home.md, .gitignore) is never overwritten. Obsidian must be closed, or it
+# writes its in-memory settings back over the new files.
 #
 # Plugin code, the Catppuccin theme, and fonts are not shipped here; see
 # README.md for the steps that finish the vault inside Obsidian.
@@ -37,11 +43,34 @@ place() {
   fi
 }
 
+# usage: place_setting <src> <dest> - copy, backing up a differing dest.
+place_setting() {
+  local rel="${2#"$VAULT"/}"
+  if [ -e "$2" ] && cmp -s "$1" "$2"; then
+    skip "$rel up to date"
+    return
+  fi
+  if [ -e "$2" ]; then
+    mkdir -p "$(dirname "$BACKUP/$rel")"
+    cp -p "$2" "$BACKUP/$rel"
+    note "replaced $rel (old copy in $BACKUP)"
+  else
+    mkdir -p "$(dirname "$2")"
+    note "added $rel"
+  fi
+  cp "$1" "$2"
+}
+
+if pgrep -x obsidian >/dev/null 2>&1; then
+  die "Obsidian is running; close it first, or it overwrites the new settings"
+fi
+
 log "seeding $VAULT"
 mkdir -p "$VAULT"
 VAULT="$(cd "$VAULT" && pwd)"
+BACKUP="${XDG_STATE_HOME:-$HOME/.local/state}/seed-vault/$(basename "$VAULT")-$(date +%Y%m%dT%H%M%S)"
 
-for d in concepts projects references/people archive templates attachments _inbox .claude/skills; do
+for d in Concepts Projects References Archive Templates _Inbox .claude/skills; do
   mkdir -p "$VAULT/$d"
 done
 
@@ -49,9 +78,9 @@ done
 # at the vault root) and vault/ (starter content).
 while IFS= read -r -d '' f; do
   rel="${f#"$CONFIG"/}"
-  place "$f" "$VAULT/.obsidian/$rel"
+  place_setting "$f" "$VAULT/.obsidian/$rel"
 done < <(find "$CONFIG" -path "$CONFIG/vault" -prune -o -type f ! -name vimrc -print0)
-place "$CONFIG/vimrc" "$VAULT/.obsidian.vimrc"
+place_setting "$CONFIG/vimrc" "$VAULT/.obsidian.vimrc"
 
 # Starter content. gitignore is stored without its dot so it does not apply
 # to this repo.

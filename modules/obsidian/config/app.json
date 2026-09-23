@@ -22,7 +22,7 @@
   "spellcheck": false,
   "defaultViewMode": "source",
   "showUnsupportedFiles": true,
-  "attachmentFolderPath": "attachments",
+  "attachmentFolderPath": "./",
   "mobileToolbarCommands": [
     "command-palette:open",
     "editor:toggle-checklist-status",
@@ -52,7 +52,7 @@
   ],
   "propertiesInDocument": "hidden",
   "newFileLocation": "folder",
-  "newFileFolderPath": "_inbox",
+  "newFileFolderPath": "_Inbox",
   "openBehavior": "file:Home.md",
   "useTab": false
 }
