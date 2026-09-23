@@ -154,11 +154,9 @@ vmap <C-i> :surroundUnderscores<CR>
 " ============================================
 " EDITING
 " ============================================
-exmap toggleCheckbox obcommand editor:toggle-checklist-status
 exmap cycleCheckbox obcommand editor:cycle-list-checklist
 exmap toggleBold obcommand editor:toggle-bold
 exmap toggleItalic obcommand editor:toggle-italics
-exmap toggleCode obcommand editor:toggle-code
 
 nmap <Space>x :cycleCheckbox<CR>
 " Normal mode: toggle bold/italic on word under cursor

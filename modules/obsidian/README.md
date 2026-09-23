@@ -23,9 +23,9 @@ what is missing.
 These steps are manual, or for an agent to walk through with the owner.
 
 1. Open the folder as a vault ("Open folder as vault").
-2. Settings → Community plugins: turn on community plugins (leave
-   Restricted mode), then Browse and install each of these by name. The
-   seeded settings are picked up on install.
+2. Settings → Community plugins: turn off Restricted mode, then Browse
+   and install each of these by name. The seeded settings are picked up
+   on install.
 
    | Search for     | Plugin id                 |
    |----------------|---------------------------|

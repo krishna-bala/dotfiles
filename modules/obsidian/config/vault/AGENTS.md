@@ -29,7 +29,7 @@ _inbox/            # Default location for new notes; sort regularly
 ## Properties (frontmatter)
 
 - Universal: `type`, `created` (`YYYY-MM-DD`), `tags`.
-- Projects: `type: project`, `status` (`active`, `paused`, `backlog`, `complete`, `ongoing`). `Home.md` lists every note with `type: project` regardless of folder.
+- Projects: `type: project`, `status` (`active`, `paused`, `backlog`, `complete`, `ongoing`). `Home.md` lists every note with `type: project` that is not `complete`, regardless of folder.
 - Index files serve as MOCs with dataview queries and include `aliases: [<folder-name>]` so they can be linked as `[[folder-name]]`.
 
 ## Writing conventions
