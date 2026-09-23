@@ -10,8 +10,8 @@ Obsidian knowledge vault. Start navigation at [[Home]].
 ## Structure
 
 ```
-Concepts/          # Ideas you synthesized: flat, evergreen, reusable
-Projects/          # Things you work on, including their meetings and logs
+Projects/          # Things you work on, finite or ongoing, with their meetings and logs
+Knowledge/         # What you worked out: ideas, mental models, lessons; flat and evergreen
 References/        # External information: people, teams, systems, processes
 Archive/           # Finished or historical material
 Templates/         # Templater templates
@@ -19,7 +19,7 @@ _Inbox/            # Default location for new notes; sort regularly
 .claude/           # Claude Code skills, hooks, and settings for this vault
 ```
 
-- Boundary test: "Did I author this insight?" → `Concepts/`. "Am I recording external info?" → `References/`. "Am I working on it?" → `Projects/`.
+- Filing test: "Am I working on it?" → `Projects/`. "Did I work this out myself?" → `Knowledge/`. "Am I recording information from outside?" → `References/`. Group related references in subfolders (`References/People/`) as they accumulate.
 - Folders describe domain, not status. Completed projects stay in `Projects/` with `status: complete`.
 - New notes land in `_Inbox/`. Move a note to its folder once its home is clear; `Home.md` lists what is waiting.
 - Add an `AGENTS.md` to a folder when it gains conventions of its own. This file is authoritative at the root; folder files add local rules.
