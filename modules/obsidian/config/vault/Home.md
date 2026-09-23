@@ -7,25 +7,25 @@ tags: [vault-organization]
 
 ```dataview
 TABLE status, created
-FROM "projects"
-WHERE type = "project"
+WHERE type = "project" AND status != "complete"
 SORT status ASC, file.mtime DESC
 ```
 
-## Recent meetings
-
-```dataview
-LIST
-FROM "projects"
-WHERE type = "meeting"
-SORT file.ctime DESC
-LIMIT 10
-```
-
 ## Inbox
+
+New notes land in `_inbox/`. Move each one to its folder once it has a home.
 
 ```dataview
 LIST
 FROM "_inbox"
 SORT file.ctime DESC
+```
+
+## Recently edited
+
+```dataview
+LIST
+WHERE file.name != this.file.name
+SORT file.mtime DESC
+LIMIT 10
 ```

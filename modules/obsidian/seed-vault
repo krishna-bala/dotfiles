@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
-# seed-vault - lay down a new local-only Obsidian vault using the shared
-# config in config/: the folder layout, .obsidian settings (theme, hotkeys,
-# snippets, plugin settings), the vimrc, a starter AGENTS.md, templates, and
-# a git repo with no remote.
+# seed-vault - lay down a new Obsidian vault from the starter pack in
+# config/: the folder layout, .obsidian settings (theme, hotkeys, snippets,
+# plugin settings), the vimrc, a starter AGENTS.md and Home.md, and a git
+# repo with no remote.
 #
 # usage: seed-vault <vault-path>
 #
@@ -13,9 +13,8 @@
 # should stay in that vault. An existing file is never overwritten, so a
 # re-run only fills in what is missing.
 #
-# Plugin code and the Catppuccin theme are not shipped here; install them
-# from Obsidian's community browser and they pick up the settings seeded
-# under .obsidian/plugins/.
+# Plugin code, the Catppuccin theme, and fonts are not shipped here; see
+# README.md for the steps that finish the vault inside Obsidian.
 
 set -euo pipefail
 
@@ -69,9 +68,7 @@ else
   note "initialised git repo (no remote)"
 fi
 if [ -n "$(git -C "$VAULT" remote)" ]; then
-  note "this vault has a git remote; it is meant to stay local"
+  note "this vault already has a git remote: $(git -C "$VAULT" remote | paste -sd' ')"
 fi
 
-log "Next: open $VAULT in Obsidian, turn off Restricted mode, install the
-    plugins listed in .obsidian/community-plugins.json and the Catppuccin
-    theme, then restart Obsidian."
+log "Next: finish the vault in Obsidian ($MODULE_DIR/README.md)"

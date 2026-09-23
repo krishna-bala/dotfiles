@@ -52,7 +52,6 @@ nmap Y y$
 " ============================================
 " SEARCH
 " ============================================
-exmap clearSearch obcommand editor:focus
 nmap <Space>h :nohl<CR>
 
 " ============================================
@@ -60,11 +59,9 @@ nmap <Space>h :nohl<CR>
 " ============================================
 exmap openSwitcher obcommand switcher:open
 exmap searchInFiles obcommand global-search:open
-exmap openRecent obcommand file-recovery:open
 
 nmap <Space>ff :openSwitcher<CR>
 nmap <Space>fg :searchInFiles<CR>
-nmap <Space>fr :openRecent<CR>
 
 " ============================================
 " QUICK SWITCHER (<leader><leader>)
@@ -99,18 +96,15 @@ nmap <Space>wq :closePane<CR>
 " ============================================
 exmap toggleLeft obcommand app:toggle-left-sidebar
 exmap toggleRight obcommand app:toggle-right-sidebar
-exmap toggleFileExplorer obcommand file-explorer:open
 
 nmap <Space>e :toggleLeft<CR>
 nmap <Space>b :toggleRight<CR>
 
 " ============================================
-" NOTES / DAILY (<leader>n...)
+" NOTES (<leader>n...)
 " ============================================
-exmap dailyNote obcommand daily-notes:goto
 exmap newNote obcommand file-explorer:new-file
 
-nmap <Space>nd :dailyNote<CR>
 nmap <Space>nn :newNote<CR>
 
 " ============================================

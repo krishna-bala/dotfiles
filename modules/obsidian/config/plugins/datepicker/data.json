@@ -1,5 +1,5 @@
 {
-  "dateFormat": "DD.MM.YYYY",
+  "dateFormat": "YYYY-MM-DD",
   "overrideFormat": false,
   "showDateButtons": false,
   "showTimeButtons": false,
