@@ -1,9 +1,9 @@
 # obsidian
 
-A starter pack for a new Obsidian vault: settings (Catppuccin appearance,
-hotkeys, vimrc, CSS snippet, per-plugin settings), a folder layout, a root
-`AGENTS.md`, `Home.md`, and a `.gitignore`. After seeding, each vault owns
-its copy and is free to drift from this one.
+A starter pack for an Obsidian vault, new or existing: settings
+(Catppuccin appearance, hotkeys, vimrc, CSS snippet, per-plugin settings),
+a folder layout, a root `AGENTS.md`, `Home.md`, and a `.gitignore`. After
+seeding, each vault owns its copy and is free to drift from this one.
 
 The module is in no role. `./install` and `./provision.sh` skip it; run the
 script by hand.
@@ -14,9 +14,24 @@ script by hand.
 ~/.dotfiles/modules/obsidian/seed-vault ~/my-vault
 ```
 
-The script copies files without overwriting existing ones, creates the
-folders, and runs `git init` with no remote. Re-running it only fills in
-what is missing.
+Close Obsidian first; the script refuses to run while it is open, because
+Obsidian writes its in-memory settings back over the new files.
+
+The script:
+
+- resets the pack's settings files (`.obsidian/*.json`, the snippet,
+  per-plugin `data.json`, `.obsidian.vimrc`). A file that differs is
+  backed up to `~/.local/state/seed-vault/<vault>-<timestamp>/` first.
+  Settings the pack does not ship, such as `workspace.json` or other
+  plugins' folders, are left alone. `community-plugins.json` is replaced,
+  so plugins the vault had enabled that are not in the pack end up
+  disabled; re-enable them in Settings.
+- adds `AGENTS.md`, `Home.md` and `.gitignore` only when missing.
+- creates the folders and runs `git init` with no remote if there is no
+  repo yet.
+
+Re-running it on the same vault resets any settings changed since, again
+with a backup.
 
 ## Finish in Obsidian
 
@@ -24,8 +39,9 @@ These steps are manual, or for an agent to walk through with the owner.
 
 1. Open the folder as a vault ("Open folder as vault").
 2. Settings → Community plugins: turn off Restricted mode, then Browse
-   and install each of these by name. The seeded settings are picked up
-   on install.
+   and install each of these by name. Plugin code is not part of the pack,
+   so until this step no plugin appears and vim bindings from the vimrc do
+   nothing. The seeded settings are picked up on install.
 
    | Search for     | Plugin id                 |
    |----------------|---------------------------|
