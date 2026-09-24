@@ -13,11 +13,11 @@ SORT status ASC, file.mtime DESC
 
 ## Inbox
 
-New notes land in `_inbox/`. Move each one to its folder once it has a home.
+New notes land in `_Inbox/`. Move each one to its folder once it has a home.
 
 ```dataview
 LIST
-FROM "_inbox"
+FROM "_Inbox"
 SORT file.ctime DESC
 ```
 
