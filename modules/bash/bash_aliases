@@ -57,7 +57,5 @@ kssh() {
 }
 # ===============
 
-alias claude='claude --allow-dangerously-skip-permissions'
-
 # Machine-local shell env (untracked; e.g. work-specific vars). No-op if absent.
 [ -f "$HOME/.bash_aliases.local" ] && . "$HOME/.bash_aliases.local"
