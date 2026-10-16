@@ -1,15 +1,57 @@
 #!/usr/bin/env bash
-# Map the Wacom Intuos BT M to the primary monitor.
+# Map the Wacom tablet's pen and pad to the primary monitor.
 set -euo pipefail
 
-output=$(xrandr --query | awk '/ connected primary/ {print $1; exit}')
-output=${output:-$(xrandr --query | awk '/ connected/ {print $1; exit}')}
+# Lines look like " 0: +*DP-0 2560/697x1440/392+1080+248  DP-0", where the
+# "*" marks the primary monitor. Fall back to the first monitor without one.
+monitors=$(xrandr --listmonitors)
+line=$(awk 'NR > 1 && $2 ~ /\*/ {print; exit}' <<<"$monitors")
+line=${line:-$(awk 'NR == 2' <<<"$monitors")}
 
-if [[ -z "$output" ]]; then
+if [[ -z "$line" ]]; then
   echo "wacominit: no connected output found" >&2
   exit 1
 fi
 
-xsetwacom set "Wacom Intuos BT M Pen stylus" MapToOutput "$output"
-xsetwacom set "Wacom Intuos BT M Pen stylus" Area 0 0 21600 12150
-xsetwacom set "Wacom Intuos BT M Pad pad"    MapToOutput "$output"
+read -r _ _ geometry output <<<"$line"
+monitor_w=${geometry%%/*}
+monitor_h=${geometry#*x}
+monitor_h=${monitor_h%%/*}
+
+# Look the pen and pad up by type: the X name comes from the tablet, and a
+# Bluetooth Intuos can report a different model name than this was written
+# for. xsetwacom exits 0 for an unknown device, so check here.
+devices=$(xsetwacom --list devices)
+device_of() {
+  awk -v type="type: $1" 'index($0, type) { sub(/[ \t]*id:.*/, ""); print; exit }' <<<"$devices"
+}
+stylus=$(device_of STYLUS)
+pad=$(device_of PAD)
+
+if [[ -z "$stylus" || -z "$pad" ]]; then
+  echo "wacominit: no Wacom pen and pad found (is the tablet connected?)" >&2
+  exit 1
+fi
+
+# The pen gets the largest part of the tablet with the monitor's aspect
+# ratio, so MapToOutput doesn't stretch it. Reset first so the read below
+# returns the full tablet area rather than an earlier, smaller one.
+xsetwacom set "$stylus" ResetArea
+read -r _ _ full_w full_h <<<"$(xsetwacom get "$stylus" Area | tr -c '0-9' ' ')"
+
+if [[ ! "$full_w" =~ ^[0-9]+$ || ! "$full_h" =~ ^[0-9]+$ ]]; then
+  echo "wacominit: could not read the pen's full area" >&2
+  exit 1
+fi
+
+if (( full_w * monitor_h > full_h * monitor_w )); then
+  area_w=$(( full_h * monitor_w / monitor_h ))
+  area_h=$full_h
+else
+  area_w=$full_w
+  area_h=$(( full_w * monitor_h / monitor_w ))
+fi
+
+xsetwacom set "$stylus" MapToOutput "$output"
+xsetwacom set "$stylus" Area 0 0 "$area_w" "$area_h"
+xsetwacom set "$pad" MapToOutput "$output"
