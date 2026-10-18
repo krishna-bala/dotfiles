@@ -47,9 +47,16 @@ table() {
             pending = 0
             d = desc
             if (d == "") { d = cmd; sub(/^[[:space:]]+/, "", d) }
-            if (length(d) > 70) d = substr(d, 1, 67) "..."
-            printf "%-38s  %-26s  %s\n", chord, section, d
+            if (length(d) > 60) d = substr(d, 1, 57) "..."
+            n++; chords[n] = chord; sections[n] = section; descs[n] = d
+            if (length(chord) > cw) cw = length(chord)
+            if (length(section) > sw) sw = length(section)
             flush_comment()
+        }
+        # Columns sized to their widest entry, so rows fit the window.
+        END {
+            for (i = 1; i <= n; i++)
+                printf "%-*s  %-*s  %s\n", cw, chords[i], sw, sections[i], descs[i]
         }
     ' "$SXHKDRC"
 }
@@ -61,8 +68,10 @@ case "${1:-}" in
     ;;
 --fzf)
     # Enter does nothing (the sheet is for reading); Esc closes it.
-    table | fzf --no-sort --layout=reverse --prompt 'hotkeys> ' \
-        --bind 'enter:ignore' || true
+    # no-hscroll keeps the key column in view instead of scrolling a long
+    # row to its match.
+    table | fzf --no-hscroll --no-sort --layout=reverse \
+        --prompt 'hotkeys> ' --bind 'enter:ignore' || true
     exit 0
     ;;
 esac
