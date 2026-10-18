@@ -2,19 +2,25 @@
 ## bspwm/sxhkd hotkeys ##
 #########################
 
+# Each binding's comment is read by the hotkey cheatsheet (super+slash):
+# its first line is the short description shown there, and any further
+# lines are detail kept only in this file.
+
 # quit bspwm
 super + alt + q
 	bspc quit
 
-# re-detect topology and apply best-matching monitor profile
+# re-detect monitors and apply profile
+# re-detects the topology, then applies the best-matching monitor profile
 super + alt + r
 	~/.config/bspwm/scripts/apply-auto.sh
 
-# emergency: in-place bspwm restart (rarely needed; topology changes go through super+alt+r)
+# restart bspwm in place (emergency)
+# rarely needed; topology changes go through super+alt+r
 super + alt + ctrl + r
 	bspc wm -r
 
-# make sxhkd reload its configuration files:
+# reload sxhkd config
 super + Escape
 	pkill -USR1 -x sxhkd
 
@@ -22,21 +28,24 @@ super + Escape
 ## Node Management ##
 #####################
 
-# close and kill
+# close / kill window
 super + {_,shift + }w
 	bspc node -{c,k}
 
-# alternate between the tiled and monocle layout
+# toggle tiled / monocle layout
 super + m
 	bspc desktop -l next
 
-# set the window state
+# tiled / pseudo-tiled / floating / fullscreen
 super + {t,shift + t,s,f}
 	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
 # set the node flags
 # super + shift + {m,x,y,z}
 # 	bspc node -g {marked,locked,sticky,private}
+
+# toggle sticky window
+# a sticky window stays visible on every desktop
 super + shift + y
 	bspc node -g sticky
 
@@ -54,53 +63,61 @@ super + shift + y
 ## Node & Desktop focus/swap ##
 ###############################
 
-# focus the node/monitor in the given direction
+# focus window in direction
+# falls through to the next monitor when there is no window that way
 super + {h,j,k,l}
   ~/.config/bspwm/scripts/smart_focus.sh {west,south,north,east}
 
+# move window in direction
+# swaps with the neighbour, or moves to the next monitor at the edge
 super + shift + {h,j,k,l}
 	~/.config/bspwm/scripts/smart_send.sh {west,south,north,east}
 
-# focus the next/previous desktop (current monitor)
+# focus prev / next desktop
+# stays on the current monitor
 super + bracket{left,right}
 	bspc desktop -f {prev,next}.local
 
-# Swap and follow node across desktops (current monitor)
+# move window to prev / next desktop, follow
 super + shift + bracket{left,right}
     bspc node -d {prev,next}.local --follow
 
+# move window to prev / next desktop
 super + ctrl + bracket{left,right}
     bspc node -d {prev,next}.local
 
-# focus desktop n on current monitor
+# focus desktop n
+# desktops are numbered per monitor
 super + {1-9,0}
 	bspc desktop focused:^{1-9,10} -f
 
-# send window to desktop n and follow focus
+# move window to desktop n, follow
 super + shift + {1-9,0}
 	bspc node -d focused:^{1-9,10} --follow
 
-# send window in direction, don't follow
+# transplant window in direction
+# bspc node -n: inserts beside the neighbour, honouring its preselection
 super + ctrl + {h,j,k,l}
 	bspc node -n {west,south,north,east}
 
-# send window to desktop n, don't follow
+# move window to desktop n
 super + ctrl + {1-9,0}
 	bspc node -d focused:^{1-9,10}
 
-# focus the last node/desktop
+# focus last window / desktop
 super + {Tab, grave}
 	bspc {node,desktop} -f last
 
-# focus the next/previous window in the current desktop
+# focus next / prev window
 super + {_,shift + }c
 	bspc node -f {next,prev}.local.!hidden.window
 
-# cycle windows (useful in monocle layout)
+# cycle windows
+# useful in monocle layout
 super + {comma,period}
 	bspc node -f {prev,next}.local.!hidden.window
 
-# focus the older or newer node in the focus history
+# focus older / newer in history
 super + {o,i}
 	bspc wm -h off; \
 	bspc node {older,newer} -f; \
@@ -116,19 +133,19 @@ super + {o,i}
 ## preselect ##
 ###############
 
-# preselect the direction
+# preselect split direction
 super + alt + {h,j,k,l}
 	bspc node -p {west,south,north,east}
 
-# preselect the ratio
+# preselect split ratio
 super + alt + {1-9}
 	bspc node -o 0.{1-9}
 
-# cancel the preselection for the focused node
+# cancel preselection
 super + alt + space
 	bspc node -p cancel
 
-# cancel the preselection for the focused desktop
+# cancel all preselections on desktop
 super + alt + shift + space
 	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
 
@@ -136,7 +153,8 @@ super + alt + shift + space
 ## move/resize ##
 #################
 
-# Smart expand/contract a window
+# resize window
+# grows toward a neighbour, or shrinks from the opposite side at the edge
 super + {Left,Down,Up,Right}
 	~/.config/bspwm/scripts/smart_resize.sh {west,south,north,east}
 
@@ -148,68 +166,77 @@ super + shift + {Left,Down,Up,Right}
 ## wm independent hotkeys ##
 ############################
 
-# Increase volume
+# volume up
 XF86AudioRaiseVolume
     pactl set-sink-volume @DEFAULT_SINK@ +5%
 
-# Decrease volume
+# volume down
 XF86AudioLowerVolume
     pactl set-sink-volume @DEFAULT_SINK@ -5%
 
-# Mute/Unmute volume
+# toggle mute
 XF86AudioMute
     pactl set-sink-mute @DEFAULT_SINK@ toggle
 
-# Increase brightness
+# brightness up
 XF86MonBrightnessUp
     brightnessctl set +1%
 
-# Decrease brightness
+# brightness down
 XF86MonBrightnessDown
     brightnessctl set 1%-
 
-# Increase brightness
+# brightness up (large step)
 shift + XF86MonBrightnessUp
     brightnessctl set +10%
 
-# Decrease brightness
+# brightness down (large step)
 shift + XF86MonBrightnessDown
     brightnessctl set 10%-
 
+# screenshot region
+# saved to ~/Pictures/Screenshots and copied to the clipboard
 Print
     mkdir -p ~/Pictures/Screenshots && scrot -s ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_region.png' -e 'xclip -selection clipboard -t image/png -i "$f"'
 
+# screenshot full screen
+# saved to ~/Pictures/Screenshots and copied to the clipboard
 super + Print
     mkdir -p ~/Pictures/Screenshots && scrot ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_full.png' -e 'xclip -selection clipboard -t image/png -i "$f"'
 
+# screenshot each display, joined
+# scrot -m; saved to ~/Pictures/Screenshots and copied to the clipboard
 super + shift + Print
     mkdir -p ~/Pictures/Screenshots && scrot -m ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_all.png' -e 'xclip -selection clipboard -t image/png -i "$f"'
 
-# terminal emulator
+# terminal
 super + Return
 	~/.config/kitty/launch.sh
 
-# terminal emulator (always local, ignores kitten ssh)
+# local terminal
+# always local, ignores a kitten ssh session in the focused window
 super + shift + Return
 	~/.config/kitty/launch.sh --home
 
-# program launcher
+# app launcher
 super + @space
 	rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/polybar/shades/scripts/rofi/launcher.rasi
 
-# program launcher
+# window switcher
 alt + Tab
 	rofi -no-config -no-lazy-grab -show window -modi window -theme ~/.config/polybar/shades/scripts/rofi/launcher.rasi
 
+# power menu
 super + BackSpace
 	~/.config/polybar/shades/scripts/powermenu.sh
 
 
-# Restart polybar (re-apply current profile via the reconciliation pipeline)
+# restart polybar
+# re-applies the current profile via the reconciliation pipeline
 super + alt + shift + p
   ~/.config/bspwm/scripts/apply-auto.sh
 
-# Launch screen recorder
+# screen recorder
 super + shift + p
   python3 ~/.config/bspwm/scripts/screen-recorder.py
 
@@ -217,7 +244,8 @@ super + shift + p
 super + alt + p
   ~/.config/bspwm/scripts/toggle_polybar.sh
 
-# Full-screen screenshot
+# screenshot full screen
+# same as super+Print, for keyboards without a Print key
 super + p
   mkdir -p ~/Pictures/Screenshots && scrot ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_full.png' -e 'xclip -selection clipboard -t image/png -i "$f"'
 
@@ -225,35 +253,40 @@ super + p
 super + alt + ctrl + l
     ~/.local/bin/lockscreen
 
-# Suspend system (lock first; i3lock forks, so wait a beat before suspending)
+# lock and suspend
+# i3lock forks, so wait a beat before suspending
 super + shift + s
     ~/.local/bin/lockscreen; sleep 1; systemctl suspend
 
-# Toggle Redshift on/off
+# toggle redshift
 super + shift + r
     pkill -x redshift || redshift -c ~/.config/redshift.conf &
 
-# Clear all notifications
+# clear notifications
 super + shift + d
   dunstctl close-all
 
-# Monitor manager - Interactive profile selection
+# pick monitor profile
+# interactive monitor-manager selection
 super + shift + x
   ~/.config/bspwm/scripts/monitor-switch.sh
 
-# Emergency laptop display recovery (works blind - enables any connected eDP-* output)
+# force laptop screen on (emergency)
+# works blind: enables any connected eDP-* output
 super + shift + F1
   xrandr --query | grep -o '^eDP[^ ]* connected' | cut -d' ' -f1 | \
   xargs -r -n1 -I OUT xrandr --output OUT --auto; \
   notify-send "Display Recovery" "Laptop screen enabled"
 
-# Toggle caps:swapescape via systemd user service. Bound to both keysyms
+# toggle caps / escape swap
+# Toggles caps:swapescape via systemd user service. Bound to both keysyms
 # because the swap itself changes which one the physical key emits.
 super + shift + {Caps_Lock,Escape}
   systemctl --user is-active --quiet swapescape.service \
     && systemctl --user stop swapescape.service \
     || systemctl --user start swapescape.service
 
-# show this hotkey cheatsheet (parsed live from this file)
+# hotkey cheatsheet
+# parsed live from this file; see the note at the top
 super + slash
   ~/.config/bspwm/scripts/hotkeys.sh
