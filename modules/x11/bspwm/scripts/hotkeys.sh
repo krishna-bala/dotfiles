@@ -7,13 +7,18 @@
 # directly above it (falling back to its command), and "## Name ##" banner
 # lines become section labels. Commented-out bindings are not listed.
 #
-# Usage: hotkeys.sh           show in rofi
+# Shown with fzf in a floating, sticky kitty window rather than rofi: rofi
+# grabs the keyboard, which would leave sxhkd deaf while the sheet is open.
+#
+# Usage: hotkeys.sh           toggle the cheatsheet window
+#        hotkeys.sh --fzf     browse the table with fzf (runs inside the window)
 #        hotkeys.sh --print   write the table to stdout
 
 set -euo pipefail
 
 SXHKDRC="${SXHKDRC:-${XDG_CONFIG_HOME:-$HOME/.config}/sxhkd/sxhkdrc}"
-THEME="$HOME/.config/polybar/shades/scripts/rofi/launcher.rasi"
+CLASS=sxhkd-hotkeys
+KITTY="$(command -v kitty || echo "$HOME/.local/bin/kitty")"
 
 table() {
     awk '
@@ -49,21 +54,26 @@ table() {
     ' "$SXHKDRC"
 }
 
-if [ "${1:-}" = "--print" ]; then
+case "${1:-}" in
+--print)
     table
     exit 0
-fi
+    ;;
+--fzf)
+    # Enter does nothing (the sheet is for reading); Esc closes it.
+    table | fzf --no-sort --layout=reverse --prompt 'hotkeys> ' \
+        --bind 'enter:ignore' || true
+    exit 0
+    ;;
+esac
 
-# Rofi grabs the keyboard, so pressing the hotkey again would do nothing;
-# a second press closes the open cheatsheet instead of stacking another.
-if pgrep -f 'rofi .*-p hotkeys' >/dev/null; then
-    pkill -f 'rofi .*-p hotkeys'
+# A second press closes the open sheet instead of stacking another.
+if pkill -f -- "--class $CLASS"; then
     exit 0
 fi
 
-table | rofi -dmenu -i -no-custom -p hotkeys \
-    -theme "$THEME" \
-    -theme-str 'window { width: 1200px; }' \
-    -theme-str 'element-text { font: "JetBrainsMono Nerd Font Mono 13"; }' \
-    -theme-str 'listview { lines: 18; }' \
-    >/dev/null || true
+# One-shot rule: float it centred, and keep it on every desktop so it stays
+# in view while trying the hotkeys it lists.
+bspc rule -a "$CLASS" -o state=floating sticky=on center=on rectangle=1200x700+0+0
+exec "$KITTY" --class "$CLASS" -o font_size=11 -o remember_window_size=no \
+    "$0" --fzf
