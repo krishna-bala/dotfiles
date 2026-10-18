@@ -16,3 +16,5 @@
     # Link individual skills so other installed skills remain independent.
     ~/.agents/skills/vault: skills/vault
     ~/.claude/skills/vault: skills/vault
+    ~/.agents/skills/living-codebase-map: skills/living-codebase-map
+    ~/.claude/skills/living-codebase-map: skills/living-codebase-map
