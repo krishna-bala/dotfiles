@@ -47,7 +47,6 @@ table() {
             pending = 0
             d = desc
             if (d == "") { d = cmd; sub(/^[[:space:]]+/, "", d) }
-            if (length(d) > 60) d = substr(d, 1, 57) "..."
             n++; chords[n] = chord; sections[n] = section; descs[n] = d
             if (length(chord) > cw) cw = length(chord)
             if (length(section) > sw) sw = length(section)
@@ -69,9 +68,11 @@ case "${1:-}" in
 --fzf)
     # Enter does nothing (the sheet is for reading); Esc closes it.
     # no-hscroll keeps the key column in view instead of scrolling a long
-    # row to its match.
+    # row to its match; fzf has no manual sideways scroll, so ctrl-/ (its
+    # default toggle-wrap-word) wraps long rows to read them in full.
     table | fzf --no-hscroll --no-sort --layout=reverse \
-        --prompt 'hotkeys> ' --bind 'enter:ignore' || true
+        --prompt 'hotkeys> ' --header 'ctrl-/ wrap long rows   esc close' \
+        --bind 'enter:ignore' || true
     exit 0
     ;;
 esac
