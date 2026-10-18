@@ -253,3 +253,7 @@ super + shift + {Caps_Lock,Escape}
   systemctl --user is-active --quiet swapescape.service \
     && systemctl --user stop swapescape.service \
     || systemctl --user start swapescape.service
+
+# show this hotkey cheatsheet (parsed live from this file)
+super + slash
+  ~/.config/bspwm/scripts/hotkeys.sh
