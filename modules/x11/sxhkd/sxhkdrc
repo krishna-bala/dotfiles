@@ -249,16 +249,13 @@ super + alt + p
 super + p
   mkdir -p ~/Pictures/Screenshots && scrot ~/Pictures/Screenshots/'%Y-%m-%d_%H%M%S_full.png' -e 'xclip -selection clipboard -t image/png -i "$f"'
 
-# lock screen
+# lock and blank screen
+# i3lock forks once locked, then the panel is powered off without sleeping;
+# any input wakes it. Forced rather than left to the idle timeout, which
+# apps can suspend (Claude desktop does). The sleep lets the hotkey's own
+# key release pass first, or it would wake the panel straight back up
 super + alt + ctrl + l
-    ~/.local/bin/lockscreen
-
-# blank screen
-# powers the panel off without sleeping; any input wakes it. Forced rather
-# than left to the idle timeout, which apps can suspend (Claude desktop
-# does). The sleep lets the hotkey's own key release pass first
-super + alt + ctrl + b
-    sleep 0.5; xset dpms force off
+    ~/.local/bin/lockscreen && sleep 0.5 && xset dpms force off
 
 # lock and suspend
 # i3lock forks, so wait a beat before suspending
