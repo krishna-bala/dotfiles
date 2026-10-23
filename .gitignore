@@ -19,3 +19,4 @@ htmlcov/
 
 # Provisioning log
 provision.log
+.worktrees/
