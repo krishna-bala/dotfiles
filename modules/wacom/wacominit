@@ -13,14 +13,17 @@ if [[ -z "$line" ]]; then
   exit 1
 fi
 
-read -r _ _ geometry output <<<"$line"
+read -r _ _ geometry _ <<<"$line"
 monitor_w=${geometry%%/*}
 monitor_h=${geometry#*x}
 monitor_h=${monitor_h%%/*}
 
-# Look the pen and pad up by type: the X name comes from the tablet, and a
-# Bluetooth Intuos can report a different model name than this was written
-# for. xsetwacom exits 0 for an unknown device, so check here.
+# xsetwacom rejects output names here ("Unable to find an output"), so map to
+# the monitor's WIDTHxHEIGHT+X+Y geometry, which it accepts.
+mapping="${monitor_w}x${monitor_h}+${geometry#*/*+}"
+
+# Look the pen and pad up by type rather than by name. xsetwacom exits 0 for
+# an unknown device, so check here.
 devices=$(xsetwacom --list devices)
 device_of() {
   awk -v type="type: $1" 'index($0, type) { sub(/[ \t]*id:.*/, ""); print; exit }' <<<"$devices"
@@ -33,10 +36,20 @@ if [[ -z "$stylus" || -z "$pad" ]]; then
   exit 1
 fi
 
+# xsetwacom prints a failed set but still exits 0, so any output is an error.
+set_tablet() {
+  local out
+  out=$(xsetwacom set "$@" 2>&1)
+  if [[ -n "$out" ]]; then
+    echo "wacominit: $out" >&2
+    exit 1
+  fi
+}
+
 # The pen gets the largest part of the tablet with the monitor's aspect
 # ratio, so MapToOutput doesn't stretch it. Reset first so the read below
 # returns the full tablet area rather than an earlier, smaller one.
-xsetwacom set "$stylus" ResetArea
+set_tablet "$stylus" ResetArea
 read -r _ _ full_w full_h <<<"$(xsetwacom get "$stylus" Area | tr -c '0-9' ' ')"
 
 if [[ ! "$full_w" =~ ^[0-9]+$ || ! "$full_h" =~ ^[0-9]+$ ]]; then
@@ -52,6 +65,6 @@ else
   area_h=$(( full_w * monitor_h / monitor_w ))
 fi
 
-xsetwacom set "$stylus" MapToOutput "$output"
-xsetwacom set "$stylus" Area 0 0 "$area_w" "$area_h"
-xsetwacom set "$pad" MapToOutput "$output"
+set_tablet "$stylus" MapToOutput "$mapping"
+set_tablet "$stylus" Area 0 0 "$area_w" "$area_h"
+set_tablet "$pad" MapToOutput "$mapping"
