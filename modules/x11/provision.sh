@@ -173,10 +173,14 @@ UV_BIN="$(command -v uv || echo "$HOME/.local/bin/uv")"
 # `uv tool install` resolves afresh, so the lockfile is turned into a
 # constraints file first: the tool venv gets exactly the versions uv.lock
 # records, and --locked makes a lock that has drifted from pyproject.toml
-# fail here rather than install something unreviewed.
+# fail here rather than install something unreviewed. The lock records
+# pypi.org URLs, so a machine's own index (a mirror) would read as drift:
+# --no-config keeps uv.toml out of that check and env -u does the same for
+# index variables. The install below still uses the configured index.
 tmp="$(mktemp -d)"
 (cd "$REPO_ROOT/apps/monitor-manager" &&
-  "$UV_BIN" export --locked --no-dev --no-hashes --no-emit-project -q -o "$tmp/constraints.txt" &&
+  env -u UV_INDEX -u UV_DEFAULT_INDEX -u UV_INDEX_URL -u UV_EXTRA_INDEX_URL \
+    "$UV_BIN" --no-config export --locked --no-dev --no-hashes --no-emit-project -q -o "$tmp/constraints.txt" &&
   "$UV_BIN" tool install --editable --reinstall -q -c "$tmp/constraints.txt" .) ||
   die "uv tool install failed for apps/monitor-manager"
 rm -rf "$tmp"
