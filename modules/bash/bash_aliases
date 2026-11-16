@@ -55,6 +55,12 @@ lg() {
 kssh() {
   kitty +kitten ssh "$@"
 }
+# Complete kssh exactly like ssh: bash-completion's ssh completer reads
+# ~/.ssh/config (Includes too), known_hosts, and is case-insensitive about
+# keywords. Its function name differs between bash-completion versions, so
+# copy whatever spec ssh has. No-op without bash-completion.
+_completion_loader ssh 2>/dev/null
+eval "$(complete -p ssh 2>/dev/null | sed 's/ ssh$/ kssh/')"
 # ===============
 
 # Machine-local shell env (untracked; e.g. work-specific vars). No-op if absent.
