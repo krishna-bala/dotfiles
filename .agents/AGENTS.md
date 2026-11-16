@@ -74,7 +74,7 @@ guidance) with this file (guidance for editing this repo).
 ## Supply-chain / version-pinning policy
 
 Every tool fetched from an upstream release - nvm, uv, glab, lazygit,
-starship, fzf, lsd, kitty, neovim, go, typst, and the Nerd Fonts
+starship, fzf, lsd, kitty, neovim, go, and the Nerd Fonts
 (JetBrainsMono, Iosevka, FantasqueSansMono) - names an exact version (no
 fetch-latest) and is verified against a recorded sha256 before installing
 (helpers live in `lib/provision-lib.sh`; pins live in the module that
@@ -95,10 +95,11 @@ unpinned or unverified.
 
 Raising a pin is a deliberate, reviewed change: update the version variable
 and its sha256 (from the upstream release's published checksums where they
-exist; kitty, neovim, and typst publish none, so their hashes are computed
-from the reviewed download), review the upstream diff, then re-run the
-module's `provision.sh`. The monitor-manager's Python dependencies are
-pinned the same way via the committed `uv.lock`: `uv sync --locked` in CI,
+exist; kitty publishes only detached .sig signatures and neovim publishes
+none, so their hashes are computed from the reviewed download), review the
+upstream diff, then re-run the module's `provision.sh`. The
+monitor-manager's Python dependencies are pinned the same way via the
+committed `uv.lock`: `uv sync --locked` in CI,
 and the tool install exports the lock as a constraints file. The rust
 toolchain is pinned the same way (verified rustup-init, pinned toolchain
 version), and the tree-sitter CLI is built from source at a pinned version

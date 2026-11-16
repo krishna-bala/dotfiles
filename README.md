@@ -24,7 +24,7 @@ pinned tool is at or above its pin, and which overlay seams are present.
 | Role | What it is | Modules |
 |---|---|---|
 | `server` | a headless box reached over ssh | cli-tools bash git tmux starship nvim agents |
-| `workstation` | a machine someone sits at, any desktop | server + kitty bazel node go typst |
+| `workstation` | a machine someone sits at, any desktop | server + kitty bazel node go |
 | `desktop` | a workstation running this repo's bspwm/X11 stack | workstation + x11 |
 
 Roles nest (`roles/workstation` starts with `@server`). Modules outside any
@@ -61,7 +61,7 @@ Modules:
   `bin/clipimg`, the remote-side half of kitty's clipboard kitten.
 - `nvim` - neovim plus the rust toolchain and tree-sitter CLI its config
   (a separate repo) builds with.
-- `node`, `go`, `typst`, `bazel` - language toolchains and completions.
+- `node`, `go`, `bazel` - language toolchains and completions.
 - `kitty` - the terminal emulator and its font. Client-side: not on servers.
 - `agents` - shared instructions and skills exposed through `~/.agents/`,
   with `~/.codex/AGENTS.md`, `~/.claude/CLAUDE.md`, and individual

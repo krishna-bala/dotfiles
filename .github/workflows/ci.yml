@@ -124,7 +124,7 @@ jobs:
           . ./lib/common.sh
           . ./lib/roles.sh
           # nesting, order, dedup
-          [ "$(resolve_modules desktop | tr '\n' ' ')" = "cli-tools bash git tmux starship nvim agents kitty bazel node go typst x11 " ]
+          [ "$(resolve_modules desktop | tr '\n' ' ')" = "cli-tools bash git tmux starship nvim agents kitty bazel node go x11 " ]
           # a module reached twice is applied once
           [ "$(resolve_modules server workstation | wc -l)" = "$(resolve_modules workstation | wc -l)" ]
           # requires: wacom without x11 is refused
