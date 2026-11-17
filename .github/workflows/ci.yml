@@ -117,6 +117,17 @@ jobs:
             echo "install_release_binary installed despite a wrong archive hash" >&2; exit 1
           fi
           [ ! -e "$HOME/.local/bin/should-not-exist" ]
+          # ...and installs every member/dest pair from one verified archive
+          mkdir -p "$tmp/pkg"
+          printf '#!/bin/sh\necho one\n' > "$tmp/pkg/one"
+          printf '#!/bin/sh\necho two\n' > "$tmp/pkg/two"
+          tar -czf "$tmp/multi.tgz" -C "$tmp" pkg
+          multi="$(sha256sum "$tmp/multi.tgz" | cut -d' ' -f1)"
+          install_release_binary "http://127.0.0.1:8765/multi.tgz" "$multi" pkg/one ci-one 1 pkg/two ci-two
+          [ "$("$HOME/.local/bin/ci-one")" = one ] && [ "$("$HOME/.local/bin/ci-two")" = two ]
+          if (install_release_binary "http://127.0.0.1:8765/multi.tgz" "$multi" pkg/one ci-one 1 pkg/two); then
+            echo "install_release_binary accepted an unpaired member" >&2; exit 1
+          fi
       - name: role resolution
         run: |
           set -euo pipefail
