@@ -181,21 +181,27 @@ fetch_url() {
   curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o "$dest" "$url"
 }
 
-# usage: install_release_binary <url> <sha256> <member-path-in-tar> <dest-name> [strip]
+# usage: install_release_binary <url> <sha256> <member-path-in-tar> <dest-name> [strip [<member> <dest>]...]
 # Download a release tarball, verify it against the recorded sha256, and
-# install one binary from it into ~/.local/bin. tar reads the compression
-# from the archive itself, so .tar.gz and .tar.xz both work. On failure the
-# temp dir is left behind for inspection.
+# install one binary from it into ~/.local/bin - or several, given further
+# member/dest pairs after strip, all from the one verified download. tar
+# reads the compression from the archive itself, so .tar.gz and .tar.xz
+# both work. On failure the temp dir is left behind for inspection.
 install_release_binary() {
-  local url="$1" sha256="$2" member="$3" dest="$4" strip="${5:-0}"
-  local tmp
+  local url="$1" sha256="$2" strip="${5:-0}"
+  local -a pairs=("$3" "$4" "${@:6}")
+  local tmp member dest i
+  [ $((${#pairs[@]} % 2)) -eq 0 ] || die "install_release_binary: unpaired member/dest"
   tmp="$(mktemp -d)"
   fetch_url "$url" "$tmp/archive" || die "download failed: $url"
   verify_sha256 "$tmp/archive" "$sha256"
-  tar -xaf "$tmp/archive" -C "$tmp" --strip-components="$strip" "$member" ||
-    die "extract failed: $member from $url"
-  install -m 0755 "$tmp/$(basename "$member")" "$HOME/.local/bin/$dest" ||
-    die "install failed: $dest"
+  for ((i = 0; i < ${#pairs[@]}; i += 2)); do
+    member="${pairs[i]}" dest="${pairs[i + 1]}"
+    tar -xaf "$tmp/archive" -C "$tmp" --strip-components="$strip" "$member" ||
+      die "extract failed: $member from $url"
+    install -m 0755 "$tmp/$(basename "$member")" "$HOME/.local/bin/$dest" ||
+      die "install failed: $dest"
+  done
   rm -rf "$tmp"
 }
 
@@ -341,11 +347,18 @@ install_nerd_font() {
 UV_VERSION="0.11.20"
 UV_SHA256="5de211d9278af365497d387e25316907b3b4a9f25b4476dd6dbf238d6f85cff3"
 
+# uvx is a shim that runs the uv beside it (its --version is that uv's), so
+# it is installed with uv, and added on its own only where it is missing
+# next to our ~/.local/bin/uv - e.g. machines provisioned before it was
+# extracted. That leaves a uv updated past the pin alone, and never puts a
+# uvx where there is no sibling uv for it to run.
 install_uv() {
+  local url="https://github.com/astral-sh/uv/releases/download/$UV_VERSION/uv-x86_64-unknown-linux-gnu.tar.gz"
+  local dir="uv-x86_64-unknown-linux-gnu"
   log "uv $UV_VERSION"
   if ! pin_satisfied uv "$UV_VERSION"; then
-    install_release_binary \
-      "https://github.com/astral-sh/uv/releases/download/$UV_VERSION/uv-x86_64-unknown-linux-gnu.tar.gz" \
-      "$UV_SHA256" "uv-x86_64-unknown-linux-gnu/uv" uv 1
+    install_release_binary "$url" "$UV_SHA256" "$dir/uv" uv 1 "$dir/uvx" uvx
+  elif [ -x "$HOME/.local/bin/uv" ] && [ ! -x "$HOME/.local/bin/uvx" ]; then
+    install_release_binary "$url" "$UV_SHA256" "$dir/uvx" uvx 1
   fi
 }
